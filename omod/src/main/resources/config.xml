@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<!-- Module Properties -->
+	<id>${project.parent.artifactId}</id>
+	<name>${project.parent.name}</name>
+	<version>${project.parent.version}</version>
+	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
+	<author>Stanslaus Odhiambo</author>
+	<description>
+		${project.parent.description}
+	</description>
+	<updateURL>https://modules.openmrs.org/modules/download/${project.parent.artifactId}/update.rdf</updateURL>
+	<require_version>${openMRSVersion}</require_version>
+	<!-- / Module Properties -->
+
+	
+	<!-- Required Modules -->
+	<require_modules>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uiframework
+		</require_module>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uilibrary
+		</require_module>
+																											
+		<require_module version="1.5.1-SNAPSHOT">
+			org.openmrs.module.hospitalcore
+		</require_module>
+			
+	</require_modules>
+	<!-- / Required Modules -->
+	
+	<!-- Module Activator -->
+	<activator>${project.parent.groupId}.${project.parent.artifactId}.RegistrationActivator</activator>
+	
+	<privilege>
+		<name>Print Duplicate Slip</name>
+		<description>Allows user to provide duplicate slip to patient</description>
+	</privilege>
+	
+	
+	<!-- Adds link to admin page -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
+	</extension>
+	<extension>
+		<point>org.openmrs.gutter.tools</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.RegistrationHeader</class>
+	</extension>
+	
+	<!-- Maps hibernate file's, if present -->
+	<mappingFiles>
+				
+		RegistrationFee.hbm.xml
+				
+	</mappingFiles>
+	
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.identifier_prefix</property>
+		<defaultValue>BDHOS</defaultValue>
+		<description>
+			Patient identifier prefix
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.location</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			Location id
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.patientIdentifierType</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			Patient Identifier Type id
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.encounterType.init</property>
+		<defaultValue>REGINITIAL</defaultValue>
+		<description>
+			Encounter type for the first visit
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.encounterType.revisit</property>
+		<defaultValue>REGREVISIT</defaultValue>
+		<description>
+			Encounter type for returned visits
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.newPatientConcept</property>
+		<defaultValue>New Patient</defaultValue>
+		<description>
+			Concept name of "New Patient" referral for patient queue
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.numberOfDateValidation</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Number of date validation
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.initialVisitRegistrationFee</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Registration Fee for first visit 
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.reVisitRegistrationFee</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Registration Fee for revisit
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.patientPerRSBY</property>
+		<defaultValue>5</defaultValue>
+		<description>
+			Maximum number of patients can register with a RSBY number
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.patientPerBPL</property>
+		<defaultValue>10</defaultValue>
+		<description>
+			Maximum number of patients can register with a BPL number
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.revisitConcept</property>
+		<defaultValue>REVISIT</defaultValue>
+		<description>
+			Name of concept REVISIT
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.bloodbankConceptId</property>
+		<defaultValue>6425</defaultValue>
+		<description>
+			Concept id of bloodbank room
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.bloodbankOrderTypeId</property>
+		<defaultValue>6</defaultValue>
+		<description>
+			ID of bloodbank order type
+		</description>
+	</globalProperty>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with ${project.parent.artifactId}. -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+</module>
+
