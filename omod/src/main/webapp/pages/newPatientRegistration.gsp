@@ -1,6 +1,18 @@
 <% ui.decorateWith("appui", "standardEmrPage", [title: "Patient Registration"]) %>
 <% 
 	ui.includeCss("registration", "onepcssgrid.css")
+	ui.includeCss("registration", "main.css")
+	ui.includeCss("registration", "jquery.steps.css")
+	
+%>
+<%
+    ui.includeJavascript("registration", "registrationutils.js")  
+    ui.includeJavascript("registration", "custom.js") 
+    ui.includeJavascript("registration", "jquery.cookie-1.3.1.js") 
+    ui.includeJavascript("registration", "jquery.steps.min.js")    
+    ui.includeJavascript("registration", "modernizr-2.6.2.min.js") 
+    ui.includeJavascript("registration", "jquery.validate.min.js")
+    ui.includeJavascript("registration", "validations.js")
 %>
 
 <openmrs:require privilege="Add Patients" otherwise="/login.htm" redirect="/findPatient.htm" />
@@ -29,70 +41,6 @@
 		}
 </style>
 
-<script type="text/javascript">
-
-	// Hospital name
-	hospitalName = "${hospitalName}";
-
-	// Districts
-	var _districts = new Array();
-	${districts}.eachWithIndex{district,ix ->
-		_districts[ix] = district;	
-	}
-	
-
-	
-	// Upazilas
-	var _upazilas = new Array();
-	${upazilas}.eachWithIndex{upazila,i ->
-		_districts[i] = upazila;	
-	}
-	
-	
-	var _payingCategoryMap = new Array();
-	
-	${payingCategoryMap}.eachWithIndex{entry,i ->
-		_payingCategoryMap[entry.key] = entry.value;
-	
-	}
-	
-	
-	var _nonPayingCategoryMap = new Array();
-	${nonPayingCategoryMap}.eachWithIndex{entry,i ->
-		_nonPayingCategoryMap[entry.key] = entry.value;		
-	}
-	
-
-	
-	var _specialSchemeMap = new Array();
-	${specialSchemeMap}.eachWithIndex{entry,i ->
-		_specialSchemeMap[entry.key] = entry.value;
-	
-	
-	/**
-	 ** MODEL FROM CONTROLLER
-	 **/
-	MODEL = {
-		patientIdentifier: "${patientIdentifier}",
-		districts: _districts,
-		upazilas: _upazilas,
-		////ghanshyam,16-dec-2013,3438 Remove the interdependency
-		TRIAGE: "${TRIAGE}",
-		OPDs: "${OPDs}",
-		SPECIALCLINIC: "${SPECIALCLINIC}",
-		payingCategory: "${payingCategory}",
-		nonPayingCategory: "${nonPayingCategory}",
-		specialScheme: "${specialScheme}",
-		payingCategoryMap: _payingCategoryMap,
-		nonPayingCategoryMap: _nonPayingCategoryMap,
-		specialSchemeMap: _specialSchemeMap,
-		universities: "${universities}",
-		referredFrom: "${referralHospitals}",
-		referralType: "${referralReasons}",
-		TEMPORARYCAT: "${TEMPORARYCAT}",
-		religions: "${religionList}"
-	}
-</script>
 
 <div class="onepcssgrid-1000">
 

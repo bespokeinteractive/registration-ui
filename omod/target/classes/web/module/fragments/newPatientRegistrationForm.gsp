@@ -1,7 +1,4 @@
-<script>
-  
-  
-  
+<script>  
   jQuery(document).ready(function() {
   
   	jQuery(function() {
@@ -16,28 +13,10 @@
         constrainInput: false
     });
     
-    //jQuery('#birthdate').change(PAGE.checkBirthDate);
-    jQuery("#payingCategoryField").hide();
-	jQuery("#nonPayingCategoryField").hide();
-	jQuery("#specialSchemeCategoryField").hide();
-	jQuery("#nhifNumberRow").hide();
-	jQuery("#universityRow").hide();
-	jQuery("#studentIdRow").hide();
-	jQuery("#waiverNumberRow").hide();
-	jQuery("#mlc").hide();
-	jQuery("#otherNationality").hide();
-	jQuery("#referredFromColumn").hide();
-	jQuery("#referralTypeRow").hide();
-	jQuery("#referralDescriptionRow").hide();
-	jQuery("#triageField").hide();
-	jQuery("#opdWardField").hide();
-	jQuery("#specialClinicField").hide();
-	jQuery("#fileNumberField").hide();
-    
-    
+       
     
     //end of doc ready
-});
+	});
   
 </script>
 <style>
@@ -86,15 +65,12 @@
 				</div>	
 				
 				
-				<div class="onerow">
-					<div class="col4"><label>Age or D.O.B*</label></div>
+				<div class="onerow">					
 					<div class="col4"><label>Gender*(required)</label></div>
-					<div class="col4 last"><label>Marital Status*</label></div>
+					<div class="col4"><label>Marital Status*</label></div>
+					<div class="col4 last"><label>Age or D.O.B*</label></div>
 				</div>
 				<div class="onerow">
-					<div class="col4">
-						<input type="text" id="birthdate" name="patient.birthdate" class="form-textbox" />
-					</div>
 					<div class="col4">
 						<select id="patientGender" name="patient.gender" class="form-combo">
 									<option value="Any"></option>
@@ -102,7 +78,7 @@
 									<option value="F">Female</option>
 						</select>
 					</div>
-					<div class="col4 last">
+					<div class="col4">
 						<select id="maritalStatus" name="person.attribute.26" style='width: 152px;' class="form-combo">
 											<option value="Marital"></option>
 											<option value="Single">Single</option>
@@ -112,6 +88,9 @@
 											<option value="Widower">Widower</option>
 											<option value="Separated">Separated</option>
 						</select>
+					</div>
+					<div class="col4 last">
+						<input type="text" id="birthdate" name="patient.birthdate" class="form-textbox" />
 					</div>
 				</div>
 				<div class="onerow">
@@ -133,10 +112,14 @@
 				</div>
 				
 				<div class="onerow">
-				<div class="col4"><label>Nationality</label></div>
-				<div class="col4"><label>National ID:</label></div>
-				<div class="col4 last"><label>Passport No.</label></div>
-			</div>
+					<div class="col4"><label>Nationality</label></div>
+					<div class="col4"><label>National ID:</label></div>
+					<div class="col4 last"><label>Passport No.</label></div>
+				</div>
+				
+				
+				
+				
 			<div class="onerow">
 				<div class="col4">
 						<select id="patientNation" name="person.attribute.27" style="width: 152px;" onchange="showOtherNationality();" class="form-combo">
@@ -207,6 +190,9 @@
 						<input id="passportNumber" name="person.attribute.38" onblur="submitPassportNumber();" class="form-textbox"/>
 					</div>
 				</div>
+				
+				
+				
 					  	
 		  	</div>	
 		  	
@@ -347,7 +333,8 @@
 					<div class="col3"><input type="button" value="Reset" onclick="window.location.href=window.location.href"/></div>
 					<div class="col3 last"><label></label></div>
 				</div>	  	
-		  	</div>		  	  	
+		  	</div>
+		  			  	  	
 		</div>	
 	</form>
 </div>
