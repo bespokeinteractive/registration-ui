@@ -6,13 +6,14 @@
 	
 %>
 <%
-    ui.includeJavascript("registration", "registrationutils.js")  
     ui.includeJavascript("registration", "custom.js") 
     ui.includeJavascript("registration", "jquery.cookie-1.3.1.js") 
     ui.includeJavascript("registration", "jquery.steps.min.js")    
     ui.includeJavascript("registration", "modernizr-2.6.2.min.js") 
     ui.includeJavascript("registration", "jquery.validate.min.js")
     ui.includeJavascript("registration", "validations.js")
+	ui.includeJavascript("registration", "jquery.loadmask.min.js")
+	ui.includeJavascript("registration", "jquery.formfilling.js")
 %>
 
 <openmrs:require privilege="Add Patients" otherwise="/login.htm" redirect="/findPatient.htm" />
@@ -40,6 +41,12 @@
 			}
 		}
 </style>
+<script type="text/javascript">
+
+	// Hospital name
+	hospitalName = "${hospitalName}";
+
+</script>
 
 
 <div class="onepcssgrid-1000">

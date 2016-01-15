@@ -2,6 +2,7 @@ package org.openmrs.module.registration.page.controller;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -107,37 +108,48 @@ public class NewPatientRegistrationPageController {
 	public String post(HttpServletRequest request, PageModel model, UiUtils uiUtils) throws IOException {
 		// list all parameter submitted
 		Map<String, String> parameters = RegistrationWebUtils.optimizeParameters(request);
-		logger.info("Submited Parameters: " + parameters);
+		Map<String, Object> redirectParams=new HashMap<String, Object>();
+		System.out.println(parameters);
+		logger.info("Submitted Parameters: " + parameters);
 
-		Patient patient;
+		Patient patient = null;
 		try {
 			// create patient
 			patient = generatePatient(parameters);
+
 			patient = Context.getPatientService().savePatient(patient);
 			RegistrationUtils.savePatientSearch(patient);
 			logger.info(String.format("Saved new patient [id=%s]", patient.getId()));
 
-			// create encounter for the visit
+			// create encounter for the visit here
 			Encounter encounter = createEncounter(patient, parameters);
 			encounter = Context.getEncounterService().saveEncounter(encounter);
-			logger.info(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
+            System.out.println(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
 					patient.getId()));
+			redirectParams.put("status", "success");
+			redirectParams.put("patientId", patient.getPatientId());
+			redirectParams.put("encounterId", encounter.getId());
+
 			model.addAttribute("status", "success");
 			model.addAttribute("patientId", patient.getPatientId());
 			model.addAttribute("encounterId", encounter.getId());
-		} catch (Exception e) {
+            System.out.println("EEEEEEEEEEEEEEEEEEEEEEEE"+encounter);
+        } catch (Exception e) {
 
 			e.printStackTrace();
 			model.addAttribute("status", "error");
 			model.addAttribute("message", e.getMessage());
 		}
-		return "redirect:" + uiUtils.pageLink("registration", "statuses");
+
+
+        String s = "redirect:" + uiUtils.pageLink("registration", "showPatientInfo?patientId="+patient.getPatientId(), redirectParams);
+        return s;
 
 	}
 
 	/**
 	 * Generate Patient From Parameters
-	 * 
+	 *
 	 * @param parameters
 	 * @return
 	 * @throws Exception
@@ -156,12 +168,15 @@ public class NewPatientRegistrationPageController {
 			patient.addName(personName);
 		}
 
+
 		// get identifier
 		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_IDENTIFIER))) {
 			PatientIdentifier identifier = RegistrationUtils
 					.getPatientIdentifier(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_IDENTIFIER));
+			identifier.setPreferred(true);
 			patient.addIdentifier(identifier);
 		}
+
 
 		// get birthdate
 		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE))) {
@@ -177,6 +192,7 @@ public class NewPatientRegistrationPageController {
 		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_GENDER))) {
 			patient.setGender(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_GENDER));
 		}
+
 
 		// get address
 		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_ADDRESS_DISTRICT))) {
@@ -206,13 +222,12 @@ public class NewPatientRegistrationPageController {
 		} else {
 			throw new Exception(validateResult);
 		}
-
 		return patient;
 	}
 
 	/**
 	 * Create Encouunter For The Visit Of Patient
-	 * 
+	 *
 	 * @param patient
 	 * @param parameters
 	 * @return
