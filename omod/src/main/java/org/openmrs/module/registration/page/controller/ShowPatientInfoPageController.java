@@ -25,7 +25,7 @@ import java.util.*;
 
 /**
  * @author Stanslaus Odhiambo
- *         Created on 1/14/2016.
+ * Created on 1/14/2016.
  */
 public class ShowPatientInfoPageController {
     private static Log logger = LogFactory.getLog(ShowPatientInfoPageController.class);
@@ -39,6 +39,18 @@ public class ShowPatientInfoPageController {
                       @RequestParam(value = "revisit", required = false) Boolean revisit,
                       @RequestParam(value = "reprint", required = false) Boolean reprint, PageModel model)
             throws IOException, ParseException {
+        model.addAttribute("userLocation","Afya EHMS");
+        model.addAttribute("selectedOPD",null);
+        model.addAttribute("selectedTRIAGE",null);
+        model.addAttribute("selectedSPECIALCLINIC",null);
+        model.addAttribute("selectedMLC",null);
+        model.addAttribute("dueDate",null);
+        model.addAttribute("daysLeft",null);
+        model.addAttribute("specialSchemeName",null);
+        model.addAttribute("create", null);
+        model.addAttribute("creates", null);
+        model.addAttribute("observations", null);
+
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         PatientModel patientModel = new PatientModel(patient);
@@ -140,6 +152,7 @@ public class ShowPatientInfoPageController {
             model.addAttribute("currentDateTime", sdf.format(hcs.getLastVisitTime(patient)));
 
             Encounter encounter = Context.getService(RegistrationService.class).getLastEncounter(patient);
+            System.out.println("VVVVVVVVVVVVVVVVVVVVVVVv"+encounter);
             if (encounter != null) {
                 Map<Integer, String> observations = new HashMap<Integer, String>();
 
@@ -166,6 +179,7 @@ public class ShowPatientInfoPageController {
                     }
                     observations.put(obs.getConcept().getConceptId(), ObsUtils.getValueAsString(obs));
                 }
+                System.out.println("VVVVVVVVVVVVVVVVVVVVVVVv"+observations);
                 model.addAttribute("observations", observations);
                 List<PersonAttribute> pas = hcs.getPersonAttributes(patientId);
                 for (PersonAttribute pa : pas) {

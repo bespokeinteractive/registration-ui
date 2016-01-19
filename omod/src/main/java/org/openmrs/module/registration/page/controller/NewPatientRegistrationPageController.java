@@ -124,7 +124,7 @@ public class NewPatientRegistrationPageController {
 			// create encounter for the visit here
 			Encounter encounter = createEncounter(patient, parameters);
 			encounter = Context.getEncounterService().saveEncounter(encounter);
-            System.out.println(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
+            logger.info(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
 					patient.getId()));
 			redirectParams.put("status", "success");
 			redirectParams.put("patientId", patient.getPatientId());
@@ -133,7 +133,6 @@ public class NewPatientRegistrationPageController {
 			model.addAttribute("status", "success");
 			model.addAttribute("patientId", patient.getPatientId());
 			model.addAttribute("encounterId", encounter.getId());
-            System.out.println("EEEEEEEEEEEEEEEEEEEEEEEE"+encounter);
         } catch (Exception e) {
 
 			e.printStackTrace();
@@ -142,7 +141,7 @@ public class NewPatientRegistrationPageController {
 		}
 
 
-        String s = "redirect:" + uiUtils.pageLink("registration", "showPatientInfo?patientId="+patient.getPatientId(), redirectParams);
+        String s = "redirect:" + uiUtils.pageLink("registration", "showPatientInfo", redirectParams);
         return s;
 
 	}
