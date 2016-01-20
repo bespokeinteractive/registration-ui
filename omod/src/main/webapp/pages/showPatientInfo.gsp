@@ -10,6 +10,7 @@
 <openmrs:globalProperty key="hospitalcore.hospitalName" defaultValue="ddu" var="hospitalName"/>
 <div class="onepcssgrid-1000">
 
+    ${ui.includeFragment("registration", "js_css")}
     ${ui.includeFragment("registration", "patientInfoForm")}
 
 </div>

@@ -22,25 +22,25 @@
         // Paying Category Map
         var _payingCategoryMap = new Array();
         var payingCategoryMap = "${payingCategoryMap}";
-        jQuery.each(payingCategoryMap, function (key, value) {
-            _payingCategoryMap[key] = value;
-        });
+        <% payingCategoryMap.each { k, v -> %>
+            _payingCategoryMap[${k}] = '${v}';
+        <%}%>
 
 
         // NonPaying Category Map
         var _nonPayingCategoryMap = new Array();
         var nonPayingCategoryMap = "${nonPayingCategoryMap}";
-        jQuery.each(nonPayingCategoryMap, function (key, value) {
-            _nonPayingCategoryMap[key] = value;
-        });
-
+        <% nonPayingCategoryMap.each { k, v -> %>
+            _nonPayingCategoryMap[${k}] = '${v}';
+        <%}%>
 
         // Special Scheme Map
         var _specialSchemeMap = new Array();
         var specialSchemeMap = "${specialSchemeMap}";
-        jQuery.each(specialSchemeMap, function (key, value) {
-            _specialSchemeMap[key] = value;
-        });
+        <% specialSchemeMap.each { k, v -> %>
+            _specialSchemeMap[${k}] = '${v}';
+        <%}%>
+
         /**
          ** MODEL FROM CONTROLLER
          **/
@@ -824,7 +824,7 @@
 
             if (jQuery("#mlcCaseYes").attr('checked') == false
                     && jQuery("#mlcCaseNo").attr('checked') == false) {
-                alert("You did not choose any of the Medico Legal Case");
+                alert("You did not choose any of the Medical Legal Case");
                 return false;
             }
             else {

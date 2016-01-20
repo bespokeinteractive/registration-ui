@@ -1,15 +1,14 @@
 <openmrs:globalProperty var="userLocation" key="hospital.location_user" defaultValue="false"/>
 
 <script type="text/javascript">
-    var MODEL;
+    var MODEL, _attributes;
     jQuery(document).ready(function () {
 
 
         var _attributes = new Array();
-        var attributes = "${patient.attributes}";
-        jQuery.each(attributes, function (key, value) {
-            _attributes[key] = value;
-        });
+        <% patient.attributes.each { k, v -> %>
+        _attributes[${k}] = '${v}';
+        <%}%>
 
         var _observations = new Array();
         var observations = "${observations}";
@@ -22,6 +21,7 @@
          **/
         MODEL = {
             patientId: "${patient.patientId}",
+            encounterId: "${encounterId}",
             patientIdentifier: "${patient.identifier}",
             patientName: "${patient.fullname}",
             patientAge: "${patient.age}",
@@ -41,7 +41,7 @@
             registrationFee: "${registrationFee}",
             dueDate: "${dueDate}",
             daysLeft: "${daysLeft}",
-            firstTimeVisit: "${firstTimeVisit == 'true'}",
+            firstTimeVisit: "${firstTimeVisit}",
             revisit: "${param.revisit == 'true'}",
             reprint: "${param.reprint == 'true'}",
             selectedPaymentCategory: "${selectedPaymentCategory}",
@@ -108,31 +108,27 @@
         });
 
         // Set the selected triage
-//        if(!StringUtils.isBlank(MODEL.selectedTRIAGE)){
-        if ((MODEL.selectedTRIAGE).trim()) {
+        if (!StringUtils.isBlank(MODEL.selectedTRIAGE)) {
             jQuery("#triageField").show();
             jQuery("#triage").val(MODEL.selectedTRIAGE);
             jQuery("#triage").attr("disabled", "disabled");
         }
 
         // Set the selected OPD
-//        if(!StringUtils.isBlank(MODEL.selectedOPD)){
-        if ((MODEL.selectedOPD).trim()) {
+        if (!StringUtils.isBlank(MODEL.selectedOPD)) {
             jQuery("#opdWardField").show();
             jQuery("#opdWard").val(MODEL.selectedOPD);
             jQuery("#opdWard").attr("disabled", "disabled");
         }
 
         // Set the selected SPECIAL CLINIC
-//        if(!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)){
-        if ((MODEL.selectedSPECIALCLINIC).trim()) {
+        if (!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)) {
             jQuery("#specialClinicField").show();
             jQuery("#specialClinic").val(MODEL.selectedSPECIALCLINIC);
             jQuery("#specialClinic").attr("disabled", "disabled");
         }
 
-//        if(!StringUtils.isBlank(MODEL.selectedMLC)){
-        if ((MODEL.selectedMLC).trim()) {
+        if (!StringUtils.isBlank(MODEL.selectedMLC)) {
             jQuery("#mlc").show();
             jQuery("#mlc").val(MODEL.selectedMLC);
             jQuery("#mlc").attr("disabled", "disabled");
@@ -166,8 +162,7 @@
             VALIDATORS.specialClinicRoomCheck();
         });
 
-//        if(!StringUtils.isBlank(MODEL.selectedTRIAGE) || !StringUtils.isBlank(MODEL.selectedOPD) || !StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)){
-        if ((MODEL.selectedTRIAGE).trim() || (MODEL.selectedOPD).trim() || (MODEL.selectedSPECIALCLINIC).trim()) {
+        if (!StringUtils.isBlank(MODEL.selectedTRIAGE) || !StringUtils.isBlank(MODEL.selectedOPD) || !StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)) {
             jQuery("#triageRoomField").hide();
             jQuery("#opdRoomField").hide();
             jQuery("#specialClinicRoomField").hide();
@@ -221,8 +216,7 @@
             jQuery("#reprint").hide();
             jQuery("#printableRegistrationFeeForFirstVisitAndReprintRow").hide();
 
-//            if(!StringUtils.isBlank(MODEL.selectedMLC)){
-            if ((MODEL.selectedMLC).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedMLC)) {
                 jQuery("#mlcCaseYesField").hide();
                 jQuery("#mlcCaseNoRowField").hide();
             }
@@ -236,16 +230,13 @@
             jQuery("#specialClinicRowField").hide();
 
             jQuery("#printableRoomToVisitRow").show();
-//            if(!StringUtils.isBlank(MODEL.selectedTRIAGE)){
-            if ((MODEL.selectedTRIAGE).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedTRIAGE)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#triage option:checked").html() + "</span>");
             }
-//            if(!StringUtils.isBlank(MODEL.selectedOPD)){
-            if ((MODEL.selectedOPD).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedOPD)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#opdWard option:checked").html() + "</span>");
             }
-//            if(!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)){
-            if ((MODEL.selectedSPECIALCLINIC).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#specialClinic option:checked").html() + "</span>");
                 jQuery("#printableFileNumber").empty();
                 if (MODEL.patientAttributes[43] != undefined) {
@@ -273,8 +264,7 @@
         else if (MODEL.reprint == "true") {
 
             jQuery("#printableRegistrationFeeForFirstVisitAndReprintRow").hide();
-//            if(!StringUtils.isBlank(MODEL.selectedMLC)){
-            if ((MODEL.selectedMLC).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedMLC)) {
                 jQuery("#mlcCaseYesField").hide();
                 jQuery("#mlcCaseNoRowField").hide();
             }
@@ -287,8 +277,7 @@
             jQuery("#opdRowField").hide();
             jQuery("#specialClinicRowField").hide();
 
-//            if(!StringUtils.isBlank(MODEL.selectedMLC)){
-            if ((MODEL.selectedMLC).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedMLC)) {
                 jQuery("#mlcCaseNoRowField").hide();
             }
             else {
@@ -297,17 +286,14 @@
             }
 
             jQuery("#printableRoomToVisitRow").show();
-//            if(!StringUtils.isBlank(MODEL.selectedTRIAGE)){
-            if ((MODEL.selectedTRIAGE).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedTRIAGE)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#triage option:checked").html() + "</span>");
 
             }
-//            if(!StringUtils.isBlank(MODEL.selectedOPD)){
-            if ((MODEL.selectedOPD).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedOPD)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#opdWard option:checked").html() + "</span>");
             }
-//            if(!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)){
-            if ((MODEL.selectedSPECIALCLINIC).trim()) {
+            if (!StringUtils.isBlank(MODEL.selectedSPECIALCLINIC)) {
                 jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#specialClinic option:checked").html() + "</span>");
                 jQuery("#printableFileNumber").empty();
                 if (MODEL.patientAttributes[43] != undefined) {
@@ -392,14 +378,30 @@
 
                 // submit form and print
                 if (!reprint) {
-                    jQuery("#patientInfoForm").ajaxSubmit({
-                        success: function (responseText, statusText, xhr) {
-                            if (responseText == "success") {
-                                PAGE.print();
-                                window.location.href = getContextPath() + "/findPatient.htm";
-                            }
+                    jQuery.ajax({
+                        type: "GET",
+                        url: '${ ui.actionLink("registration", "newPatientRegistrationForm", "savePatientInfo") }',
+                        dataType: "json",
+                        data: ({
+                            patientId: MODEL.patientId,
+                            encounterId: MODEL.encounterId
+
+                        }),
+                        success: function (data) {
+                            PAGE.print();
+                            window.location.href = '${ ui.pageLink("registration", "patientRegistration")}';
                         }
                     });
+//                    jQuery("#patientInfoForm").ajaxSubmit({
+//                        success: function (responseText, statusText, xhr) {
+//
+//                            if (responseText == "success") {
+//                                alert("Hit the function ");
+//                                PAGE.print();
+//                                window.location.href = getContextPath() + "/findPatient.htm";
+//                            }
+//                        }
+//                    });
                 } else {
                     PAGE.print();
                     window.location.href = getContextPath() + "/findPatient.htm";
@@ -410,10 +412,19 @@
 
         // Print the slip
         print: function () {
-            jQuery("#patientInfoPrintArea").printArea({
-                mode: "popup",
-                popClose: true
-            });
+            var myStyle = '<link rel="stylesheet" href="http://localhost:8080/openmrs/ms/uiframework/resource/registration/styles/onepcssgrid.css" />';
+            var printDiv = jQuery("#patientInfoPrintArea").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title>Patient Information</title>');
+            printWindow.document.write(printDiv);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+
+//            jQuery("#patientInfoPrintArea").printArea({
+//                mode: "popup",
+//                popClose: true
+//            });
         },
 
         // harsh #244 Added a save button.
@@ -505,8 +516,7 @@
                 } else {
 
                     if (jQuery("#mlcCaseYes").is(':checked')) {
-//                        if (StringUtils.isBlank(jQuery("#mlc").val())){
-                        if (!(jQuery("#mlc").val()).trim()) {
+                        if (StringUtils.isBlank(jQuery("#mlc").val())) {
                             alert("Please select the medico legal case");
                             return false;
                         }
@@ -521,22 +531,19 @@
                     return false;
                 } else {
                     if (jQuery("#triageRoom").attr('checked')) {
-//                        if (StringUtils.isBlank(jQuery("#triage").val())) {
-                        if (!(jQuery("#triage").val()).trim()) {
+                        if (StringUtils.isBlank(jQuery("#triage").val())) {
                             alert("Please select the triage room to visit");
                             return false;
                         }
                     }
                     else if (jQuery("#opdRoom").attr('checked')) {
-//                        if (StringUtils.isBlank(jQuery("#opdWard").val())) {
-                        if (!(jQuery("#opdWard").val()).trim()) {
+                        if (StringUtils.isBlank(jQuery("#opdWard").val())) {
                             alert("Please select the OPD room to visit");
                             return false;
                         }
                     }
                     else {
-//                        if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                        if (!(jQuery("#specialClinic").val()).trim()) {
+                        if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
                             alert("Please select the Special Clinic to visit");
                             return false;
                         }
@@ -651,8 +658,7 @@
                 jQuery("#opdWard").val("");
                 jQuery("#opdWardField").hide();
                 jQuery("#specialClinicField").show();
-//                if (!StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                if ((jQuery("#specialClinic").val()).trim()) {
+                if (!StringUtils.isBlank(jQuery("#specialClinic").val())) {
                     jQuery("#fileNumberRowField").show();
                 }
             }
@@ -750,8 +756,7 @@
 
     function specialClinicSelection() {
 
-//        if (!StringUtils.isBlank(jQuery("#specialClinic").val())) {
-        if ((jQuery("#specialClinic").val()).trim()) {
+        if (!StringUtils.isBlank(jQuery("#specialClinic").val())) {
             jQuery("#fileNumberRowField").show();
             if (MODEL.patientAttributes[43] != null) {
                 jQuery("#fileNumber").val(MODEL.patientAttributes[43]);
@@ -839,7 +844,7 @@
             <div class="onerow" align="left">
                 <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>submit form and print</b></div>
+                <div class="col2" align="left"><b>Previous Day of Visit:</b></div>
 
                 <div class="col2" align="left"><span id="datetime"></span></div>
 
@@ -899,23 +904,31 @@
             <div class="onerow" align="left" id="medicoLegalCaseRowField">
                 <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>Medico Legal Case:</b><label style="color:red">*</label></div>
+                <div class="col2" align="left"><b>Medical Legal Case:</b></div>
 
-                <div class="col2" align="left" id="mlcCaseYesField">
-                    <input id="mlcCaseYes" type="checkbox" name="mlcCaseYes"/> Yes &nbsp;<select id="mlc"
-                                                                                                 name="patient.mlc"
-                                                                                                 style='width: 152px;'></select><br/>
+                <div class="col2" align="left">
+                    <div id="mlcCaseYesField">
+                        <input id="mlcCaseYes" type="checkbox" name="mlcCaseYes"/> Yes
+                        <select id="mlc" name="patient.mlc" style='width: 152px;'></select>
+                    </div>
 
-                    <div id="mlcCaseNoField"><input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/> No &nbsp;</div>
+                    <div id="mlcCaseNoRowField">
+                        <div id="mlcCaseNoField">
+                            <input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/> No
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="col4 last">&nbsp;</div>
             </div>
 
+
             <div class="onerow" align="left" id="triageRowField">
                 <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>Room to Visit:</b><label style="color:red">*</label></div>
+                <div class="col2" align="left"><b>Room to Visit:</b></div>
 
                 <div class="col2" align="left">
                     <div id="triageRoomField">
@@ -1024,16 +1037,30 @@
                     <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
                 </div>
             </div>
+
             <div class="onerow">
-                <div class="col4">erafdsdafd</div>
-                <div class="col2"><input type="button" value="Print"/></div>
-                <div class="col2"><input type="button" value="REPrint"/></div>
-                <div class="col4 last">asdfds</div>
+                <div class="col4">&nbsp;</div>
+
+                <div class="col2">
+                    <input id="printSlip" type="button" value="Print"
+                           onClick="PAGE.submit(false);"/>
+                </div>
+
+                <div class="col2">
+                    <input id="reprint" type="button" value="Reprint"
+                           onClick="PAGE.submit(true);"/>
+                </div>
+
+                <div class="col4 last">
+                    <input id="buySlip" type="button" value="Buy a new slip"
+                           onClick="PAGE.buySlip();"/>
+                    <input id="save" type="button" value="Save" onClick="PAGE.save();"/>
+                    <span id="validationDate"></span>
+                </div>
             </div>
 
         </form>
     </div>
-
 
 </div>
 
