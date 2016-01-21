@@ -374,25 +374,6 @@
             });
         },
 
-        //This function is not used.left for future use if required
-        checkNationalIDAndPassportNumber: function () {
-            nationalId = jQuery("#patientNationalId").val();
-            passportNumber = jQuery("#passportNumber").val();
-            jQuery.ajax({
-                type: "GET",
-                url: '${ ui.actionLink("registration", "registrationUtils", "main") }',
-                dataType: "json",
-                data: ({
-                    nationalId: nationalId,
-                    passportNumber: passportNumber
-                }),
-                success: function (data) {
-//                    jQuery("#validationMessage").html(data);
-                    validateNationalIDAndPassportNumber(data);
-                }
-            });
-        },
-
         /** VALIDATE BIRTHDATE */
         checkBirthDate: function () {
             var submitted = jQuery("#birthdate").val();
@@ -910,12 +891,12 @@
                 }
             }
             //submitNationalIDAndPassportNumber();
-            if (validateNationalIDAndPassportNumber()) {
-                return true;
-            }
-            else {
-                return false;
-            }
+//            if (validateNationalIDAndPassportNumber()) {
+//                return true;
+//            }
+//            else {
+//                return false;
+//            }
 
             return true;
         }
