@@ -1,4 +1,11 @@
 <% ui.decorateWith("appui", "standardEmrPage", [title: "Patient Registration"]) %>
+<script type="text/javascript">
+	var breadcrumbs = [
+		{icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm'},
+        {label: "Patient"},
+		{label: "New Patient"}
+	]
+</script>
 <% 
 	ui.includeCss("registration", "onepcssgrid.css")
 	ui.includeCss("registration", "main.css")
