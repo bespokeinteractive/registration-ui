@@ -1410,9 +1410,9 @@
 
 
                 <div class="onerow">
-                    <div class="col4"><label>Gender*(required)</label></div>
+                    <div class="col4"><label>Gender*</label></div>
 
-                    <div class="col4"><label>Marital Status*</label></div>
+                    <div class="col4"><label>Marital Status</label></div>
 
                     <div class="col4 last"><label>Age or D.O.B*</label></div>
                 </div>
@@ -1588,7 +1588,7 @@
 
                     <div class="col4"><label>Email Address</label></div>
 
-                    <div class="col4 last"><label>Physical Address</label></div>
+                    <div class="col4 last"><label>Physical Address*</label></div>
                 </div>
 
                 <div class="onerow">

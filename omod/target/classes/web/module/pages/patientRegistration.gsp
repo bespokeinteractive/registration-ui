@@ -2,6 +2,12 @@
 <% 
 	ui.includeCss("registration", "onepcssgrid.css")
 %>
+<script type="text/javascript">
+	var breadcrumbs = [
+		{icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm'},
+		{label: "Patient Registration"}
+	]
+</script>
 <openmrs:require privilege="Add Patients" otherwise="/login.htm" redirect="/findPatient.htm" />
 <div class="onepcssgrid-1200">
 
