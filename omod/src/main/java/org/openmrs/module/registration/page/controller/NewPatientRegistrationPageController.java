@@ -233,26 +233,121 @@ public class NewPatientRegistrationPageController {
 	 */
 	private Encounter createEncounter(Patient patient, Map<String, String> parameters) {
 
+		int rooms1 = Integer.parseInt(parameters.get("rooms1"));
+		int paymt1 = Integer.parseInt(parameters.get("paym_1"));
+		int paymt2 = Integer.parseInt(parameters.get("paym_2"));
+
+        int legal1 = Integer.parseInt(parameters.get("legal1"));
+        String legal2 = parameters.get("legal2");
+
+        int refer1 = Integer.parseInt(parameters.get("refer1"));
+        String refer2 = parameters.get("refer2");
+        String refer3 = parameters.get("refer3");
+        String refer4 = parameters.get("refer4");
+
+        String paymt3 = null;
+        String paymt4 = null;
+
+        String tNTriage = null,oNOpd = null, sNSpecial = null,nFNumber ;
+        String nPayn = null, nNotpayn = null, nScheme = null, nNHIFnumb = null, nWaivernumb = null, nUniID = null, nStuID = null ;
+
+		switch(rooms1){
+			case 1: {
+                tNTriage = parameters.get("rooms2");
+				break;
+			}
+            case 2: {
+                oNOpd = parameters.get("rooms2");
+                break;
+            }
+            case 3: {
+                sNSpecial = parameters.get("rooms2");
+                nFNumber= parameters.get("rooms3");
+                break;
+            }
+		}
+
+        switch(paymt1){
+            case 1: {
+                paymt3 = "Paying";
+                if (paymt2 == 1){
+                    nPayn = "GENERAL";
+                }
+                else if (paymt2 == 2){
+                    nPayn = "CHILD LESS THAN 5 YEARS";
+                }
+                else if (paymt2 == 3){
+                    nPayn = "EXPECTANT MOTHER";
+                }
+
+                break;
+            }
+            case 2: {
+                paymt3 = "Non-Paying";
+
+                if (paymt2 == 1){
+                    nNotpayn = "NHIF CIVIL SERVANT";
+                    nNHIFnumb = parameters.get("modesummary");
+                }
+                else if (paymt2 == 2){
+                    nNotpayn = "CCC PATIENT";
+                }
+                else if (paymt2 == 3){
+                    nNotpayn = "TB PATIENT";
+                }
+                else if (paymt2 == 4){
+                    nNotpayn = "PRISIONER";
+                }
+
+                break;
+            }
+            case 3: {
+                paymt3 = "Special Schemes";
+
+                if (paymt2 == 1){
+                    nUniID = "";
+                    nStuID = parameters.get("modesummary");
+                    nScheme = "STUDENT SCHEME";
+                }
+                else if (paymt2 == 2){
+                    nWaivernumb = parameters.get("modesummary");
+                    nScheme = "WAIVER CASE";
+                }
+                else if (paymt2 == 3){
+                    nScheme = "DELIVERY CASE";
+                }
+
+                nFNumber= parameters.get("rooms3");
+                break;
+            }
+        }
+
+
+
+
+
+
 		Encounter encounter = RegistrationWebUtils.createEncounter(patient, false);
 
-		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_TRIAGE))) {
+		if (!StringUtils.isBlank(tNTriage)) {
 			Concept triageConcept = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_TRIAGE);
 
 			Concept selectedTRIAGEConcept = Context.getConceptService()
-					.getConcept(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_TRIAGE));
-			String selectedCategory = parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY);
+					.getConcept(tNTriage);
+
+			String selectedCategory = paymt3;
 			Obs triageObs = new Obs();
 			triageObs.setConcept(triageConcept);
 			triageObs.setValueCoded(selectedTRIAGEConcept);
 			encounter.addObs(triageObs);
 
 			RegistrationWebUtils.sendPatientToTriageQueue(patient, selectedTRIAGEConcept, false, selectedCategory);
-		} else if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_OPD_WARD))) {
+		} else if (!StringUtils.isBlank(oNOpd)) {
 			Concept opdConcept = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_OPD_WARD);
 			PatientQueueService queueService = (PatientQueueService) Context.getService(PatientQueueService.class);
 			Concept selectedOPDConcept = Context.getConceptService()
-					.getConcept(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_OPD_WARD));
-			String selectedCategory = parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY);
+					.getConcept(oNOpd);
+			String selectedCategory = paymt3;
 			Obs opdObs = new Obs();
 			opdObs.setConcept(opdConcept);
 			opdObs.setValueCoded(selectedOPDConcept);
@@ -284,8 +379,8 @@ public class NewPatientRegistrationPageController {
 					.getConcept(RegistrationConstants.CONCEPT_NAME_SPECIAL_CLINIC);
 			PatientQueueService queueService = (PatientQueueService) Context.getService(PatientQueueService.class);
 			Concept selectedSpecialClinicConcept = Context.getConceptService()
-					.getConcept(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SPECIAL_CLINIC));
-			String selectedCategory = parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY);
+					.getConcept(sNSpecial);
+			String selectedCategory = paymt3;
 			Obs opdObs = new Obs();
 			opdObs.setConcept(specialClinicConcept);
 			opdObs.setValueCoded(selectedSpecialClinicConcept);
@@ -315,39 +410,40 @@ public class NewPatientRegistrationPageController {
 
 		}
 
-		// payment category and registration fee
-		Concept cnrf = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_REGISTRATION_FEE);
-		Concept cnp = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NEW_PATIENT);
-		Obs obsn = new Obs();
-		obsn.setConcept(cnrf);
-		obsn.setValueCoded(cnp);
-		Double doubleVal = Double.parseDouble(parameters.get(RegistrationConstants.FORM_FIELD_REGISTRATION_FEE));
-		obsn.setValueNumeric(doubleVal);
-		obsn.setValueText(parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY));
-		if (parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY).equals("Paying")) {
-			obsn.setComment(parameters.get(RegistrationConstants.FORM_FIELD_PAYING_CATEGORY));
-		} else if (parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY).equals("Non-Paying")) {
-			obsn.setComment(parameters.get(RegistrationConstants.FORM_FIELD_NONPAYING_CATEGORY));
-		} else if (parameters.get(RegistrationConstants.FORM_FIELD_PAYMENT_CATEGORY).equals("Special Schemes")) {
-			obsn.setComment(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SPECIAL_SCHEME));
-		}
-		encounter.addObs(obsn);
+        // payment category and registration fee
+        Concept cnrf = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_REGISTRATION_FEE);
+        Concept cnp = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NEW_PATIENT);
+        Obs obsn = new Obs();
+        obsn.setConcept(cnrf);
+        obsn.setValueCoded(cnp);
+        Double doubleVal = Double.parseDouble(parameters.get(RegistrationConstants.FORM_FIELD_REGISTRATION_FEE));
+        obsn.setValueNumeric(doubleVal);
+        obsn.setValueText(paymt3);
+        if (paymt3.equals("Paying")) {
+            obsn.setComment(nPayn);
+        } else if (paymt3.equals("Non-Paying")) {
+            obsn.setComment(nNotpayn);
+        } else if (paymt3.equals("Special Schemes")) {
+            obsn.setComment(nScheme);
+        }
+        encounter.addObs(obsn);
 
-		Concept mlcConcept = Context.getConceptService()
-				.getConcept(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE);
+        Concept mlcConcept = Context.getConceptService()
+                .getConcept(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE);
 
-		Obs mlcObs = new Obs();
-		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_MLC))) {
-			Concept selectedMlcConcept = Context.getConceptService()
-					.getConcept(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_MLC));
-			mlcObs.setConcept(mlcConcept);
-			mlcObs.setValueCoded(selectedMlcConcept);
-			encounter.addObs(mlcObs);
-		} /*
+        Obs mlcObs = new Obs();
+        if (!StringUtils.isBlank(legal2)) {
+            Concept selectedMlcConcept = Context.getConceptService()
+                    .getConcept(legal2);
+            mlcObs.setConcept(mlcConcept);
+            mlcObs.setValueCoded(selectedMlcConcept);
+            encounter.addObs(mlcObs);
+        } /*
 			 * else { mlcObs.setConcept(mlcConcept);
 			 * mlcObs.setValueCoded(Context.getConceptService().getConcept(
 			 * "NO")); encounter.addObs(mlcObs); }
 			 */
+
 
 		/*
 		 * REFERRAL INFORMATION
@@ -357,7 +453,7 @@ public class NewPatientRegistrationPageController {
 				.getConcept(RegistrationConstants.CONCEPT_NAME_PATIENT_REFERRED_TO_HOSPITAL);
 		referralObs.setConcept(referralConcept);
 		encounter.addObs(referralObs);
-		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_REFERRED_FROM))) {
+		if (!StringUtils.isBlank(refer2)) {
 			referralObs.setValueCoded(Context.getConceptService().getConcept("YES"));
 
 			// referred from
@@ -366,7 +462,7 @@ public class NewPatientRegistrationPageController {
 					.getConcept(RegistrationConstants.CONCEPT_NAME_PATIENT_REFERRED_FROM);
 			referredFromObs.setConcept(referredFromConcept);
 			referredFromObs.setValueCoded(Context.getConceptService().getConcept(
-					Integer.parseInt(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_REFERRED_FROM))));
+					Integer.parseInt(refer2)));
 			encounter.addObs(referredFromObs);
 
 			// referred reason
@@ -375,9 +471,9 @@ public class NewPatientRegistrationPageController {
 					.getConcept(RegistrationConstants.CONCEPT_NAME_REASON_FOR_REFERRAL);
 			referredReasonObs.setConcept(referredReasonConcept);
 			referredReasonObs.setValueCoded(Context.getConceptService().getConcept(
-					Integer.parseInt(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_REFERRED_REASON))));
+					Integer.parseInt(refer4)));
 			referredReasonObs
-					.setValueText(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_REFERRED_DESCRIPTION));
+					.setValueText(refer3);
 			encounter.addObs(referredReasonObs);
 		} else {
 			referralObs.setValueCoded(Context.getConceptService().getConcept("NO"));

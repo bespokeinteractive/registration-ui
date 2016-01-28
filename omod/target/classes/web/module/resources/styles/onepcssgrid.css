@@ -35,7 +35,7 @@
  */
 .onepcssgrid-1000, .onepcssgrid-1200 {
 	margin: 0 auto;
-	padding: 0 0 0 1%; /* THAT'S THE NAME ;) */
+	padding: 0; /* THAT'S THE NAME ;) */
 }
 
 .onepcssgrid-1200 {
@@ -79,6 +79,16 @@
 .col10 { width: 82%; }
 .col11 { width: 90.5%; }
 .col12 { width: 99%; margin: 0; }
+.col13 { width: 20%; }
+.col14 { width: 20%; }
+
+.fixedwidth {
+	width:200px!important;
+}
+
+.underlines {
+	border-bottom: 1px solid #ddd;
+}
 
 .col1 img, .col2 img, .col3 img, .col4 img, .col5 img, .col6 img, .col7 img, .col8 img, .col9 img, .col10 img, .col11 img, .col12 img {
 	width: 100%;

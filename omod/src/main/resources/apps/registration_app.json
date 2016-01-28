@@ -2,7 +2,7 @@
   {
     "id": "registration.regApp",        // unique id for this app, unique across all apps, typically starts with your module id
     "description": "App for managing Registration operations",        // plain text or a message code (not displayed to end-users),
-    "order": 2,
+    "order": 1,
     "extensions": [
       {
         "id": "registration.registrationAppHomepageLink",
