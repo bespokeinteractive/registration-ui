@@ -75,6 +75,7 @@
             jQuery('#' + checkboxID).removeClass("red-border");
         });
 
+
         jQuery('input:text[id]').focusout(function (event) {
             var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", ""];
             var idd = jQuery(event.target).attr('id');
@@ -102,6 +103,7 @@
                 }
             }
         });
+
 
         jQuery(function () {
             jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
@@ -253,24 +255,17 @@
          });*/
 
 
-        jQuery("#payingCategoryField").hide();
-        jQuery("#nonPayingCategoryField").hide();
-        jQuery("#specialSchemeCategoryField").hide();
-		
+        //jQuery("#payingCategoryField").hide();
+       // jQuery("#nonPayingCategoryField").hide();
+       // jQuery("#specialSchemeCategoryField").hide();
 		jQuery('#payingCategory option').eq(1).prop('selected', true);
-		jQuery('#refer1 option').eq(2).prop('selected', true);
-		jQuery('#legal1 option').eq(2).prop('selected', true);
-		
         jQuery("#nhifNumberRow").hide();
         jQuery("#universityRow").hide();
         jQuery("#studentIdRow").hide();
         jQuery("#waiverNumberRow").hide();
-		
-		LoadLegalCases();
-		LoadReferralCases();
-		LoadPayCatg();
 
         //stans
+        jQuery("#mlc").hide();
         jQuery("#otherNationality").hide();
         jQuery("#referredFromColumn").hide();
         jQuery("#referralTypeRow").hide();
@@ -707,7 +702,18 @@
 						tab3++;
                     }
                 }
+
             }
+
+            /*if (jQuery("#maritalStatus").val() == "Marital") {
+             alert("Please select marital status of the patient");
+             return false;
+             } */
+
+            /*if (jQuery("#patientReligion").val() == "Religion") {
+             alert("Please select religion of the patient");
+             return false;
+             } */
 
 
 //            if (StringUtils.isBlank(jQuery("#patientPostalAddress").val())) {
@@ -830,6 +836,8 @@
 				jQuery('#relationshipType').removeClass("red-border");
 			}
 			
+			
+			
 			if (jQuery("#legal1").val() == 0){
 				jQuery('#legal1').addClass("red-border");
 				i++;
@@ -839,13 +847,13 @@
 				jQuery('#legal1').removeClass("red-border");
 			}
 
-            if ((jQuery("#legal1").val() == 1 && jQuery("#mlc").val().trim() == "") || jQuery('#mlc').val()==null) {
-                jQuery('#mlc').addClass("red-border");
+            if ((jQuery("#legal1").val() == 1 && jQuery("#legal2").val().trim() == "") || jQuery('#legal2').val()==null) {
+                jQuery('#legal2').addClass("red-border");
 				i++;
 				tab3++;
             }
             else {
-                jQuery('#mlc').removeClass("red-border");
+                jQuery('#legal2').removeClass("red-border");
             }
 
             if (jQuery("#refer1").val() == 0) {
@@ -857,22 +865,22 @@
 				jQuery('#refer1').removeClass("red-border");
             }
 			
-			if ((jQuery("#refer1").val() == 1 && jQuery("#referredFrom").val().trim() == "") || jQuery('#referredFrom').val()==null) {
-                jQuery('#referredFrom').addClass("red-border");
+			if ((jQuery("#refer1").val() == 1 && jQuery("#refer2").val().trim() == "") || jQuery('#refer2').val()==null) {
+                jQuery('#refer2').addClass("red-border");
 				i++;
 				tab3++;
             }
             else {
-                jQuery('#referredFrom').removeClass("red-border");
+                jQuery('#refer2').removeClass("red-border");
             }
 			
-			if ((jQuery("#refer1").val() == 1 && jQuery("#referralType").val().trim() == "") || jQuery('#referralType').val()==null) {
-                jQuery('#referralType').addClass("red-border");
+			if ((jQuery("#refer1").val() == 1 && jQuery("#refer4").val().trim() == "") || jQuery('#refer4').val()==null) {
+                jQuery('#refer4').addClass("red-border");
 				i++;
 				tab3++;
             }
             else {
-                jQuery('#referralType').removeClass("red-border");
+                jQuery('#refer4').removeClass("red-border");
             }
 			
 
@@ -897,15 +905,6 @@
 				return true;
 			}
 			else {
-				var str0 = "<div id='form-verification-x' onclick='verification_close();'>&#215;</div><p>Please fill in correctly the fields marked with * and highlighted in red. Also ensure that date fields have been entered in specified format</p>"
-				
-				if (str1 != ""){
-					str0 = str0 + '<p>' + str1 + '</p>'
-				}
-				
-				jQuery('#form-verification-failed').html(str0);
-				jQuery('#form-verification-failed').show();
-				jQuery('html, body').animate({ scrollTop: 100 }, 'slow');
 				return false;
 			}
 
@@ -1337,7 +1336,7 @@
 		var selectn = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 		if (selectn == 1){
 			jQuery('#ipaym_11').text('GENERAL');
-			jQuery('#ipaym_12').text('CHILD UNDER 5YRS');
+			jQuery('#ipaym_12').text('LESS THAN 5YRS');
 			jQuery('#ipaym_13').text('EXPECTANT MOTHER');
 			
 			jQuery('#tasktitle').text('Paying Category');
@@ -1411,7 +1410,7 @@
         jQuery('#modetype1').empty();
 
         if (jQuery("#paymode1").val() == 1) {
-            var myOptions = {1: 'GENERAL', 2: 'CHILD UNDER 5YRS', 3: 'EXPECTANT MOTHER'};
+            var myOptions = {1: 'GENERAL', 2: 'CHILDREN LESS THAN 5YRS', 3: 'EXPECTANT MOTHER'};
 
             var mySelect = jQuery('#modetype1');
             jQuery.each(myOptions, function (val, text) {
@@ -1468,77 +1467,63 @@
     }
 
     function LoadLegalCases() {
-        jQuery('#mlc').empty();
+        jQuery('#legal2').empty();
 
         if (jQuery("#legal1").val() == 1) {
-			PAGE.fillOptions("#mlc", {
+			PAGE.fillOptions("#legal2", {
 				data: MODEL.TEMPORARYCAT,
 				delimiter: ",",
 				optionDelimiter: "|"
 			});
-			
-			jQuery("#mlcCaseYes").attr('checked', 'checked');
-			jQuery("#mlcCaseNo").attr('checked', false);
         }
         else {
-            var myOptions = {" ": 'N/A'};
-            var mySelect = jQuery('#mlc');
+            var myOptions = {0: 'N/A'};
+            var mySelect = jQuery('#legal2');
             jQuery.each(myOptions, function (val, text) {
                 mySelect.append(
                         jQuery('<option></option>').val(val).html(text)
                 );
             });
-			
-			jQuery("#mlcCaseYes").attr('checked', false);
-			jQuery("#mlcCaseNo").attr('checked', 'checked');
         }
     }
     function LoadReferralCases() {
-        jQuery('#referredFrom').empty();
-        jQuery('#referralType').empty();
+        jQuery('#refer2').empty();
+        jQuery('#refer4').empty();
 
         if (jQuery("#refer1").val() == 1) {
-            PAGE.fillOptions("#referredFrom", {
+            PAGE.fillOptions("#refer2", {
 				data: MODEL.referredFrom,
 				delimiter: ",",
 				optionDelimiter: "|"
 			});
 
-            jQuery("#referralDescription").attr("readonly", false);
-            jQuery("#referralDescription").val("");
+            jQuery("#refer3").attr("readonly", false);
+            jQuery("#refer3").val("");
 			
-			PAGE.fillOptions("#referralType", {
+			PAGE.fillOptions("#refer4", {
 				data: MODEL.referralType,
 				delimiter: ",",
 				optionDelimiter: "|"
 			});
-			
-			jQuery("#referredYes").attr('checked', 'checked');
-			jQuery("#referredNo").attr('checked', false);
-			jQuery("#referraldiv").show();
         }
         else {
-            var myOptions = {" ": 'N/A'};
-            var mySelect = jQuery('#referredFrom');
+            var myOptions = {0: 'N/A'};
+            var mySelect = jQuery('#refer2');
             jQuery.each(myOptions, function (val, text) {
                 mySelect.append(
                         jQuery('<option></option>').val(val).html(text)
                 );
             });
 			
-			mySelect = jQuery('#referralType');
+			mySelect = jQuery('#refer4');
             jQuery.each(myOptions, function (val, text) {
                 mySelect.append(
                         jQuery('<option></option>').val(val).html(text)
                 );
             });
 
-            jQuery("#referralDescription").attr("readonly", true);
-            jQuery("#referralDescription").val("N/A");
-			
-			jQuery("#referredNo").attr('checked', 'checked');
-			jQuery("#referredYes").attr('checked', false);
-			jQuery("#referraldiv").hide();
+            jQuery("#refer3").attr("readonly", true);
+            jQuery("#refer3").val("N/A");
         }
     }
 	
@@ -1553,10 +1538,6 @@
             jQuery("#rooms3").attr("readonly", true);
             jQuery("#rooms3").val("N/A");
             jQuery('#froom2').text('Triage Rooms');
-			
-			jQuery("#triageRoom").attr('checked', 'checked');
-			jQuery("#opdRoom").attr('checked', false);
-			jQuery("#specialClinicRoom").attr('checked', false);
         }
         else if (jQuery("#rooms1").val() == 2) {
             PAGE.fillOptions("#rooms2", {
@@ -1568,10 +1549,6 @@
             jQuery("#rooms3").attr("readonly", true);
             jQuery("#rooms3").val("N/A");
             jQuery('#froom2').text('OPD Rooms');
-			
-			jQuery("#triageRoom").attr('checked', false);
-			jQuery("#opdRoom").attr('checked', 'checked');
-			jQuery("#specialClinicRoom").attr('checked', false);
         }
         else if (jQuery("#rooms1").val() == 3) {
             PAGE.fillOptions("#rooms2", {
@@ -1583,10 +1560,6 @@
             jQuery("#rooms3").attr("readonly", false);
             jQuery("#rooms3").val("");
             jQuery('#froom2').text('Special Clinic');
-			
-			jQuery("#triageRoom").attr('checked', false);
-			jQuery("#opdRoom").attr('checked', false);
-			jQuery("#specialClinicRoom").attr('checked', 'checked');
         }
         else {
             var myOptions = {0: 'N/A'};
@@ -1599,16 +1572,8 @@
 
             jQuery("#rooms3").attr("readonly", true);
             jQuery("#rooms3").val("N/A");
-			
-			jQuery("#triageRoom").attr('checked', false);
-			jQuery("#opdRoom").attr('checked', false);
-			jQuery("#specialClinicRoom").attr('checked', false);
         }
     }
-	
-	function verification_close(){
-		jQuery('#form-verification-failed').hide();
-	};
 
 
 
@@ -1779,45 +1744,6 @@
 .tasks-list-cb:checked ~ .tasks-list-desc {
   color: #34bf6e;
 }
-#form-verification-x{
-	color: #f00;
-    cursor: pointer;
-    float: right;
-    margin: -10px -22px 0;
-}
-.form-verifier-js {
-	padding:10px 30px;
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	box-sizing:border-box;
-	box-shadow:0 11px 5px -10px rgba(0,0,0,0.3);
-	border: 1px solid #F00;
-	margin-bottom: 15px;
-	display:none;
-}
-.form-verifier-js p {
-	padding-top:5px;
-	padding-bottom:0px;
-	margin-bottom: 5px;
-	
-}
-.form-duplicate-js {
-	padding:1px 30px 1px 30px;
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	box-sizing:border-box;
-	box-shadow:0 11px 5px -10px rgba(0,0,0,0.3);
-	border: 1px solid #F00;
-	margin-bottom: 15px;
-}
-.form-duplicate-js p {
-	padding-top:5px;
-	padding-bottom:0px;
-	margin-bottom: 5px;
-	
-}
 </style>
 
 <%
@@ -1835,10 +1761,7 @@
 	});
 </script>
 
-<div id="form-verification-failed" class="form-verifier-js">
-	<p> Please fill correctly the fields marked with * and/or ensure that dates have been entered in specified format.</p>
-</div>
-							
+
 <div id="content" class="container">
 	<form class="simple-form-ui" id="patientRegistrationForm" method="post">
 		
@@ -2035,16 +1958,14 @@
 					<div class="onerow">
 						<div class="col4">
 							<span id="otherNationality">
-								<br/>
-								<label for="otherNationalityId" style="margin:0px;">Specify Other</label>
-								<input type="text" id="otherNationalityId" name="person.attribute.39"
-									   placeholder="Please specify" class="form-textbox"/>
+								<input id="otherNationalityId" name="person.attribute.39"
+									   placeholder="If others,please specify" class="form-textbox"/>
 							</span>
 						</div>
 
-						<div class="col4">&nbsp;</div>
+						<div class="col4"></div>
 
-						<div class="col4 last">&nbsp;</div>
+						<div class="col4 last"></div>
 					</div>
 					
 					<div class="onerow" style="margin-top: 50px">
@@ -2124,7 +2045,7 @@
 					</div>
 
 					<div class="onerow">
-						<div class="col4"><label>Village</label></div>
+						<div class="col4"><label>Chiefdom</label></div>
 
 						<div class="col4"><label></label></div>
 
@@ -2250,7 +2171,7 @@
 								  <label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_2" id="paym_202" value="2" onchange="LoadPayCatgMode();" class="tasks-list-cb">
 										<span class="tasks-list-mark"></span>
-										<span class="tasks-list-desc" id="ipaym_12">CHILD UNDER 5YRS</span>
+										<span class="tasks-list-desc" id="ipaym_12">LESS THAN 5YRS</span>
 								  </label>
 								  <label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_2" id="paym_203" value="3" onchange="LoadPayCatgMode();" class="tasks-list-cb">
@@ -2284,7 +2205,7 @@
 						</div>
 
 						<div class="col4">
-							<label for="mlc" style="margin:0px;">Description</label>
+							<label for="legal2" style="margin:0px;">Description</label>
 						</div>
 
 						<div class="col4 last"></div>
@@ -2303,7 +2224,7 @@
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="mlc" name="patient.mlc">
+								<select id="legal2" name="legal2">
 								</select>
 							</span>
 						</div>
@@ -2317,11 +2238,11 @@
 						</div>
 
 						<div class="col4">
-							<label for="referredFrom" style="margin:0px;">Referred From</label>
+							<label for="refer2" style="margin:0px;">Referred From</label>
 						</div>
 
 						<div class="col4 last">
-							<label for="referralType" style="margin:0px;">Referral Type</label>
+							<label for="refer4" style="margin:0px;">Referral Type</label>
 						</div>
 					</div>
 
@@ -2338,25 +2259,24 @@
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="referredFrom" name="patient.referred.from">
+								<select id="refer2" name="refer2">
 								</select>
 							</span>
 						</div>
 
 						<div class="col4 last">
 							<span class="select-arrow" style="width: 100%">
-								<select id="referralType" name="patient.referred.reason">
+								<select id="refer4" name="refer4">
 								</select>
 							</span>
 						</div>
 					</div>
 					
-					<div class="onerow" id="referraldiv" style="padding-top:-5px; display:none;">
-						<label for="referralDescription" style="margin-top:20px;">Comments</label>
-						<textarea type="text" id="referralDescription" name="patient.referred.description" value="N/A" placeholder="COMMENTS" readonly="" style="height: 80px; width: 700px;"></textarea>
+					<div class="onerow" style="padding-top:-5px;">
+						<label for="refer4" style="margin-top:20px;">Comments</label>
+						<textarea type="text" id="refer3" name="refer3" value="N/A" placeholder="COMMENTS" readonly="" style="height: 80px; width: 710px;"></textarea>
 					</div>
 					
-					<h2>&nbsp;</h2>
 					<h2>Room to Visit</h2>
 
 					<div class="onerow" style="margin-top:10px;">
@@ -2396,35 +2316,25 @@
 							<input type="text" id="rooms3" name="rooms3" value="N/A" placeholder="FILE NUMBER" readonly=""/>
 						</div>
 					</div>
+					
+					
 
 					<div class="onerow" style="display:none!important;">
 						<div class="col4">
-							<input id="paying" type="checkbox" name="person.attribute.14" value="Paying" checked /> Paying
-						</div>
+							<input id="paying" type="checkbox" name="person.attribute.14"
+												 value="Paying" checked /> Paying</div>
 
-						<div class="col4">
-							<input id="nonPaying" type="checkbox" name="person.attribute.14" value="Non-Paying"/> Non-Paying
-						</div>
+						<div class="col4"><input id="nonPaying" type="checkbox" name="person.attribute.14"
+												 value="Non-Paying"/> Non-Paying</div>
 
-						<div class="col4 last">
-							<input id="specialSchemes" type="checkbox" name="person.attribute.14" value="Special Schemes"/> Special Schemes
-						</div>
-													  
-						<input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">
-						<input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>
-						<input id="referredYes" type="checkbox" name="referredYes"/> 
-						<input id="referredNo" type="checkbox" name="referredNo"/>
-						
-						<input id="triageRoom" type="checkbox" name="triageRoom"/>
-						<input id="opdRoom" type="checkbox" name="opdRoom"/>
-						<input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
+						<div class="col4 last"><input id="specialSchemes" type="checkbox" name="person.attribute.14"
+													  value="Special Schemes"/> Special Schemes</div>
 					</div>
 
 					<div class="onerow" style="display:none!important;">
 						<div class="col4">&nbsp;
 							<span id="payingCategoryField">
 							<span class="select-arrow" style="width: 100%">
-								<select id="payingCategory" name="person.attribute.44"
 								<select id="payingCategory" name="person.attribute.44"
 										onchange="payingCategorySelection();"
 										class="form-combo1" style="display:block!important"></select></span>
