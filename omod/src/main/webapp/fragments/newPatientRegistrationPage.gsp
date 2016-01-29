@@ -2035,7 +2035,6 @@
 					<div class="onerow">
 						<div class="col4">
 							<span id="otherNationality">
-								<br/>
 								<label for="otherNationalityId" style="margin:0px;">Specify Other</label>
 								<input type="text" id="otherNationalityId" name="person.attribute.39"
 									   placeholder="Please specify" class="form-textbox"/>
