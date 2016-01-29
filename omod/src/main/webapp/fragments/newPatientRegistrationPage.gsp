@@ -258,6 +258,7 @@
         jQuery("#specialSchemeCategoryField").hide();
 		
 		jQuery('#payingCategory option').eq(1).prop('selected', true);
+		jQuery('#university option').eq(1).prop('selected', true);
 		jQuery('#refer1 option').eq(2).prop('selected', true);
 		jQuery('#legal1 option').eq(2).prop('selected', true);
 		
@@ -1379,18 +1380,28 @@
 		if ((select1 == 2) && (select2==1)){
 			jQuery("#modesummary").attr("readonly", false);
             jQuery("#modesummary").val("");
-            jQuery('#summtitle1').text('NHIF Number');
+			jQuery('#universitydiv').hide();
+            jQuery('#summtitle1').text('NHIF Summary');
 			jQuery('#modesummary').attr("placeholder", "NHIF Number");
+		}
+		else if ((select1 == 3) && (select2==1)){
+			jQuery("#modesummary").attr("readonly", false);
+            jQuery("#modesummary").val("");
+			jQuery('#universitydiv').show();
+            jQuery('#summtitle1').text('Student Summary');
+			jQuery('#modesummary').attr("placeholder", "Student Number");
 		}
 		else if ((select1 == 3) && (select2==2)){
 			jQuery("#modesummary").attr("readonly", false);
             jQuery("#modesummary").val("");
-            jQuery('#summtitle1').text('Waiver Number');
+			jQuery('#universitydiv').hide();
+            jQuery('#summtitle1').text('Waiver Summary');
 			jQuery('#modesummary').attr("placeholder", "Waiver Number");
 		}
 		else {
 			jQuery("#modesummary").attr("readonly", false);
             jQuery("#modesummary").val("N/A");
+			jQuery('#universitydiv').hide();
             jQuery('#summtitle1').text('Summary');
 			jQuery('#modesummary').attr("placeholder", "Enter Value");
 			
@@ -2270,6 +2281,12 @@
 									<a class="tasks-lists"></a>
 								</header>
 							</div>
+							
+							<span id="universitydiv" class="select-arrow" style="width: 100%">
+								<select style="width: 101%;" name="person.attribute.47" id="university">&nbsp;</select>
+							</span>
+							
+							
 							
 							<input type="text" id="modesummary" name="modesummary" value="N/A" placeholder="WAIVER NUMBER"
 								   readonly="" style="width: 101%!important"/>

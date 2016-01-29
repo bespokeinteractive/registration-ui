@@ -305,7 +305,7 @@ public class NewPatientRegistrationPageController {
                 paymt3 = "Special Schemes";
 
                 if (paymt2 == 1){
-                    nUniID = "";
+                    nUniID = parameters.get("university");
                     nStuID = parameters.get("modesummary");
                     nScheme = "STUDENT SCHEME";
                 }
