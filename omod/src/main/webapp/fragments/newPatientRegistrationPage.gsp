@@ -811,7 +811,7 @@
 				}
             }
 			
-            if (jQuery("#relationshipType").val() == 0) {
+            if (jQuery("#relationshipType").val() == 0 || jQuery("#relationshipType").val().trim() == "") {
 				jQuery('#relationshipType').addClass("red-border");
 				i++;
 				tab2++;
@@ -822,12 +822,12 @@
 
             if (jQuery("#relativePostalAddress").val().length > 255) {
 				str1 = str1+"Kin Physical Address should not exceed more than 255 characters. ";
-                jQuery('#relationshipType').addClass("red-border");
+                jQuery('#relativePostalAddress').addClass("red-border");
 				i++;
 				tab2++;
             }
 			else {
-				jQuery('#relationshipType').removeClass("red-border");
+				jQuery('#relativePostalAddress').removeClass("red-border");
 			}
 			
 			if (jQuery("#legal1").val() == 0){
@@ -1376,15 +1376,24 @@
 		var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 		var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 		
-		if ((select1 == 3) && (select2==2)){
+		if ((select1 == 2) && (select2==1)){
+			jQuery("#modesummary").attr("readonly", false);
+            jQuery("#modesummary").val("");
+            jQuery('#summtitle1').text('NHIF Number');
+			jQuery('#modesummary').attr("placeholder", "NHIF Number");
+		}
+		else if ((select1 == 3) && (select2==2)){
 			jQuery("#modesummary").attr("readonly", false);
             jQuery("#modesummary").val("");
             jQuery('#summtitle1').text('Waiver Number');
+			jQuery('#modesummary').attr("placeholder", "Waiver Number");
 		}
 		else {
 			jQuery("#modesummary").attr("readonly", false);
             jQuery("#modesummary").val("N/A");
             jQuery('#summtitle1').text('Summary');
+			jQuery('#modesummary').attr("placeholder", "Enter Value");
+			
 		}
 		
 		if (select1 == 1){
@@ -2033,7 +2042,7 @@
 					</div>
 
 					<div class="onerow">
-						<div class="col4">
+						<div class="col4" style="padding-top: 5px;">
 							<span id="otherNationality">
 								<label for="otherNationalityId" style="margin:0px;">Specify Other</label>
 								<input type="text" id="otherNationalityId" name="person.attribute.39"
@@ -2051,12 +2060,6 @@
 							<span>NEXT PAGE</span>
 						</a>
 					</div>
-					
-					
-					
-					
-
-				
 				</div>
 					
 					<div class="selectdiv"  id="selected-diagnoses"></div>
