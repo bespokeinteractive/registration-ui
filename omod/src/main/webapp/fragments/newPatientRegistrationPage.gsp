@@ -1,5 +1,8 @@
 <script type="text/javascript">
     var MODEL;
+	var emrMessages = {};
+	emrMessages["requiredField"] = "Required";
+
     jQuery(document).ready(function () {
 
         // Districts
@@ -76,7 +79,7 @@
         });
 
         jQuery('input:text[id]').focusout(function (event) {
-            var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", ""];
+            var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", "otherNationalityId", ""];
             var idd = jQuery(event.target).attr('id');
 
             if (jQuery.inArray(idd, arr) != -1) {
@@ -94,7 +97,7 @@
             var idd = jQuery(event.target).attr('id');
 
             if (jQuery.inArray(idd, arr) != -1) {
-                if (jQuery('#' + idd).val() == 0) {
+                if (jQuery('#' + idd).val() == 0 || jQuery('#' + idd).val().trim() == "") {
                     jQuery('#' + idd).addClass("red-border");
                 }
                 else {
@@ -269,6 +272,7 @@
 		
 		LoadLegalCases();
 		LoadReferralCases();
+		showOtherNationality();
 		LoadPayCatg();
 
         //stans
@@ -615,15 +619,20 @@
         /** VALIDATE FORM */
         validateRegisterForm: function () {
 			var i = 0;
-			var tab1 =0;
-			var tab2 =0;
-			var tab3 =0;
+			var tab1 = 0;
+			var tab2 = 0;
+			var tab3 = 0;
+			var tab4 = 0;
+
+			var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+			var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 			
 			var str1 ='';
 
 //            if (StringUtils.isBlank(jQuery("#surName").val())) {
             if (!(jQuery("#surName").val().trim())) {
 				jQuery('#surName').addClass("red-border");
+				tab1++;
                 i++;
             }
             else {
@@ -633,6 +642,7 @@
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
 					jQuery('#surName').addClass("red-border");
+					tab1++;
 					i++;
                 }
 				else{
@@ -641,9 +651,10 @@
 
             }
 
-//            if (StringUtils.isBlank(jQuery("#firstName").val())) {
+			//if (StringUtils.isBlank(jQuery("#firstName").val())) {
             if (!(jQuery("#firstName").val().trim())) {
                 jQuery('#firstName').addClass("red-border");
+				tab1++;
                 i++;
             }
             else {
@@ -653,12 +664,12 @@
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
                     jQuery('#firstName').addClass("red-border");
+					tab1++;
 					i++;
                 }
 				else {
 					jQuery('#firstName').removeClass("red-border");
 				}
-
             }
 
 //            if (!StringUtils.isBlank(jQuery("#otherName").val())) {
@@ -669,6 +680,7 @@
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
                     jQuery('#otherName').addClass("red-border");
+					tab1++;
 					i++;
                 }
 				else{
@@ -678,92 +690,58 @@
 
             if (!(jQuery("#birthdate").val().trim())) {
                 jQuery('#birthdate').addClass("red-border");
+				tab1++;
 				i++;
             }
 			else{
 				jQuery('#birthdate').removeClass("red-border");
 			}
 			
-			
-
-            if (jQuery("#patientGender").val() == 0) {
+            if (jQuery("#patientGender").val() == 0 || jQuery("#patientGender").val().trim() == "") {
                 jQuery('#patientGender').addClass("red-border");
 				i++;
+				tab1++;
             }
-            else {
-                var selectedPayingCategory = jQuery("#paymode1").val();
-                var selectedSpecialScheme = jQuery("#modetype1").val();
-                if (selectedPayingCategory == 3) {
-                    if (jQuery("#patientGender").val() == 1) {
-                        str1 = 'Selected Scheme Doesnt Match the Gender Selected. ';
-						i++;
-						tab3++;
-                    }
-                }
-
-                if (selectedPayingCategory == 9) {
-                    if (jQuery("#patientGender").val() == 1) {
-                        str1 = str1+'Selected Payment category is only valid for Female. ';
-                        i++;
-						tab3++;
-                    }
-                }
+            else if (select1 == 1 && select2 == 3 && jQuery("#patientGender").val() == "M") {
+				str1 = 'The selected Scheme Doesnt Match the Gender Selected. ';
+				jQuery('#patientGender').addClass("red-border");
+				i++;
+				tab1++;
+			}
+			else if (jQuery("#patientGender").val() == "M" && jQuery("#maritalStatus").val() == "Widow") {
+                str1 = str1+ 'Widow marital status is only for Female. ';
+                jQuery('#maritalStatus').addClass("red-border");
+				i++;
+				tab1++;
             }
-
-
-//            if (StringUtils.isBlank(jQuery("#patientPostalAddress").val())) {
+			else if (jQuery("#patientGender").val() == "F" && jQuery("#maritalStatus").val() == "Widower") {
+                str1 = str1+ 'Widower marital status is only for Male. ';
+                jQuery('#maritalStatus').addClass("red-border");
+				i++;
+				tab1++;
+            }
+			else{
+				jQuery('#patientGender').removeClass("red-border");
+            }
+			
+			
+			
+			//TAB2
             if (!(jQuery("#patientPostalAddress").val().trim())) {
                 jQuery('#patientPostalAddress').addClass("red-border");
-				i++;
 				tab2++;
-            }
-            else {
-                if (jQuery("#patientPostalAddress").val().length > 255) {
-                    jQuery('#patientPostalAddress').addClass("red-border");
-					i++;
-					tab2++;
-                }
-				else{
-					jQuery('#patientPostalAddress').removeClass("red-border");
-				}
-            }
-
-            if (jQuery("#patientGender").val() == 1 && jQuery("#maritalStatus").val() == "Widow") {
-                str1 = str1+'Widow marital status is only for Female. ';
-                jQuery('#maritalStatus').addClass("red-border");
 				i++;
-				tab1++;
             }
+            else if (jQuery("#patientPostalAddress").val().length > 255) {
+				str1 = str1+ 'Too much information provided for Physical Address. ';
+				jQuery('#patientPostalAddress').addClass("red-border");
+				tab2++;
+				i++;
+			}
 			else {
-				jQuery('#maritalStatus').removeClass("red-border");
+				jQuery('#patientPostalAddress').removeClass("red-border");
 			}
 			
-			//paym_1
-
-            if (jQuery("#patientGender").val() == 2 && jQuery("#maritalStatus").val() == "Widower") {
-                str1 = str1+'Widower marital status is only for Male. ';
-                jQuery('#maritalStatus').addClass("red-border");
-				i++;
-				tab1++;
-            }
-
-//            if (!StringUtils.isBlank(jQuery("#patientPhoneNumber").val())) {
-            if ((jQuery("#patientPhoneNumber").val().trim())) {
-//                if (!StringUtils.isDigit(jQuery("#patientPhoneNumber").val())) {
-                if (isNaN(jQuery("#patientPhoneNumber").val())) {
-                    str1 = str1+"Please enter the patient's contact number in correct format. ";
-					jQuery('#patientPhoneNumber').addClass("red-border");
-					i++;
-					tab1++;
-                }
-				else {
-					jQuery('#patientPhoneNumber').removeClass("red-border");
-				}
-            }
-			
-			
-
-//            if (!StringUtils.isBlank(jQuery("#patientEmail").val())) {
             if ((jQuery("#patientEmail").val().trim())) {
                 var x = jQuery("#patientEmail").val();
                 var regExpForEmail =
@@ -779,17 +757,8 @@
                 }
 
             }
-
-            if (jQuery("#paymode1").val() == 0) {
-                jQuery('#paymode1').addClass("red-border");
-				i++;
-				tab3++;
-            }
-			else {
-				jQuery('#paymode1').removeClass("red-border");
-			}
-
-//            if (StringUtils.isBlank(jQuery("#patientRelativeName").val())) {
+			
+			//NOK HERE
             if (!(jQuery("#patientRelativeName").val().trim())) {
                 jQuery('#patientRelativeName').addClass("red-border");
 				i++;
@@ -822,7 +791,7 @@
 			}
 
             if (jQuery("#relativePostalAddress").val().length > 255) {
-				str1 = str1+"Kin Physical Address should not exceed more than 255 characters. ";
+				str1 = str1+"Next of Kin Physical Address should not exceed more than 255 characters. ";
                 jQuery('#relativePostalAddress').addClass("red-border");
 				i++;
 				tab2++;
@@ -831,6 +800,7 @@
 				jQuery('#relativePostalAddress').removeClass("red-border");
 			}
 			
+			//TAB3
 			if (jQuery("#legal1").val() == 0){
 				jQuery('#legal1').addClass("red-border");
 				i++;
@@ -885,6 +855,28 @@
 			else {
 				jQuery('#rooms1').removeClass("red-border");
             }
+			
+			
+			if (jQuery("#rooms2").val() == 0 || jQuery("#rooms2").val() == "" || jQuery("#rooms2").val() == null) {
+                jQuery('#rooms2').addClass("red-border");
+				i++;
+				tab3++;
+            }
+			else {
+				jQuery('#rooms2').removeClass("red-border");
+            }
+			
+			if (jQuery("#rooms1").val() == 3 && jQuery("#rooms3").val().trim() == "") {
+                jQuery('#rooms3').addClass("red-border");
+				i++;
+				tab3++;
+            }
+			else {
+				jQuery('#rooms3').removeClass("red-border");
+            }
+			
+			
+			
             //submitNationalIDAndPassportNumber();
 //            if (validateNationalIDAndPassportNumber()) {
 //                return true;
@@ -901,7 +893,7 @@
 				var str0 = "<div id='form-verification-x' onclick='verification_close();'>&#215;</div><p>Please fill in correctly the fields marked with * and highlighted in red. Also ensure that date fields have been entered in specified format</p>"
 				
 				if (str1 != ""){
-					str0 = str0 + '<p>' + str1 + '</p>'
+					str0 = str0 + '<p><span style="color:#f00;"><i class="icon-quote-left" style="font-size: 18px">&nbsp;</i>Also Note: </span>' + str1 + '</p>'
 				}
 				
 				jQuery('#form-verification-failed').html(str0);
@@ -909,8 +901,6 @@
 				jQuery('html, body').animate({ scrollTop: 100 }, 'slow');
 				return false;
 			}
-
-            
         }
     };
 
@@ -1136,9 +1126,12 @@
         var optionValue = jQuery("#patientNation option:selected").text();
         if (optionValue == "Other") {
             jQuery("#otherNationality").show();
+			jQuery('#otherNationalityId').removeClass("disabled");
+			
         }
         else {
             jQuery("#otherNationality").hide();
+			jQuery('#otherNationalityId').addClass("disabled");
         }
     }
 
@@ -1196,7 +1189,7 @@
         else {
 
             if (select1 == 1 && select2 == 3) {
-                if (jQuery("#patientGender").val() == 1) {
+                if (jQuery("#patientGender").val() == "M") {
                     alert("This category is only valid for female");
                 }
             }
@@ -1629,6 +1622,16 @@
 	function verification_close(){
 		jQuery('#form-verification-failed').hide();
 	};
+	
+	function goto_next_tab(current_tab){
+		if (current_tab == 1){
+			jQuery('#passportNumber').focus();
+		}
+		
+		
+		
+		NavigatorController.stepForward();
+	}
 
 
 
@@ -1863,67 +1866,72 @@
 	<form class="simple-form-ui" id="patientRegistrationForm" method="post">
 		
 		<section id="charges-info2" style="width:74%">
-			<fieldset>                        
+			<span class="title">Patient Details</span>
+			<fieldset class="no-confirmation">                        
 				<legend>Demographics</legend>                        
 				
-				<div >
+				<p>
 					<div class="onerow">
-						<div class="col4"><label>Surname <span>*</span></label></div>
+						<div class="col4">
+						<label>Surname <span>*</span></label></div>
 						<div class="col4"><label>First Name <span>*</span></label></div>
 						<div class="col4 last"><label>Other Name</label></div>
 					</div>
 					
 					<div class="onerow">
 						<div class="col4">
-							<input type="text" id="surName" name="patient.surName" class="form-textbox1"/>
+							<field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/></field>
 							<input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee" />
 							<input type="hidden" name="patient.identifier" value="${patientIdentifier}" 	/>
 						</div>
 
 						<div class="col4">
-							<input type="text" id="firstName" name="patient.firstName" class="form-textbox1"/>
+							<field><input type="text" id="firstName" name="patient.firstName" class="required form-textbox1"/></field>
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/>
+							<field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/></field>
 						</div>
 					</div>
 					
 					<div class="onerow">
 						<div class="col4"><label>Gender<span>*</span></label></div>
-
 						<div class="col4"><label>Marital Status</label></div>
-
 						<div class="col4 last"><label>Age or D.O.B<span>*</span></label></div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="patientGender" name="patient.gender" class="form-combo1">
-									<option value=0></option>
-									<option value="M">Male</option>
-									<option value="F">Female</option>
-								</select>
+								<field>
+									<select id="patientGender" name="patient.gender" class="required form-combo1">
+										<option value=""></option>
+										<option value="M">Male</option>
+										<option value="F">Female</option>
+									</select>
+								</field>
+								
 							</span>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="maritalStatus" name="person.attribute.26" class="form-combo1">
-									<option value="Marital"></option>
-									<option value="Single">Single</option>
-									<option value="Married">Married</option>
-									<option value="Divorced">Divorced</option>
-									<option value="Widow">Widow</option>
-									<option value="Widower">Widower</option>
-									<option value="Separated">Separated</option>
-								</select>
+								<field>
+									<select id="maritalStatus" name="person.attribute.26" class="form-combo1">
+										<option value="Marital"></option>
+										<option value="Single">Single</option>
+										<option value="Married">Married</option>
+										<option value="Divorced">Divorced</option>
+										<option value="Widow">Widow</option>
+										<option value="Widower">Widower</option>
+										<option value="Separated">Separated</option>
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="birthdate" name="patient.birthdate"/>
+							<field><input type="text" id="birthdate" name="patient.birthdate" class="required form-textbox1"/></field>
 							<inputbirthdateEstimated id="" type="hidden"
 													 name="patient.birthdateEstimate" value="true"/>
 						</div>
@@ -1931,11 +1939,9 @@
 					
 					<div class="onerow">&nbsp;
 						<div class="col4"><label>Religion</label></div>
-
 						<div class="col4">&nbsp;
 							<input type="hidden" id="estimatedAgeInYear" name="estimatedAgeInYear"/>
 						</div>
-
 						<div class="col4 last">&nbsp;
 							<span id="estimatedAge"/>
 						</div>
@@ -1944,9 +1950,10 @@
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="patientReligion" name="person.attribute.${personAttributeReligion.id}"
-										class="form-combo1">
-								</select>
+								<field>
+									<select id="patientReligion" name="person.attribute.${personAttributeReligion.id}" class="form-combo1">
+									</select>
+								</field>
 							</span>
 						</div>
 
@@ -1961,9 +1968,7 @@
 
 					<div class="onerow">
 						<div class="col4"><label>Nationality</label></div>
-
 						<div class="col4"><label>National ID:</label></div>
-
 						<div class="col4 last"><label>Passport No.</label></div>
 					</div>
 
@@ -1971,83 +1976,83 @@
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="patientNation" name="person.attribute.27"
-										onchange="showOtherNationality();" class="form-combo1">
-									<option value="Kenya">Kenya</option>
-									<option value="East Africa">East Africa</option>
-									<option value="Kenyan">Africa</option>
-									<option value="Algeria">Algeria</option>
-									<option value="Angola">Angola</option>
-									<option value="Benin">Benin</option>
-									<option value="Botswana">Botswana</option>
-									<option value="Burkina Faso">Burkina Faso</option>
-									<option value="Burundi">Burundi</option>
-									<option value="Cameroon">Cameroon</option>
-									<option value="Cape Verde">Cape Verde</option>
-									<option value="Central African Republic">Central African Republic</option>
-									<option value="Chad">Chad</option>
-									<option value="Comoros">Comoros</option>
-									<option value="Cote d'Ivoire">Cote d'Ivoire</option>
-									<option value="Democratic Republic of Congo">Democratic Republic of Congo</option>
-									<option value="Djibouti">Djibouti</option>
-									<option value="Egypt">Egypt</option>
-									<option value="Equatorial Guinea">Equatorial Guinea</option>
-									<option value="Eritrea">Eritrea</option>
-									<option value="Ethiopia">Ethiopia</option>
-									<option value="Gabon">Gabon</option>
-									<option value="Gambia">Gambia</option>
-									<option value="Ghana">Ghana</option>
-									<option value="Guinea">Guinea</option>
-									<option value="Guinea-Bissau">Guinea-Bissau</option>
-									<option value="Lesotho">Lesotho</option>
-									<option value="Liberia">Liberia</option>
-									<option value="Libya">Libya</option>
-									<option value="Madagascar">Madagascar</option>
-									<option value="Malawi">Malawi</option>
-									<option value="Mali">Mali</option>
-									<option value="Mauritania">Mauritania</option>
-									<option value="Mauritius">Mauritius</option>
-									<option value="Morocco">Morocco</option>
-									<option value="Mozambique">Mozambique</option>
-									<option value="Namibia">Namibia</option>
-									<option value="Niger">Niger</option>
-									<option value="Nigeria">Nigeria</option>
-									<option value="Republic of Congo">Republic of Congo</option>
-									<option value="Rwanda">Rwanda</option>
-									<option value="Sao Tome and Principe">Sao Tome and Principe</option>
-									<option value="Senegal">Senegal</option>
-									<option value="Seychelles">Seychelles</option>
-									<option value="Sierra Leone">Sierra Leone</option>
-									<option value="Somalia">Somalia</option>
-									<option value="South Africa">South Africa</option>
-									<option value="South Sudan">South Sudan</option>
-									<option value="Sudan">Sudan</option>
-									<option value="Swaziland">Swaziland</option>
-									<option value="Tanzania">Tanzania</option>
-									<option value="Togo">Togo</option>
-									<option value="Tunisia">Tunisia</option>
-									<option value="Uganda">Uganda</option>
-									<option value="Zambia">Zambia</option>
-									<option value="Zimbabwe">Zimbabwe</option>
-									<option value="Other">Other</option>
-								</select>
+								<field>
+									<select id="patientNation" name="person.attribute.27" onchange="showOtherNationality();" class="form-combo1">
+										<option value="Kenya">Kenya</option>
+										<option value="East Africa">East Africa</option>
+										<option value="Kenyan">Africa</option>
+										<option value="Algeria">Algeria</option>
+										<option value="Angola">Angola</option>
+										<option value="Benin">Benin</option>
+										<option value="Botswana">Botswana</option>
+										<option value="Burkina Faso">Burkina Faso</option>
+										<option value="Burundi">Burundi</option>
+										<option value="Cameroon">Cameroon</option>
+										<option value="Cape Verde">Cape Verde</option>
+										<option value="Central African Republic">Central African Republic</option>
+										<option value="Chad">Chad</option>
+										<option value="Comoros">Comoros</option>
+										<option value="Cote d'Ivoire">Cote d'Ivoire</option>
+										<option value="Democratic Republic of Congo">Democratic Republic of Congo</option>
+										<option value="Djibouti">Djibouti</option>
+										<option value="Egypt">Egypt</option>
+										<option value="Equatorial Guinea">Equatorial Guinea</option>
+										<option value="Eritrea">Eritrea</option>
+										<option value="Ethiopia">Ethiopia</option>
+										<option value="Gabon">Gabon</option>
+										<option value="Gambia">Gambia</option>
+										<option value="Ghana">Ghana</option>
+										<option value="Guinea">Guinea</option>
+										<option value="Guinea-Bissau">Guinea-Bissau</option>
+										<option value="Lesotho">Lesotho</option>
+										<option value="Liberia">Liberia</option>
+										<option value="Libya">Libya</option>
+										<option value="Madagascar">Madagascar</option>
+										<option value="Malawi">Malawi</option>
+										<option value="Mali">Mali</option>
+										<option value="Mauritania">Mauritania</option>
+										<option value="Mauritius">Mauritius</option>
+										<option value="Morocco">Morocco</option>
+										<option value="Mozambique">Mozambique</option>
+										<option value="Namibia">Namibia</option>
+										<option value="Niger">Niger</option>
+										<option value="Nigeria">Nigeria</option>
+										<option value="Republic of Congo">Republic of Congo</option>
+										<option value="Rwanda">Rwanda</option>
+										<option value="Sao Tome and Principe">Sao Tome and Principe</option>
+										<option value="Senegal">Senegal</option>
+										<option value="Seychelles">Seychelles</option>
+										<option value="Sierra Leone">Sierra Leone</option>
+										<option value="Somalia">Somalia</option>
+										<option value="South Africa">South Africa</option>
+										<option value="South Sudan">South Sudan</option>
+										<option value="Sudan">Sudan</option>
+										<option value="Swaziland">Swaziland</option>
+										<option value="Tanzania">Tanzania</option>
+										<option value="Togo">Togo</option>
+										<option value="Tunisia">Tunisia</option>
+										<option value="Uganda">Uganda</option>
+										<option value="Zambia">Zambia</option>
+										<option value="Zimbabwe">Zimbabwe</option>
+										<option value="Other">Other</option>
+									</select>
+								</field>
 							</span>
-
 						</div>
 
 						<div class="col4">
-							<input type="text" id="patientNationalId" name="person.attribute.20"
-								   onblur="submitNationalID();" class="form-textbox1"/>
+							<field>
+								<input type="text" id="patientNationalId" name="person.attribute.20" onblur="submitNationalID();" class="form-textbox1"/>
+							</field>
 							<span type="text" style="color: red;" id="nationalIdValidationMessage"></span>
-
 							<div id="divForNationalId"></div>
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="passportNumber" name="person.attribute.38"
-								   onblur="submitPassportNumber();" class="form-textbox1"/>
+							<field>
+								<input type="text" id="passportNumber" name="person.attribute.38" onblur="submitPassportNumber();" class="form-textbox1"/>
+							</field>
 							<span style="color: red;" id="passportNumberValidationMessage"></span>
-
 							<div id="divForpassportNumber"></div>
 						</div>
 					</div>
@@ -2056,8 +2061,8 @@
 						<div class="col4" style="padding-top: 5px;">
 							<span id="otherNationality">
 								<label for="otherNationalityId" style="margin:0px;">Specify Other</label>
-								<input type="text" id="otherNationalityId" name="person.attribute.39"
-									   placeholder="Please specify" class="form-textbox"/>
+								<field><input type="text" id="otherNationalityId" name="person.attribute.39" placeholder="Please specify" class="form-textbox"/></field>
+								
 							</span>
 						</div>
 
@@ -2067,94 +2072,88 @@
 					</div>
 					
 					<div class="onerow" style="margin-top: 50px">
-						<a class="button confirm" href="#" style="float:right; display:inline-block;">
+						<a class="button confirm" style="float:right; display:inline-block;" onclick="goto_next_tab(1);">
 							<span>NEXT PAGE</span>
 						</a>
 					</div>
-				</div>
+				</p>
 					
 					<div class="selectdiv"  id="selected-diagnoses"></div>
 				                  
 			</fieldset>
 			<fieldset style="min-width: 500px; width: auto">                        
 				<legend>Contact Info</legend>
-				<div>
+				<p>
 					<h2>Patient Contact Information</h2>
-
 					<div class="onerow">
 						<div class="col4"><label>Contact Number</label></div>
-
 						<div class="col4"><label>Email Address</label></div>
-
 						<div class="col4 last"><label>Physical Address <span>*</span></label></div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4">
-							<input type="text" id="patientPhoneNumber" name="person.attribute.16" class="form-textbox1"/>
+							<field><input type="text" id="patientPhoneNumber" name="person.attribute.16" class="form-textbox1"/></field>
 						</div>
 
 						<div class="col4">
-							<input type="text" id="patientEmail" name="person.attribute.37" class="form-textbox1"/>
+							<field><input type="text" id="patientEmail" name="person.attribute.37" class="form-textbox1"/></field>
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="patientPostalAddress" name="patient.address.postalAddress"
-								   class="form-textbox1"/>
+							<field><input type="text" id="patientPostalAddress" name="patient.address.postalAddress" class="required form-textbox1"/></field>
 						</div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4"><label>County</label></div>
-
 						<div class="col4"><label>Sub-County</label></div>
-
 						<div class="col4 last"><label>Location</label></div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="districts" name="patient.address.district" onChange="PAGE.changeDistrict();"
-										class="form-combo1">
-								</select>
+								<field>
+									<select id="districts" name="patient.address.district" onChange="PAGE.changeDistrict();"
+											class="form-combo1">
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="upazilas" name="patient.address.upazila" onChange="PAGE.changeUpazila();"
-										class="form-combo1"></select>
+								<field>
+									<select id="upazilas" name="patient.address.upazila" onChange="PAGE.changeUpazila();" class="form-combo1"></select>
+								</field>
 							</span>
 
 						</div>
 
 						<div class="col4 last">
 							<span class="select-arrow" style="width: 100%">
-								<select id="locations" name="patient.address.location" class="form-combo1"></select>
+								<field>
+									<select id="locations" name="patient.address.location" class="form-combo1"></select>
+								</field>
 							</span>
 						</div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4"><label>Village</label></div>
-
 						<div class="col4"><label></label></div>
-
 						<div class="col4 last"><label></label></div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4">
-							<input type="text" id="chiefdom" name="person.attribute.${personAttributeChiefdom.id}"
-								   class="form-textbox1"/>
+							<field>
+								<input type="text" id="chiefdom" name="person.attribute.${personAttributeChiefdom.id}" class="form-textbox1"/>
+							</field>
 						</div>
-
-						<div class="col4">
-						</div>
-
-						<div class="col4 last">
-						</div>
+						<div class="col4">&nbsp;</div>
+						<div class="col4 last">&nbsp;</div>
 					</div>
 					
 					<h2>&nbsp;</h2>
@@ -2162,44 +2161,44 @@
 
 					<div class="onerow">
 						<div class="col4"><label>Relative Name <span>*</span></label></div>
-
 						<div class="col4"><label>Relationship <span>*</span></label></div>
-
 						<div class="col4 last"><label>Physical Address</label></div>
 					</div>
 
 					<div class="onerow">
 						<div class="col4">
-							<input type="text" id="patientRelativeName" name="person.attribute.8" class="form-textbox1"/>
+							<field><input type="text" id="patientRelativeName" name="person.attribute.8" class="required form-textbox1"/></field>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="relationshipType" name="person.attribute.15"
-										class="form-combo1">
-									<option value="0"></option>
-									<option value="1">Parent</option>
-									<option value="2">Spouse</option>
-									<option value="3">Guardian</option>
-									<option value="4">Friend</option>
-									<option value="5">Other</option>
-								</select>
+								<field>
+									<select id="relationshipType" name="person.attribute.15"
+											class="required form-combo1">
+										<option value="0"></option>
+										<option value="1">Parent</option>
+										<option value="2">Spouse</option>
+										<option value="3">Guardian</option>
+										<option value="4">Friend</option>
+										<option value="5">Other</option>
+									</select>
+								</field>
 							</span>
-
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="relativePostalAddress" name="person.attribute.28" class="form-textbox1"/>
+							<field><input type="text" id="relativePostalAddress" name="person.attribute.28" class="form-textbox1"/></field>
 						</div>
 					</div>
 
 					<div class="onerow" style="margin-top: 10px">
 						<div class="col4"><label></label></div>
-
 						<div class="col4"><label></label></div>
 
 						<div class="col4 last">
-							<input id="sameAddress" type="checkbox"/> Same as Patient
+							<field>
+								<input id="sameAddress" type="checkbox"/> Same as Patient
+							</field>
 						</div>
 					</div>
 					
@@ -2212,8 +2211,7 @@
 							<span>NEXT PAGE</span>
 						</a>
 					</div>
-				</div>
-				<p> </p>                    
+				</p>                   
 			</fieldset>
 			
 			<fieldset>
@@ -2234,16 +2232,16 @@
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc">PAYING</span>
 									</label>
-								  <label class="tasks-list-item">
+									<label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_1" value="2" onchange="LoadPayCatg();" class="tasks-list-cb">
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc">NON-PAYING</span>
-								  </label>
-								  <label class="tasks-list-item">
+									</label>
+									<label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_1" value="3" onchange="LoadPayCatg();" class="tasks-list-cb">
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc">SPECIAL SCHEMES</span>
-								  </label>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -2260,16 +2258,16 @@
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc" id="ipaym_11">GENERAL</span>
 									</label>
-								  <label class="tasks-list-item">
+									<label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_2" id="paym_202" value="2" onchange="LoadPayCatgMode();" class="tasks-list-cb">
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc" id="ipaym_12">CHILD UNDER 5YRS</span>
-								  </label>
-								  <label class="tasks-list-item">
+									</label>
+									<label class="tasks-list-item">
 										<input style="display:none!important" type="radio" name="paym_2" id="paym_203" value="3" onchange="LoadPayCatgMode();" class="tasks-list-cb">
 										<span class="tasks-list-mark"></span>
 										<span class="tasks-list-desc" id="ipaym_13">EXPECTANT MOTHER</span>
-								  </label>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -2283,13 +2281,10 @@
 							</div>
 							
 							<span id="universitydiv" class="select-arrow" style="width: 100%">
-								<select style="width: 101%;" name="person.attribute.47" id="university">&nbsp;</select>
+								<field><select style="width: 101%;" name="person.attribute.47" id="university">&nbsp;</select></field>
 							</span>
 							
-							
-							
-							<input type="text" id="modesummary" name="modesummary" value="N/A" placeholder="WAIVER NUMBER"
-								   readonly="" style="width: 101%!important"/>
+							<field><input type="text" id="modesummary" name="modesummary" value="N/A" placeholder="WAIVER NUMBER" readonly="" style="width: 101%!important"/></field>
 						</div>
 					</div>
 
@@ -2312,18 +2307,22 @@
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="legal1" name="legal1" onchange="LoadLegalCases();">
-									<option value="0">&nbsp;</option>
-									<option value="1">AVAILABLE</option>
-									<option value="2">NOT AVAILABLE</option>
-								</select>
+								<field>
+									<select id="legal1" name="legal1" onchange="LoadLegalCases();">
+										<option value="0">&nbsp;</option>
+										<option value="1">AVAILABLE</option>
+										<option value="2">NOT AVAILABLE</option>
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="mlc" name="patient.mlc">
-								</select>
+								<field>
+									<select id="mlc" name="patient.mlc">
+									</select>
+								</field>
 							</span>
 						</div>
 
@@ -2347,32 +2346,38 @@
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="refer1" name="refer1" onchange="LoadReferralCases();">
-									<option value="0">&nbsp;</option>
-									<option value="1">AVAILABLE</option>
-									<option value="2">NOT AVAILABLE</option>
-								</select>
+								<field>
+									<select id="refer1" name="refer1" onchange="LoadReferralCases();">
+										<option value="0">&nbsp;</option>
+										<option value="1">AVAILABLE</option>
+										<option value="2">NOT AVAILABLE</option>
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="referredFrom" name="patient.referred.from">
-								</select>
+								<field>
+									<select id="referredFrom" name="patient.referred.from">
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4 last">
 							<span class="select-arrow" style="width: 100%">
-								<select id="referralType" name="patient.referred.reason">
-								</select>
+								<field>
+									<select id="referralType" name="patient.referred.reason">
+									</select>
+								</field>
 							</span>
 						</div>
 					</div>
 					
 					<div class="onerow" id="referraldiv" style="padding-top:-5px; display:none;">
 						<label for="referralDescription" style="margin-top:20px;">Comments</label>
-						<textarea type="text" id="referralDescription" name="patient.referred.description" value="N/A" placeholder="COMMENTS" readonly="" style="height: 80px; width: 700px;"></textarea>
+						<field><textarea type="text" id="referralDescription" name="patient.referred.description" value="N/A" placeholder="COMMENTS" readonly="" style="height: 80px; width: 700px;"></textarea></field>
 					</div>
 					
 					<h2>&nbsp;</h2>
@@ -2395,24 +2400,28 @@
 					<div class="onerow">
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();">
-									<option value="0">&nbsp;</option>
-									<option value="1">TRIAGE ROOM</option>
-									<option value="2">OPD ROOM</option>
-									<option value="3">SPECIAL CLINIC</option>
-								</select>
+								<field>
+									<select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();">
+										<option value="0">&nbsp;</option>
+										<option value="1">TRIAGE ROOM</option>
+										<option value="2">OPD ROOM</option>
+										<option value="3">SPECIAL CLINIC</option>
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
-								<select id="rooms2" name="rooms2">
-								</select>
+								<field>
+									<select id="rooms2" name="rooms2">
+									</select>
+								</field>
 							</span>
 						</div>
 
 						<div class="col4 last">
-							<input type="text" id="rooms3" name="rooms3" value="N/A" placeholder="FILE NUMBER" readonly=""/>
+							<field><input type="text" id="rooms3" name="rooms3" value="N/A" placeholder="FILE NUMBER" readonly=""/></field>
 						</div>
 					</div>
 
@@ -2494,6 +2503,21 @@
 				
 				<p> </p>
 			</fieldset>
-		</section>            
+		</section>   
+		<div id="confirmation">
+            <span id="confirmation_label" class="title">Confirmation</span>
+            <div class="before-dataCanvas"></div>
+            <div id="dataCanvas"></div>
+            <div class="after-data-canvas"></div>
+            <div id="confirmationQuestion">
+                Proceed?
+                <p style="display: inline">
+                    <button class="submitButton confirm right">Submit</button>
+                </p>
+                <p style="display: inline">
+                    <button class="cancel">Cancel</button>
+                </p>
+            </div>
+        </div>		
 	</form>        
 </div>
