@@ -167,7 +167,7 @@
             }
         }
         ;
-        MODEL.payingCategory = " , |"
+        MODEL.payingCategory = ", |"
                 + MODEL.payingCategory;
         PAGE.fillOptions("#payingCategory", {
             data: MODEL.payingCategory,
@@ -175,7 +175,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.nonPayingCategory = " , |"
+        MODEL.nonPayingCategory = ", |"
                 + MODEL.nonPayingCategory;
         PAGE.fillOptions("#nonPayingCategory", {
             data: MODEL.nonPayingCategory,
@@ -191,7 +191,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.universities = " , |"
+        MODEL.universities = ", |"
                 + MODEL.universities;
         PAGE.fillOptions("#university", {
             data: MODEL.universities,
@@ -199,14 +199,14 @@
             optionDelimiter: "|"
         });
 
-        MODEL.TRIAGE = " , |"
+        MODEL.TRIAGE = ", |"
                 + MODEL.TRIAGE;
         PAGE.fillOptions("#triage", {
             data: MODEL.TRIAGE,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.OPDs = " , |"
+        MODEL.OPDs = ", |"
                 + MODEL.OPDs;
         PAGE.fillOptions("#opdWard", {
             data: MODEL.OPDs,
@@ -220,7 +220,7 @@
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.TEMPORARYCAT = " , |"
+        MODEL.TEMPORARYCAT = ", |"
                 + MODEL.TEMPORARYCAT;
         PAGE.fillOptions("#mlc", {
             data: MODEL.TEMPORARYCAT,
@@ -228,7 +228,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.referredFrom = " ,Referred From|"
+        MODEL.referredFrom = ",Referred From|"
                 + MODEL.referredFrom;
         PAGE.fillOptions("#referredFrom", {
             data: MODEL.referredFrom,
@@ -236,7 +236,7 @@
             optionDelimiter: "|"
         });
 		
-        MODEL.referralType = " ,Referral Type|"
+        MODEL.referralType = ",Referral Type|"
                 + MODEL.referralType;
         PAGE.fillOptions("#referralType	", {
             data: MODEL.referralType,
@@ -274,6 +274,7 @@
 		LoadReferralCases();
 		showOtherNationality();
 		LoadPayCatg();
+		LoadRoomsTypes();
 
         //stans
         jQuery("#otherNationality").hide();
@@ -847,7 +848,7 @@
             }
 			
 
-            if (jQuery("#rooms1").val() == 0) {
+            if (jQuery("#rooms1").val() == "") {
                 jQuery('#rooms1').addClass("red-border");
 				i++;
 				tab3++;
@@ -1529,6 +1530,7 @@
 			jQuery("#referredYes").attr('checked', 'checked');
 			jQuery("#referredNo").attr('checked', false);
 			jQuery("#referraldiv").show();
+			jQuery('#referralDescription').removeClass("disabled");
         }
         else {
             var myOptions = {" ": 'N/A'};
@@ -1552,6 +1554,7 @@
 			jQuery("#referredNo").attr('checked', 'checked');
 			jQuery("#referredYes").attr('checked', false);
 			jQuery("#referraldiv").hide();
+			jQuery('#referralDescription').addClass("disabled");
         }
     }
 	
@@ -1565,11 +1568,12 @@
 			});
             jQuery("#rooms3").attr("readonly", true);
             jQuery("#rooms3").val("N/A");
-            jQuery('#froom2').text('Triage Rooms');
+            jQuery('#froom2').html('Triage Rooms<span>*</span>');
 			
 			jQuery("#triageRoom").attr('checked', 'checked');
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', false);
+			jQuery('#referralDescription').removeClass("required");
         }
         else if (jQuery("#rooms1").val() == 2) {
             PAGE.fillOptions("#rooms2", {
@@ -1580,11 +1584,12 @@
 
             jQuery("#rooms3").attr("readonly", true);
             jQuery("#rooms3").val("N/A");
-            jQuery('#froom2').text('OPD Rooms');
+            jQuery('#froom2').html('OPD Rooms<span>*</span>');
 			
 			jQuery("#triageRoom").attr('checked', false);
 			jQuery("#opdRoom").attr('checked', 'checked');
 			jQuery("#specialClinicRoom").attr('checked', false);
+			jQuery('#referralDescription').removeClass("required");
         }
         else if (jQuery("#rooms1").val() == 3) {
             PAGE.fillOptions("#rooms2", {
@@ -1595,11 +1600,12 @@
 
             jQuery("#rooms3").attr("readonly", false);
             jQuery("#rooms3").val("");
-            jQuery('#froom2').text('Special Clinic');
+            jQuery('#froom2').html('Special Clinic<span>*</span>');
 			
 			jQuery("#triageRoom").attr('checked', false);
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', 'checked');
+			jQuery('#referralDescription').addClass("required");
         }
         else {
             var myOptions = {0: 'N/A'};
@@ -1616,6 +1622,7 @@
 			jQuery("#triageRoom").attr('checked', false);
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', false);
+			jQuery('#referralDescription').removeClass("required");
         }
     }
 	
@@ -1625,18 +1632,66 @@
 	
 	function goto_next_tab(current_tab){
 		if (current_tab == 1){
-			jQuery('#passportNumber').focus();
+			var currents = '';
+			
+			while (jQuery(':focus') != jQuery('#patientPhoneNumber')) {
+				if (currents == jQuery(':focus').attr('id')){
+					NavigatorController.stepForward();
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					currents = jQuery(':focus').attr('id');
+				}
+				
+				if (jQuery(':focus').attr('id')=='patientPhoneNumber'){
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					NavigatorController.stepForward();
+				}
+			}
+			// jQuery(':focus')
+		
+			//NavigatorController.getFieldById('passportNumber').select();
+			
 		}
-		
-		
-		
-		NavigatorController.stepForward();
+		else if (current_tab == 2){
+			var currents = '';
+			
+			while (jQuery(':focus') != jQuery('#modesummary')) {
+				if (currents == jQuery(':focus').attr('id')){
+					NavigatorController.stepForward();
+					break;
+				}
+				else {
+					currents = jQuery(':focus').attr('id');
+				}
+				
+				if (jQuery(':focus').attr('id')=='modesummary'){
+					break;
+				}
+				else {
+					NavigatorController.stepForward();
+				}
+			}
+		}
 	}
-
-
-
-
-
+	
+	function goto_previous_tab(current_tab){
+		if (current_tab == 2){
+			while (jQuery(':focus') != jQuery('#passportNumber')) {
+				if (jQuery(':focus').attr('id') == 'passportNumber' || jQuery(':focus').attr('id') == 'otherNationalityId'){
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					NavigatorController.stepBackward();
+				}
+			}
+		}
+	}
 </script>
 <style>
 .ui-tabs-vertical {
@@ -2081,7 +2136,7 @@
 					<div class="selectdiv"  id="selected-diagnoses"></div>
 				                  
 			</fieldset>
-			<fieldset style="min-width: 500px; width: auto">                        
+			<fieldset style="min-width: 500px; width: auto" class="no-confirmation">                        
 				<legend>Contact Info</legend>
 				<p>
 					<h2>Patient Contact Information</h2>
@@ -2203,18 +2258,18 @@
 					</div>
 					
 					<div class="onerow" style="margin-top: 50px">
-						<a class="button task" href="#">
+						<a class="button task" onclick="goto_previous_tab(2);">
 							<span style="padding: 15px;">PREVIOUS</span>
 						</a>
 
-						<a class="button confirm" href="#" style="float:right; display:inline-block;">
+						<a class="button confirm" style="float:right; display:inline-block;" onclick="goto_next_tab(2);">
 							<span>NEXT PAGE</span>
 						</a>
 					</div>
 				</p>                   
 			</fieldset>
 			
-			<fieldset>
+			<fieldset class="no-confirmation">
 				<legend>Patient Category</legend>
 				<div>
 					<h2>Patient Category</h2>
@@ -2385,11 +2440,11 @@
 
 					<div class="onerow" style="margin-top:10px;">
 						<div class="col4">
-							<label for="rooms1" id="froom1" style="margin:0px;">Room to Visit</label>
+							<label for="rooms1" id="froom1" style="margin:0px;">Room to Visit<span>*</span></label>
 						</div>
 
 						<div class="col4">
-							<label for="rooms2" id="froom2" style="margin:0px;">Room Type</label>
+							<label for="rooms2" id="froom2" style="margin:0px;">Room Type<span>*</span></label>
 						</div>
 
 						<div class="col4 last">
@@ -2401,8 +2456,8 @@
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
 								<field>
-									<select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();">
-										<option value="0">&nbsp;</option>
+									<select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();" class="required form-combo1">
+										<option value="">&nbsp;</option>
 										<option value="1">TRIAGE ROOM</option>
 										<option value="2">OPD ROOM</option>
 										<option value="3">SPECIAL CLINIC</option>
@@ -2414,7 +2469,7 @@
 						<div class="col4">
 							<span class="select-arrow" style="width: 100%">
 								<field>
-									<select id="rooms2" name="rooms2">
+									<select id="rooms2" name="rooms2" class="required form-combo1">
 									</select>
 								</field>
 							</span>
@@ -2504,13 +2559,13 @@
 				<p> </p>
 			</fieldset>
 		</section>   
-		<div id="confirmation">
+		<div id="confirmation" style="width:75%;">
             <span id="confirmation_label" class="title">Confirmation</span>
             <div class="before-dataCanvas"></div>
             <div id="dataCanvas"></div>
             <div class="after-data-canvas"></div>
             <div id="confirmationQuestion">
-                Proceed?
+                <div>CUSTOM SUMMARY HERE</div>
                 <p style="display: inline">
                     <button class="submitButton confirm right">Submit</button>
                 </p>
@@ -2518,6 +2573,20 @@
                     <button class="cancel">Cancel</button>
                 </p>
             </div>
+			
+			<div class="onerow" style="margin-top: 150px">
+				<a class="button task ui-tabs-anchor" href="#tabs-2">
+					<span style="padding: 15px;">PREVIOUS</span>
+				</a>
+				
+				<a class="button confirm" onclick="PAGE.submit();" style="float:right; display:inline-block; margin-left: 5px;">
+					<span>FINISH</span>
+				</a>
+				
+				<a class="button cancel" onclick="window.location.href = window.location.href" style="float:right; display:inline-block;"/>
+					<span>RESET</span>
+				</a>
+			</div>
         </div>		
 	</form>        
 </div>
