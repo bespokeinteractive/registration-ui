@@ -1,5 +1,5 @@
 <%
-    def props = ["patientIdentifier.identifier", "names", "age", "gender", "previous", "action"]
+    def props = ["patientId", "names", "age", "gender", "previous", "action"]
 %>
 
 <style>
@@ -121,9 +121,14 @@
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "listOfOrder"); def pageLinkEdit = ui.pageLink("registration", "listOfOrder"); %>
+                  def pageLinkRevisit = ui.pageLink("registration", "showPatientInfo");
+                  def pageLinkEdit = ui.pageLink("registration", "showPatientInfo");
+                  def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
+                   %>
 
-            row += '<td> <div class="dropdown"><span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span><ul><li><a href="#"><i class="icon-heart"></i>Save</a></li>   </ul></div>  <a href="${pageLinkRevisit}?patientId=' + item.patientId + '"><i class="icon-signin small"></i></a> </td>';
+            row += '<td> <a href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i>' +
+                    '</a>  <a href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
+                    '<a href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
             <% } else {%>
             row += '<td>' + item.${ it } + '</td>';
             <% }
@@ -241,7 +246,7 @@
             <option value="50" id="3">50</option>
             <option value="100" id="4">100</option>
             <option value="150" id="5">150</option>
-        </select>  entries
+        </select>
     </div>
 
 

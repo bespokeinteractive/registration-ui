@@ -84,7 +84,7 @@ public class RevisitPatientRegistrationFormFragmentController {
 
 //        model.addAttribute("patients", renderedPatients);
 //        model.addAttribute("size", patients.size());
-        return SimpleObject.fromCollection(renderedPatients,uiUtils,"patientIdentifier.identifier","names","age","gender");
+        return SimpleObject.fromCollection(renderedPatients,uiUtils,"patientId","names","age","gender");
     }
 
 

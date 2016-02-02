@@ -60,6 +60,8 @@ public class ShowPatientInfoPageController {
         model.addAttribute("creates", "");
         model.addAttribute("observations", "");
         model.addAttribute("encounterId",encounterId);
+        model.addAttribute("registrationFee","");
+        model.addAttribute("selectedPaymentCategory","");
 
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
@@ -137,6 +139,7 @@ public class ShowPatientInfoPageController {
             int value = stf.compareTo(sef);
             System.out.println("****" + value);
             model.addAttribute("create", value);
+            model.addAttribute("firstTimeVisit", false);
         }
 
         // If reprint, get the latest registration encounter
