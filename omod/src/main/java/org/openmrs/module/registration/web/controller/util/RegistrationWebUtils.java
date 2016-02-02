@@ -204,7 +204,7 @@ public class RegistrationWebUtils {
 	 * Ghanshyam - Sagar : date- 15 Dec, 2012. Redmine issue's for Bangladesh :
 	 * #510 and #511 and #512 Tehsil renamed as Upazila
 	 */
-	public static void getAddressData(Model model) throws MalformedURLException, DocumentException, JaxenException {
+	public static void getAddressData(PageModel model) throws MalformedURLException, DocumentException, JaxenException {
 		File addressFile = new File(OpenmrsUtil.getApplicationDataDirectory() + "kenyaaddresshierarchy.xml");
 		if (addressFile.exists()) {
 			SAXReader reader = new SAXReader();

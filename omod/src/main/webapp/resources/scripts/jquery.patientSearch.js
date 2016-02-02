@@ -19,7 +19,8 @@
 					
 					jQuery.ajax({
 						type : "GET",
-						url : openmrsContextPath + "/module/hospitalcore/searchPatient.form",
+						url: '${ ui.actionLink("registration", "registrationUtils", "searchPatient") }',
+						//url : openmrsContextPath + "/module/hospitalcore/searchPatient.form",
 						data : ({
 							searchBoxView: options.searchBoxView
 						}),
