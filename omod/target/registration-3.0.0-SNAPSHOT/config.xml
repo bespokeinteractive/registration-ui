@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<!-- Module Properties -->
+	<id>registration</id>
+	<name>Registration Module</name>
+	<version>3.0.0-SNAPSHOT</version>
+	<package>org.openmrs.module.registration</package>
+	<author>Stanslaus Odhiambo</author>
+	<description>
+		Registration Module with the new UI
+	</description>
+	<updateURL>https://modules.openmrs.org/modules/download/registration/update.rdf</updateURL>
+	<require_version>1.9.8</require_version>
+	<!-- / Module Properties -->
+
+	
+	<!-- Required Modules -->
+	<require_modules>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uiframework
+		</require_module>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uilibrary
+		</require_module>
+																											
+		<require_module version="1.5.1-SNAPSHOT">
+			org.openmrs.module.hospitalcore
+		</require_module>
+			
+	</require_modules>
+	<!-- / Required Modules -->
+	
+	<!-- Module Activator -->
+	<activator>org.openmrs.module.registration.RegistrationActivator</activator>
+	
+	<privilege>
+		<name>Print Duplicate Slip</name>
+		<description>Allows user to provide duplicate slip to patient</description>
+	</privilege>
+	
+	
+	<!-- Adds link to admin page -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.registration.extension.html.AdminList</class>
+	</extension>
+	<extension>
+		<point>org.openmrs.gutter.tools</point>
+		<class>org.openmrs.module.registration.extension.html.RegistrationHeader</class>
+	</extension>
+	
+	<!-- Maps hibernate file's, if present -->
+	<mappingFiles>
+				
+		RegistrationFee.hbm.xml
+				
+	</mappingFiles>
+	
+	
+	<globalProperty>
+		<property>registration.identifier_prefix</property>
+		<defaultValue>BDHOS</defaultValue>
+		<description>
+			Patient identifier prefix
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.location</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			Location id
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.patientIdentifierType</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			Patient Identifier Type id
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.encounterType.init</property>
+		<defaultValue>REGINITIAL</defaultValue>
+		<description>
+			Encounter type for the first visit
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.encounterType.revisit</property>
+		<defaultValue>REGREVISIT</defaultValue>
+		<description>
+			Encounter type for returned visits
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.newPatientConcept</property>
+		<defaultValue>New Patient</defaultValue>
+		<description>
+			Concept name of "New Patient" referral for patient queue
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.numberOfDateValidation</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Number of date validation
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.initialVisitRegistrationFee</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Registration Fee for first visit 
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.reVisitRegistrationFee</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			Registration Fee for revisit
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>registration.patientPerRSBY</property>
+		<defaultValue>5</defaultValue>
+		<description>
+			Maximum number of patients can register with a RSBY number
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>registration.patientPerBPL</property>
+		<defaultValue>10</defaultValue>
+		<description>
+			Maximum number of patients can register with a BPL number
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.revisitConcept</property>
+		<defaultValue>REVISIT</defaultValue>
+		<description>
+			Name of concept REVISIT
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.bloodbankConceptId</property>
+		<defaultValue>6425</defaultValue>
+		<description>
+			Concept id of bloodbank room
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>registration.bloodbankOrderTypeId</property>
+		<defaultValue>6</defaultValue>
+		<description>
+			ID of bloodbank order type
+		</description>
+	</globalProperty>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with registration. -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+</module>
+

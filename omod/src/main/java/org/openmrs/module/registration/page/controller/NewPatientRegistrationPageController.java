@@ -238,12 +238,12 @@ public class NewPatientRegistrationPageController {
 		int paymt2 = Integer.parseInt(parameters.get("paym_2"));
 
         int legal1 = Integer.parseInt(parameters.get("legal1"));
-        String legal2 = parameters.get("legal2");
+        String legal2 = parameters.get("mlc");
 
         int refer1 = Integer.parseInt(parameters.get("refer1"));
-        String refer2 = parameters.get("refer2");
-        String refer3 = parameters.get("refer3");
-        String refer4 = parameters.get("refer4");
+        String refer2 = parameters.get("referredFrom");
+        String refer3 = parameters.get("referralDescription");
+        String refer4 = parameters.get("referralType");
 
         String paymt3 = null;
         String paymt4 = null;
@@ -305,7 +305,7 @@ public class NewPatientRegistrationPageController {
                 paymt3 = "Special Schemes";
 
                 if (paymt2 == 1){
-                    nUniID = "";
+                    nUniID = parameters.get("university");
                     nStuID = parameters.get("modesummary");
                     nScheme = "STUDENT SCHEME";
                 }
