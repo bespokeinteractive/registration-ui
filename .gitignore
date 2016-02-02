@@ -8,5 +8,5 @@
 *.iml
 /.idea
 **/bin
-/omod/target/
-/omod/.classpath
+**/target/
+**/.classpath
