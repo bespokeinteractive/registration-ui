@@ -91,6 +91,18 @@
                 }
             }
         });
+		
+		jQuery('input:text[id]').focusout(function (event) {
+            var arr = ["firstName", "", "", "", "", ""];
+            var idd = jQuery(event.target).attr('id');
+
+            if (jQuery.inArray(idd, arr) != -1) {
+				if (idd == 'firstName'){
+					jQuery('#summ_idnt').text(jQuery('#patientIdnts').val());
+					jQuery('#summ_name').text(jQuery('#surName').val() +', '+ jQuery('#firstName').val());
+				}
+            }
+        });
 
         jQuery('select').focusout(function (event) {
             var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
@@ -103,6 +115,10 @@
                 else {
                     jQuery('#' + idd).removeClass("red-border");
                 }
+				
+				if (idd == 'patientGender'){
+					jQuery('#summ_gend').text(jQuery('#patientGender option:selected').text());
+				}
             }
         });
 
@@ -445,6 +461,8 @@
                         } else {
                             jQuery("#birthdateEstimated").val("false");
                         }
+						
+                        jQuery("#summ_ages").html(data.datemodel.age.substr(1,1000));
                         jQuery("#estimatedAge").html(data.datemodel.age);
                         jQuery("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                         jQuery("#birthdate").val(data.datemodel.birthdate);
@@ -1405,20 +1423,27 @@
 			jQuery('#payingCategory option').eq(select2).prop('selected', true);
 			jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
 			jQuery('#specialScheme option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Paying / '+jQuery('#payingCategory option:selected').text());
 		}
 		else if (select1 == 2){
 			jQuery('#nonPayingCategory option').eq(select2).prop('selected', true);
 			jQuery('#payingCategory option').eq(0).prop('selected', true);
 			jQuery('#specialScheme option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Non-Paying / '+jQuery('#nonPayingCategory option:selected').text());
 		}
 		else{
 			jQuery('#specialScheme option').eq(select2).prop('selected', true);
 			jQuery('#payingCategory option').eq(0).prop('selected', true);
 			jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Special Scheme / '+jQuery('#specialScheme option:selected').text());
 		}
 		
-		
 		payingCategorySelection();
+		
+		jQuery('#summ_fees').text(jQuery('#selectedRegFeeValue').val()+'.00');
 	}
 	
     function LoadPaymodes() {
@@ -1691,6 +1716,28 @@
 				}
 			}
 		}
+		else if (current_tab == 3){
+			while (jQuery(':focus') != jQuery('#relativePostalAddress')) {
+				if (jQuery(':focus').attr('id') == 'relativePostalAddress'){
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					NavigatorController.stepBackward();
+				}
+			}
+		}
+		else if (current_tab == 4){
+			while (jQuery(':focus') != jQuery('#rooms3')) {
+				if (jQuery(':focus').attr('id') == 'rooms3'){
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					NavigatorController.stepBackward();
+				}
+			}
+		}
 	}
 </script>
 <style>
@@ -1821,7 +1868,7 @@
   display: inline-block;
   vertical-align: top;
   margin-right: 0px;
-  width: 18px;
+  width: 16px;
   height: 20px;
   border: 2px solid #c4cbd2;
   border-radius: 12px;
@@ -1896,6 +1943,25 @@
 	margin-bottom: 5px;
 	
 }
+.dashboard .info-section {
+
+}
+.dashboard .info-body li{
+	padding-bottom: 2px;
+}
+
+.dashboard .info-body li span{
+	margin-right:10px;
+}
+
+.dashboard .info-body li small{
+	
+}
+
+.dashboard .info-body li div{
+	width: 150px;
+	display: inline-block;
+}
 </style>
 
 <%
@@ -1937,7 +2003,7 @@
 						<div class="col4">
 							<field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/></field>
 							<input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee" />
-							<input type="hidden" name="patient.identifier" value="${patientIdentifier}" 	/>
+							<input type="hidden" id="patientIdnts" name="patient.identifier" value="${patientIdentifier}" 	/>
 						</div>
 
 						<div class="col4">
@@ -2365,8 +2431,8 @@
 								<field>
 									<select id="legal1" name="legal1" onchange="LoadLegalCases();">
 										<option value="0">&nbsp;</option>
-										<option value="1">AVAILABLE</option>
-										<option value="2">NOT AVAILABLE</option>
+										<option value="1">YES</option>
+										<option value="2">NO</option>
 									</select>
 								</field>
 							</span>
@@ -2404,8 +2470,8 @@
 								<field>
 									<select id="refer1" name="refer1" onchange="LoadReferralCases();">
 										<option value="0">&nbsp;</option>
-										<option value="1">AVAILABLE</option>
-										<option value="2">NOT AVAILABLE</option>
+										<option value="1">YES</option>
+										<option value="2">NO</option>
 									</select>
 								</field>
 							</span>
@@ -2540,7 +2606,7 @@
 
 
 					<div class="onerow" style="margin-top: 150px">
-						<a class="button task ui-tabs-anchor" href="#tabs-2">
+						<a class="button task ui-tabs-anchor" onclick="goto_previous_tab(3);">
 							<span style="padding: 15px;">PREVIOUS</span>
 						</a>
 						
@@ -2559,23 +2625,29 @@
 				<p> </p>
 			</fieldset>
 		</section>   
-		<div id="confirmation" style="width:75%;">
+		<div id="confirmation" style="width:74%;">
             <span id="confirmation_label" class="title">Confirmation</span>
-            <div class="before-dataCanvas"></div>
-            <div id="dataCanvas"></div>
-            <div class="after-data-canvas"></div>
-            <div id="confirmationQuestion">
-                <div>CUSTOM SUMMARY HERE</div>
-                <p style="display: inline">
-                    <button class="submitButton confirm right">Submit</button>
-                </p>
-                <p style="display: inline">
-                    <button class="cancel">Cancel</button>
-                </p>
-            </div>
-			
+			<div class="dashboard onerow">
+				<div class="info-section">
+	    			<div class="info-header">
+	    				<i class="icon-diagnosis"></i>
+	    				<h3>Patient Summary</h3>
+	    			</div>
+	    			<div class="info-body">
+	    				<ul>
+	    					<li><span class="status active"></span><div>Patient ID:</div>		<small id="summ_idnt">/</small></li>
+	    					<li><span class="status active"></span><div>Names:</div>			<small id="summ_name">/</small></li>
+	    					<li><span class="status active"></span><div>Age:</div>				<small id="summ_ages">/</small></li>
+	    					<li><span class="status active"></span><div>Gender:</div>			<small id="summ_gend">/</small></li>
+	    					<li><span class="status active"></span><div>Pay Category:</div> 	<small id="summ_pays">/</small></li>
+	    					<li><span class="status active"></span><div>Registration Fee:</div>	<small id="summ_fees">/</small></li>
+	    				</ul>
+	    				
+	    			</div>
+	    		</div>
+			</div>
 			<div class="onerow" style="margin-top: 150px">
-				<a class="button task ui-tabs-anchor" href="#tabs-2">
+				<a class="button task ui-tabs-anchor" onclick="goto_previous_tab(4);">
 					<span style="padding: 15px;">PREVIOUS</span>
 				</a>
 				

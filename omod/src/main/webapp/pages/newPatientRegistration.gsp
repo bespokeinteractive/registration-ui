@@ -100,12 +100,12 @@ label span{
 	<div class="example">
 		<ul id="breadcrumbs">
 			<li>
-				<a href="#">
+				<a href="${ui.pageLink('referenceapplication','home')}">
 					<i class="icon-home small"></i></a>
 			</li>
 			<li>
 				<i class="icon-chevron-right link"></i>
-				<a href="#">Patient Admission</a>
+				<a href="#">Add New Patient</a>
 			</li>
 			<li>
 			</li>
