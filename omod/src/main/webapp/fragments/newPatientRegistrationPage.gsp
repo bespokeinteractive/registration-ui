@@ -1728,15 +1728,8 @@
 			}
 		}
 		else if (current_tab == 4){
-			while (jQuery(':focus') != jQuery('#rooms3')) {
-				if (jQuery(':focus').attr('id') == 'rooms3'){
-					jQuery("#ui-datepicker-div").hide();
-					break;
-				}
-				else {
-					NavigatorController.stepBackward();
-				}
-			}
+			jQuery('#rooms3').focus();
+			
 		}
 	}
 </script>
@@ -1944,7 +1937,7 @@
 	
 }
 .dashboard .info-section {
-
+    margin: 0 5px 5px;
 }
 .dashboard .info-body li{
 	padding-bottom: 2px;
@@ -2296,7 +2289,7 @@
 								<field>
 									<select id="relationshipType" name="person.attribute.15"
 											class="required form-combo1">
-										<option value="0"></option>
+										<option value=""></option>
 										<option value="1">Parent</option>
 										<option value="2">Spouse</option>
 										<option value="3">Guardian</option>
@@ -2625,7 +2618,7 @@
 				<p> </p>
 			</fieldset>
 		</section>   
-		<div id="confirmation" style="width:74%;">
+		<div id="confirmation" style="width:74%; padding-top: 0px;">
             <span id="confirmation_label" class="title">Confirmation</span>
 			<div class="dashboard onerow">
 				<div class="info-section">
