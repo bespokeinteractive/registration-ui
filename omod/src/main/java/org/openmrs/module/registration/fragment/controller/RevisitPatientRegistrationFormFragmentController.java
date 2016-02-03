@@ -90,7 +90,7 @@ public class RevisitPatientRegistrationFormFragmentController {
 
 //        model.addAttribute("patients", renderedPatients);
 //        model.addAttribute("size", patients.size());
-        return SimpleObject.fromCollection(renderedPatients, uiUtils, "patientId", "patientIdentifier.identifier", "names", "age", "gender");
+        return SimpleObject.fromCollection(patients, uiUtils, "patientId", "patientIdentifier.identifier", "names", "age", "gender");
     }
 
     // Filter patient list using advance search criteria
