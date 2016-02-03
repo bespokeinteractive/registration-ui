@@ -88,6 +88,72 @@
         }
     };
 
+    ADVSEARCH = {
+        timeoutId : 0,
+        showing : false,
+        params : "",
+        delayDuration : 1000,
+        pageSize : 10,
+        beforeSearch: function(){},
+
+        // search patient
+        searchPatient : function(currentPage, pageSize) {
+            this.beforeSearch();
+            var phrase = jQuery("#searchPhrase").val();
+
+            if (phrase.length >= 3) {
+                jQuery("#ajaxLoader").show();
+                getPatientQueue(1);
+
+//                jQuery.ajax({
+//                    type : "POST",
+//                    url : url,
+//                    data : ({
+//                        phrase : phrase,
+//                        gender : gender,
+//                        age : age,
+//                        ageRange : ageRange,
+//                        date : date,
+//                        dateRange : dateRange,
+//                        relativeName : relativeName,
+//                        view : view,
+//                        currentPage : currentPage,
+//                        pageSize : pageSize
+//                    }),
+//                    success : function(data) {
+//                        jQuery("#ajaxLoader", form).hide();
+//                    },
+//                    error : function(xhr, ajaxOptions, thrownError) {
+//                        alert(xhr);
+//                        jQuery("#ajaxLoader", form).hide();
+//                    }
+//                });
+            }
+        },
+
+        // start searching patient
+        startSearch : function(e) {
+            e = e || window.event;
+            ch = e.which || e.keyCode;
+            if (ch != null) {
+                if ((ch >= 48 && ch <= 57) || (ch >= 96 && ch <= 105)
+                        || (ch >= 65 && ch <= 90)
+                        || (ch == 109 || ch == 189 || ch == 45) || (ch == 8)
+                        || (ch == 46)) {
+                } else if (ch == 13) {
+                    clearTimeout(this.timeoutId);
+                    this.timeoutId = setTimeout("ADVSEARCH.delay()",
+                            this.delayDuration);
+                }
+            }
+        },
+
+        // delay before search
+        delay : function() {
+            this.searchPatient(0, this.pageSize);
+        }
+    };
+
     jQuery(document).ready(function () {
 
         // hover rows
@@ -163,21 +229,23 @@
                 currentPage: currentPage,
                 pageSize: pgSize,
                 age: age,
-                ageRange : ageRange,
+                ageRange: ageRange,
                 patientMaritalStatus: patientMaritalStatus,
-                lastVisit:lastVisit,
+                lastVisit: lastVisit,
                 phoneNumber: phoneNumber,
                 relativeName: relativeName,
-                nationalId:nationalId,
+                nationalId: nationalId,
                 fileNumber: fileNumber
             }),
             success: function (data) {
+                jQuery("#ajaxLoader").hide();
                 pData = data;
                 updateQueueTable(data);
-
-//                    jQuery("#billingqueue").show(0);
-//                    jQuery("#billingqueue").html(data);
             },
+            error : function(xhr, ajaxOptions, thrownError) {
+                alert(xhr);
+                jQuery("#ajaxLoader").hide();
+            }
 
         });
     }
@@ -192,24 +260,25 @@
 <form id="patientRegistrationForm" method="POST">
 
     <div id="searchPane" style="display: inline-block; float: left;">
-        <input id="searchPhrase" name="searchPhrase"
+        <input id="searchPhrase" name="searchPhrase" onkeyup="ADVSEARCH.startSearch(event);" onblur="ADVSEARCH.delay();"
                placeholder="Name/Identifier"/>
         <a class="button task" href="#" id="showAdvancedSearch">
             <i class="icon-filter"></i>
             Advanced Search
         </a>
+        <img id="ajaxLoader" style="display:none;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
     </div>
 
     <div id="advancedDetails" style="float: right">
         <span class="select-arrow">
-            <select id="gender">
+            <select id="gender" onblur="ADVSEARCH.delay();">
                 <option value="any">Gender</option>
                 <option value="M">Male</option>
                 <option value="F">Female</option>
             </select>
         </span>
-        <input id="age" placeholder="Age"/>
-        <select id="ageRange">
+        <input id="age" placeholder="Age" onblur="ADVSEARCH.delay();"/>
+        <select id="ageRange" onblur="ADVSEARCH.delay();">
             <option value="0">Exact</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -217,17 +286,17 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-        <input id="patientMaritalStatus" placeholder="Marital Status"/>
-        <select id="lastVisit">
+        <input id="patientMaritalStatus" placeholder="Marital Status" onblur="ADVSEARCH.delay();"/>
+        <select id="lastVisit" onblur="ADVSEARCH.delay();">
             <option value="any">Anytime</option>
             <option value="31">Last Month</option>
             <option value="183">Last Six Months</option>
             <option value="366">Last Year</option>
         </select>
-        <input id="phoneNumber" placeholder="Phone Number"/>
-        <input id="relativeName" placeholder="Marital Status"/>
-        <input id="nationalId" placeholder="National Id"/>
-        <input id="fileNumber" placeholder="File Number"/>
+        <input id="phoneNumber" placeholder="Phone Number" onblur="ADVSEARCH.delay();"/>
+        <input id="relativeName" placeholder="Marital Status" onblur="ADVSEARCH.delay();"/>
+        <input id="nationalId" placeholder="National Id" onblur="ADVSEARCH.delay();"/>
+        <input id="fileNumber" placeholder="File Number" onblur="ADVSEARCH.delay();"/>
     </div>
     <br/><br/><br/>
 
@@ -255,6 +324,7 @@
         </section>
 
     </div>
+
     <div id="selection">
         Show
         <select name="sizeSelector" id="sizeSelector" onchange="getPatientQueue(1)">

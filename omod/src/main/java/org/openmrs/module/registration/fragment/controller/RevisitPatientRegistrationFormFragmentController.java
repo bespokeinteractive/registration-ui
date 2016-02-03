@@ -156,12 +156,6 @@ public class RevisitPatientRegistrationFormFragmentController {
         return page;
     }
 
-    public String showSearchBox(@RequestParam("view") String view,
-                                @RequestParam("resultBoxId") String resultBoxId, Model model) {
-        model.addAttribute("view", view);
-        model.addAttribute("resultBoxId", resultBoxId);
-        return "/module/hospitalcore/patientSearch/searchBox";
-    }
 
     private List<Patient> select(List<Patient> patients, Matcher matcher) {
         List<Patient> result = new ArrayList<Patient>();
