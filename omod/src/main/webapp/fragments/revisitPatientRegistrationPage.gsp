@@ -126,9 +126,9 @@
                   def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
                    %>
 
-            row += '<td> <a href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i>' +
-                    '</a>  <a href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
-                    '<a href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
+            row += '<td> <a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i>' +
+                    '</a>  <a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
+                    '<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
             <% } else {%>
             row += '<td>' + item.${ it } + '</td>';
             <% }
@@ -141,18 +141,35 @@
     // get queue
     function getPatientQueue(currentPage) {
         this.currentPage = currentPage;
-        var phrase = jQuery("#surName").val();
+        var phrase = jQuery("#searchPhrase").val();
         var pgSize = jQuery("#sizeSelector").val();
         var gender = jQuery("#gender").val();
+        var age = jQuery("#age").val();
+        var ageRange = jQuery("#ageRange").val();
+        var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
+        var lastVisit = jQuery("#lastVisit").val();
+        var phoneNumber = jQuery("#phoneNumber").val();
+        var relativeName = jQuery("#relativeName").val();
+        var nationalId = jQuery("#nationalId").val();
+        var fileNumber = jQuery("#fileNumber").val();
+
         jQuery.ajax({
-            type: "GET",
+            type: "POST",
             url: "${ui.actionLink('registration','revisitPatientRegistrationForm','searchPatient')}",
             dataType: "json",
             data: ({
                 gender: gender,
                 phrase: phrase,
                 currentPage: currentPage,
-                pageSize: pgSize
+                pageSize: pgSize,
+                age: age,
+                ageRange : ageRange,
+                patientMaritalStatus: patientMaritalStatus,
+                lastVisit:lastVisit,
+                phoneNumber: phoneNumber,
+                relativeName: relativeName,
+                nationalId:nationalId,
+                fileNumber: fileNumber
             }),
             success: function (data) {
                 pData = data;
@@ -175,7 +192,7 @@
 <form id="patientRegistrationForm" method="POST">
 
     <div id="searchPane" style="display: inline-block; float: left;">
-        <input id="surName" name="patient.surName"
+        <input id="searchPhrase" name="searchPhrase"
                placeholder="Name/Identifier"/>
         <a class="button task" href="#" id="showAdvancedSearch">
             <i class="icon-filter"></i>

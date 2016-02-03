@@ -14,6 +14,7 @@ import org.openmrs.ui.framework.page.PageModel;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author Stanslaus Odhiambo
@@ -43,6 +44,7 @@ public class RevisitPatientRegistrationPageController {
                         .getSubConcepts(RegistrationConstants.CONCEPT_NAME_OPD_WARD));
         model.addAttribute("location", Context.getAdministrationService().getGlobalProperty("hospitalcore.hospitalName"));
         model.addAttribute("listOfPatients", new ArrayList<String>());
+        model.addAttribute("currentTime",new Date());
 
     }
 

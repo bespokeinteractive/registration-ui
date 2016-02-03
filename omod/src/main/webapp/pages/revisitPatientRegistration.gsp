@@ -32,7 +32,7 @@
 
         <div class="identifiers">
             <em>Current Time:</em>
-            <span>25-01-2016 10:56:41</span>
+            <span>${currentTime}</span>
         </div>
 
 

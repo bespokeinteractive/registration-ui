@@ -61,6 +61,7 @@ public class ShowPatientInfoPageController {
         model.addAttribute("observations", "");
         model.addAttribute("encounterId", encounterId);
         model.addAttribute("registrationFee", "");
+        model.addAttribute("revisit", false);
         model.addAttribute("selectedPaymentCategory", "");
 
         Patient patient = Context.getPatientService().getPatient(patientId);
@@ -123,6 +124,7 @@ public class ShowPatientInfoPageController {
             Boolean firstTimeVisit = true;
             model.addAttribute("firstTimeVisit", firstTimeVisit);
             model.addAttribute("typeOfSlip", "Registration Receipt");
+            model.addAttribute("reprint", false);
         }
 
         if ((revisit != null) && revisit) {

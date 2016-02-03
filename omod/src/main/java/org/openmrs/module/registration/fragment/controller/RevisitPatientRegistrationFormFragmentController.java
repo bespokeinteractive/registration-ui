@@ -8,6 +8,10 @@ import org.openmrs.module.hospitalcore.matcher.*;
 import org.openmrs.module.hospitalcore.util.HospitalCoreConstants;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
+import org.openmrs.ui.framework.page.PageModel;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +39,8 @@ public class RevisitPatientRegistrationFormFragmentController {
             @RequestParam(value = "phrase", required = false) String phrase,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
-            HttpServletRequest request, UiUtils uiUtils) {
+            UiUtils uiUtils,
+            HttpServletRequest request) {
         String prefix = Context.getAdministrationService().getGlobalProperty(
                 HospitalCoreConstants.PROPERTY_IDENTIFIER_PREFIX);
 //        model.addAttribute("prefix", prefix);
@@ -67,15 +72,16 @@ public class RevisitPatientRegistrationFormFragmentController {
         // e.printStackTrace();
         // }
 
-        for (Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
-            String parameterName = (String) e.nextElement();
-//            model.addAttribute(parameterName,request.getParameter(parameterName));
-        }
+//        for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
+//            String parameterName = (String) e.nextElement();
+//            model.addAttribute(parameterName,
+//                    request.getParameter(parameterName));
+//        }
 
         // PAGING
-//        if (currentPage > 0) {
+        if (currentPage > 0) {
 //            model.addAttribute("prevPage", currentPage - 1);
-//        }
+        }
         if ((currentPage + 1) * pageSize <= patients.size()) {
 //            model.addAttribute("nextPage", currentPage + 1);
         }
@@ -84,9 +90,8 @@ public class RevisitPatientRegistrationFormFragmentController {
 
 //        model.addAttribute("patients", renderedPatients);
 //        model.addAttribute("size", patients.size());
-        return SimpleObject.fromCollection(renderedPatients,uiUtils,"patientId","names","age","gender");
+        return SimpleObject.fromCollection(renderedPatients, uiUtils, "patientId", "patientIdentifier.identifier", "names", "age", "gender");
     }
-
 
     // Filter patient list using advance search criteria
     private List<Patient> filterPatients(HttpServletRequest request,
@@ -151,6 +156,13 @@ public class RevisitPatientRegistrationFormFragmentController {
         return page;
     }
 
+    public String showSearchBox(@RequestParam("view") String view,
+                                @RequestParam("resultBoxId") String resultBoxId, Model model) {
+        model.addAttribute("view", view);
+        model.addAttribute("resultBoxId", resultBoxId);
+        return "/module/hospitalcore/patientSearch/searchBox";
+    }
+
     private List<Patient> select(List<Patient> patients, Matcher matcher) {
         List<Patient> result = new ArrayList<Patient>();
         for (Patient patient : patients) {
@@ -169,5 +181,4 @@ public class RevisitPatientRegistrationFormFragmentController {
             return 0;
         }
     }
-
 }
