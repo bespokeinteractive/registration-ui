@@ -59,9 +59,9 @@ public class ShowPatientInfoPageController {
         model.addAttribute("create", "");
         model.addAttribute("creates", "");
         model.addAttribute("observations", "");
-        model.addAttribute("encounterId",encounterId);
-        model.addAttribute("registrationFee","");
-        model.addAttribute("selectedPaymentCategory","");
+        model.addAttribute("encounterId", encounterId);
+        model.addAttribute("registrationFee", "");
+        model.addAttribute("selectedPaymentCategory", "");
 
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
@@ -127,7 +127,8 @@ public class ShowPatientInfoPageController {
 
         if ((revisit != null) && revisit) {
             model.addAttribute("typeOfSlip", "Registration Receipt");
-
+            model.addAttribute("revisit", revisit);
+            model.addAttribute("reprint", reprint);
             SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy");
             String sef = spf.format(hcs.getLastVisitTime(patient));
             System.out.println("patient created day visit" + hcs.getLastVisitTime(patient));
@@ -145,6 +146,9 @@ public class ShowPatientInfoPageController {
         // If reprint, get the latest registration encounter
         if ((reprint != null) && reprint) {
 
+            model.addAttribute("firstTimeVisit", false);
+            model.addAttribute("revisit", false);
+            model.addAttribute("reprint", reprint);
             model.addAttribute("typeOfSlip", "Duplicate Slip");
             SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy");
             String sef = spf.format(hcs.getLastVisitTime(patient));
@@ -153,8 +157,8 @@ public class ShowPatientInfoPageController {
             System.out.println("patient created day " + patient.getDateCreated());
             System.out.println("patient created day " + sef);
             String stf = spf.format(new Date());
-            System.out.println("patient prevuois day visit" + spf.format(new Date()));
-            System.out.println("prevuois day visit" + stf);
+            System.out.println("patient previous day visit" + spf.format(new Date()));
+            System.out.println("previous day visit" + stf);
             //model.addAttribute("currentDateTime",stf );
             int value = stf.compareTo(sef);
             int values = stf.compareTo(srf);
@@ -229,7 +233,7 @@ public class ShowPatientInfoPageController {
         Encounter encounter = null;
         if (encounterId != null) {
             encounter = Context.getEncounterService().getEncounter(encounterId);
-			/*
+            /*
 				Concept cnrf = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_REGISTRATION_FEE);
 				Concept cnp = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NEW_PATIENT);
 				Obs obsn = new Obs();

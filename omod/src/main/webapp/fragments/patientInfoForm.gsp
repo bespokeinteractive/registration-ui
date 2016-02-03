@@ -42,8 +42,8 @@
             dueDate: "${dueDate}",
             daysLeft: "${daysLeft}",
             firstTimeVisit: "${firstTimeVisit}",
-            revisit: "${param.revisit == 'true'}",
-            reprint: "${param.reprint == 'true'}",
+            revisit: "${revisit}",
+            reprint: "${reprint}",
             selectedPaymentCategory: "${selectedPaymentCategory}",
             specialSchemeName: "${specialSchemeName}",
             create: "${create}",
@@ -404,7 +404,8 @@
 //                    });
                 } else {
                     PAGE.print();
-                    window.location.href = getContextPath() + "/findPatient.htm";
+//                    window.location.href = getContextPath() + "/findPatient.htm";
+                    window.location.href = '${ ui.pageLink("registration", "patientRegistration")}';
                 }
 
             }

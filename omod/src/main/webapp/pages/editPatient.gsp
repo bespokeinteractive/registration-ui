@@ -1,0 +1,1 @@
+<% ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"]) %>

@@ -122,7 +122,7 @@
             <% props.each {
                if(it == props.last()){
                   def pageLinkRevisit = ui.pageLink("registration", "showPatientInfo");
-                  def pageLinkEdit = ui.pageLink("registration", "showPatientInfo");
+                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
                   def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
                    %>
 
