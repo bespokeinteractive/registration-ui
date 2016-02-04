@@ -252,9 +252,9 @@
         <span class="select-arrow">
             <select id="gender" onblur="ADVSEARCH.delay();">
                 <option value="any">Gender</option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-            </select>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+        </select>
         </span>
         <input id="age" placeholder="Age" onblur="ADVSEARCH.delay();"/>
         <select id="ageRange" onblur="ADVSEARCH.delay();">
