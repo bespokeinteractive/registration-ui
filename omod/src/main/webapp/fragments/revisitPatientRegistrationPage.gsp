@@ -143,9 +143,11 @@
                     '</a>  <a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
                     '<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
             <% } else {%>
+
+            <% if()%>
             row += '<td>' + item.${ it } + '</td>';
             <% }
-               } %>
+            } %>
             row += '</tr>';
             tbody.append(row);
         }
