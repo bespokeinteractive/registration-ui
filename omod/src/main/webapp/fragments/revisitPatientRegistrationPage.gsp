@@ -1,323 +1,206 @@
-<%
-    def props = ["patientId", "names", "age", "gender", "previous", "action"]
-%>
-
-<style>
-
-</style>
 <script type="text/javascript">
-
-    var MODEL;
-    jQuery(document).ready(function () {
-        jQuery("#advancedDetails").hide();
-        jQuery("#showAdvancedSearch").click(function () {
-            jQuery("#advancedDetails").toggle();
-            //clear the search fields so as not to affect next search
-//            jQuery("#patientRegistrationForm")[0].reset();
-
-        });
-
-        // Districts
-        var _districts = new Array();
-        var districts = "${districts}";
-        <% districts.each { d -> %>
-        _districts.push("${d}");
-        <% } %>
-
-
-
-        // Upazilas
-        var _upazilas = new Array();
-        var upazilas = "${upazilas}";
-        <% upazilas.each { d -> %>
-        _upazilas.push("${d}");
-        <% } %>
-
-        /**
-         ** MODEL FROM CONTROLLER
-         **/
-        MODEL = {
-            patientIdentifier: "${patientIdentifier}",
-            districts: _districts,
-            upazilas: _upazilas,
-            ////ghanshyam,16-dec-2013,3438 Remove the interdependency
-            TRIAGE: "${TRIAGE}",
-            OPDs: "${OPDs}",
-            referredFrom: "${referralHospitals}",
-            referralType: "${referralReasons}",
-            TEMPORARYCAT: "${TEMPORARYCAT}"
-        }
-
-    });//end of ready function
-
-    PATIENTSEARCHRESULT = {
-        oldBackgroundColor: "",
-
-        /** Click to view patient info */
-        visit: function (patientId, deadInfo, admittedInfo) {
-            if (deadInfo == "true") {
-                alert("This Patient is Dead");
-                return false;
-            }
-            if (admittedInfo == "true") {
-                alert("This Patient is admitted");
-                return false;
-            }
-            window.location.href = emr.pageLink("registration", "showPatientInfo", {
-                "patientId": patientId,
-                "revisit": true
-            });
-        },
-
-        /** Edit a patient */
-        editPatient: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
-                alert("This Patient is Dead");
-                return false;
-            }
-            window.location.href = emr.pageLink("registration", "showPatientInfo", {"patientId": patientId});
-            ;
-        },
-
-        reprint: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
-                alert("This Patient is Dead");
-                return false;
-            }
-            window.location.href = emr.pageLink("registration", "showPatientInfo", {
-                "patientId": patientId,
-                "reprint": true
-            });
-        }
-    };
-
-    ADVSEARCH = {
-        timeoutId : 0,
-        showing : false,
-        params : "",
-        delayDuration : 1000,
-        pageSize : 10,
-        beforeSearch: function(){},
-
-        // search patient
-        searchPatient : function(currentPage, pageSize) {
-            this.beforeSearch();
-            var phrase = jQuery("#searchPhrase").val();
-
-            if (phrase.length >= 3) {
-                jQuery("#ajaxLoader").show();
-                getPatientQueue(1);
-            }
-        },
-
-        // start searching patient
-        startSearch : function(e) {
-            e = e || window.event;
-            ch = e.which || e.keyCode;
-            if (ch != null) {
-                if ((ch >= 48 && ch <= 57) || (ch >= 96 && ch <= 105)
-                        || (ch >= 65 && ch <= 90)
-                        || (ch == 109 || ch == 189 || ch == 45) || (ch == 8)
-                        || (ch == 46)) {
-                } else if (ch == 13) {
-                    clearTimeout(this.timeoutId);
-                    this.timeoutId = setTimeout("ADVSEARCH.delay()",
-                            this.delayDuration);
-                }
-            }
-        },
-
-        // delay before search
-        delay : function() {
-            this.searchPatient(0, this.pageSize);
-        }
-    };
-
-    jQuery(document).ready(function () {
-
-        // hover rows
-        jQuery(".patientSearchRow").hover(
-                function (event) {
-                    obj = event.target;
-                    while (obj.tagName != "TR") {
-                        obj = obj.parentNode;
-                    }
-                    PATIENTSEARCHRESULT.oldBackgroundColor = jQuery(obj).css("background-color");
-                    jQuery(obj).css("background-color", "#00FF99");
-                },
-                function (event) {
-                    obj = event.target;
-                    while (obj.tagName != "TR") {
-                        obj = obj.parentNode;
-                    }
-                    jQuery(obj).css("background-color", PATIENTSEARCHRESULT.oldBackgroundColor);
-                }
-        );
-
-    });
-
-    //update the queue table
-    function updateQueueTable(data) {
-        var jq = jQuery;
-        jq('#searchResultsTable > tbody > tr').remove();
-        var tbody = jq('#searchResultsTable > tbody');
-        for (index in data) {
-            var item = data[index];
-            var row = '<tr>';
-            <% props.each {
-               if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "showPatientInfo");
-                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
-                  def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
-                   %>
-
-            row += '<td> <a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i>' +
-                    '</a>  <a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
-                    '<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
-            <% } else {%>
-            row += '<td>' + item.${ it } + '</td>';
-            <% }
-               } %>
-            row += '</tr>';
-            tbody.append(row);
-        }
-    }
-
-    // get queue
-    function getPatientQueue(currentPage) {
-        this.currentPage = currentPage;
-        var phrase = jQuery("#searchPhrase").val();
-        var pgSize = jQuery("#sizeSelector").val();
-        var gender = jQuery("#gender").val();
-        var age = jQuery("#age").val();
-        var ageRange = jQuery("#ageRange").val();
-        var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
-        var lastVisit = jQuery("#lastVisit").val();
-        var phoneNumber = jQuery("#phoneNumber").val();
-        var relativeName = jQuery("#relativeName").val();
-        var nationalId = jQuery("#nationalId").val();
-        var fileNumber = jQuery("#fileNumber").val();
-
-        jQuery.ajax({
-            type: "POST",
-            url: "${ui.actionLink('registration','revisitPatientRegistrationForm','searchPatient')}",
-            dataType: "json",
-            data: ({
-                gender: gender,
-                phrase: phrase,
-                currentPage: currentPage,
-                pageSize: pgSize,
-                age: age,
-                ageRange: ageRange,
-                patientMaritalStatus: patientMaritalStatus,
-                lastVisit: lastVisit,
-                phoneNumber: phoneNumber,
-                relativeName: relativeName,
-                nationalId: nationalId,
-                fileNumber: fileNumber
-            }),
-            success: function (data) {
-                jQuery("#ajaxLoader").hide();
-                pData = data;
-                updateQueueTable(data);
-            },
-            error : function(xhr, ajaxOptions, thrownError) {
-                alert(xhr);
-                jQuery("#ajaxLoader").hide();
-            }
-
-        });
-    }
-
-
+	function HideDashboard(){
+		jQuery('#dashboard').hide();
+	}
+	function ShowDashboard(){
+		jQuery('#dashboard').toggle(1000);
+		
+	}
 </script>
 
-<h3 align="center" style="color:black">Search Revisit Patient</h3>
+<style>
+	form .advanced{
+		background: #f0f0f0 none repeat scroll 0 0;
+		border-color: #ddd;
+		border-style: solid;
+		border-width: 1px;
+		cursor: pointer;
+		float: right;
+		padding: 5px 0;
+		text-align: center;
+		width: 17%;
+	}
+	.col4 label{
+		width: 110px;
+		display: inline-block;
+	}
+	.col4 input[type=text] {
+		display: inline-block;
+		padding: 2px 10px;
+	}
+	.col4 select {
+		padding: 2px 10px;
+	}
+	form select {
+		min-width: 50px;
+		display: inline-block;
+	}
+</style>
 
-<div id="patientSearchResult"></div>
-
-<form id="patientRegistrationForm" method="POST">
-
-    <div id="searchPane" style="display: inline-block; float: left;">
-        <input id="searchPhrase" name="searchPhrase" onkeyup="ADVSEARCH.startSearch(event);" onblur="ADVSEARCH.delay();"
-               placeholder="Name/Identifier"/>
-        <a class="button task" href="#" id="showAdvancedSearch">
-            <i class="icon-filter"></i>
-            Advanced Search
-        </a>
-        <img id="ajaxLoader" style="display:none;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
-    </div>
-
-    <div id="advancedDetails" style="float: right">
-        <span class="select-arrow">
-            <select id="gender" onblur="ADVSEARCH.delay();">
-                <option value="any">Gender</option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-            </select>
-        </span>
-        <input id="age" placeholder="Age" onblur="ADVSEARCH.delay();"/>
-        <select id="ageRange" onblur="ADVSEARCH.delay();">
-            <option value="0">Exact</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <input id="patientMaritalStatus" placeholder="Marital Status" onblur="ADVSEARCH.delay();"/>
-        <select id="lastVisit" onblur="ADVSEARCH.delay();">
-            <option value="any">Anytime</option>
-            <option value="31">Last Month</option>
-            <option value="183">Last Six Months</option>
-            <option value="366">Last Year</option>
-        </select>
-        <input id="phoneNumber" placeholder="Phone Number" onblur="ADVSEARCH.delay();"/>
-        <input id="relativeName" placeholder="Marital Status" onblur="ADVSEARCH.delay();"/>
-        <input id="nationalId" placeholder="National Id" onblur="ADVSEARCH.delay();"/>
-        <input id="fileNumber" placeholder="File Number" onblur="ADVSEARCH.delay();"/>
-    </div>
-    <br/><br/><br/>
-
-    <div id="searchResults">
-        <section>
-            <div>
-                <table cellpadding="5" cellspacing="0" width="100%" id="searchResultsTable">
-                    <thead>
-                    <tr align="center">
-                        <th>Patient ID</th>
-                        <th>Name</th>
-                        <th>Age</th>
-                        <th>Gender</th>
-                        <th>Date of Previous Visit</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr align="center">
-                        <td colspan="6">No patients found</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </div>
-
-    <div id="selection">
-        Show
-        <select name="sizeSelector" id="sizeSelector" onchange="getPatientQueue(1)">
-            <option value="10" id="1">10</option>
-            <option value="20" id="2" selected>20</option>
-            <option value="50" id="3">50</option>
-            <option value="100" id="4">100</option>
-            <option value="150" id="5">150</option>
-        </select>
-    </div>
-
-
-    <div id="searchbox"></div>
-
-    <div id="numberOfFoundPatients"></div>
+<form onsubmit="return false" id="patient-search-form" method="get">
+    <input type="text" autocomplete="off" placeholder="Search by ID or Name" id="patient-search" style="width:80%;padding: 5px 10px;">
+	<div id="advanced" class="advanced" onclick="ShowDashboard();">ADVANCED SEARCH</div>
+	
+	<div id="dashboard" class="dashboard" style="display:none;">
+		<div class="info-section">
+			<div class="info-header">
+				<i class="icon-diagnosis"></i>
+				<h3>ADVANCED SEARCH</h3>
+				<span id="as_close" onclick="HideDashboard();">
+					<div class="identifiers">
+						<span style="background:#00463f">x</span>
+					</div>
+				</span>
+			</div>
+			<div class="info-body" style="min-height: 140px;">
+				<ul>
+					<li>
+						<div class="onerow">
+							<div class="col4">
+								<label for="gender">Gender</label>
+								<select style="width: 170px" id="gender" name="gender">
+									<option value="Any">Any</option>
+									<option value="M">Male</option>
+									<option value="F">Female</option>
+								</select>
+							</div>
+							
+							<div class="col4">
+								<label for="lastDayOfVisit">Previous Visit</label>
+								<input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px" placeholder="Last Visit Date">
+							</div>
+							
+							<div class="col4 last">
+								<label for="relativeName">Relative Name</label>
+								<input id="relativeName" name="relativeName" style="width: 151px" placeholder="Relative Name">
+							</div>
+						</div>
+						
+						<div class="onerow" style="padding-top: 0px;">
+							<div class="col4">
+								<label for="age">Age</label>
+								<input id="age" name="age" style="width: 149px" placeholder="Patient Age">
+							</div>
+							
+							<div class="col4">
+								<label for="gender">Previous Visit</label>
+								<select style="width: 170px" id="lastVisit">
+									<option value="Any">Anytime</option>
+									<option value="31">Last month</option>
+									<option value="183">Last 6 months</option>
+									<option value="366">Last year</option>
+								</select>
+							</div>
+							
+							<div class="col4 last">
+								<label for="nationalId">National ID</label>
+								<input id="nationalId" name="nationalId" style="width: 151px" placeholder="National ID">
+							</div>
+						</div>
+						
+						<div class="onerow" style="padding-top: 0px;">
+							<div class="col4">
+								<label for="ageRange">Range &plusmn;</label>
+								<select id="ageRange" name="ageRange" style="width: 170px">
+									<option value="0">Exact</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+							</div>
+							
+							<div class="col4">
+								<label for="phoneNumber">Phone No.</label>
+								<input id="phoneNumber" name="phoneNumber" style="width: 149px" placeholder="Phone No.">
+							</div>
+							
+							<div class="col4 last">
+								<label for="fileNumber">File Number</label>
+								<input id="fileNumber" name="fileNumber" style="width: 151px" placeholder="File Number">
+							</div>
+						</div>
+						
+						<div class="onerow" style="padding-top: 0px;">
+							<div class="col4">
+								<label for="patientMaritalStatus">Marital Status</label>
+								<select id="patientMaritalStatus" style="width: 170px">
+									<option value="Any">Any</option>
+									<option value="Single">Single</option>
+									<option value="Married">Married</option>
+									<option value="Divorced">Divorced</option>
+									<option value="Widow">Widow</option>
+									<option value="Widower">Widower</option>
+									<option value="Separated">Separated</option>
+								</select>
+							</div>
+							
+							<div class="col4">
+								&nbsp;
+							</div>
+							
+							<div class="col4 last">&nbsp;</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </form>
 
+<div id="patient-search-results" style="display: block; margin-top:3px;">
+	<div role="grid" class="dataTables_wrapper" id="patient-search-results-table_wrapper">
+		<table id="patient-search-results-table" class="dataTable" aria-describedby="patient-search-results-table_info">
+			<thead>
+				<tr role="row">
+					<th class="ui-state-default" role="columnheader" style="width: 220px;">
+						<div class="DataTables_sort_wrapper">Identifier<span class="DataTables_sort_icon"></span></div>
+					</th>
+					
+					<th class="ui-state-default" role="columnheader">
+						<div class="DataTables_sort_wrapper">Name<span class="DataTables_sort_icon"></span></div>
+					</th>
+					
+					<th class="ui-state-default" role="columnheader" style="width:60px;">
+						<div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
+					</th>
+					
+					<th class="ui-state-default" role="columnheader" style="width: 60px;">
+						<div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
+					</th>
+					
+					<th class="ui-state-default" role="columnheader" style="width:120px;">
+						<div class="DataTables_sort_wrapper">Last Visit<span class="DataTables_sort_icon"></span></div>
+					</th>
+					
+					<th class="ui-state-default" role="columnheader" style="width: 100px;">
+						<div class="DataTables_sort_wrapper">Action<span class="DataTables_sort_icon"></span></div>
+					</th>
+				</tr>
+			</thead>
+			
+			<tbody role="alert" aria-live="polite" aria-relevant="all">
+				<tr class="odd">
+					<td class="">KALJ1622420458183-4</td>
+					<td class="">Dennis Kungu</td>
+					<td class="">M</td>
+					<td class="">29</td>
+					<td class="">24-Mar-2013</td>
+					<td class="">&nbsp;</td>
+				</tr>
+				
+				<tr class="odd">
+					<td class="">KALJ1673850004567-9</td>
+					<td class="">Brian Kirui</td>
+					<td class="">M</td>
+					<td class="">25</td>
+					<td class="">N/A</td>
+					<td class="">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+	</div>
+</div>
