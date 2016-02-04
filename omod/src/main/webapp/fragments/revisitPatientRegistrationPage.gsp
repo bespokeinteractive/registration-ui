@@ -117,6 +117,9 @@
                 jQuery("#ajaxLoader").show();
                 getPatientQueue(1);
             }
+			else{
+				jq().toastmessage('showNoticeToast', "Specify atleast three characters to Search");
+			}
         },
 
         // start searching patient
@@ -167,6 +170,10 @@
             row += '</tr>';
             tbody.append(row);
         }
+		
+		if (jq('#patient-search-results-table tr').length <= 1){
+			tbody.append('<tr align="center"><td colspan="6">No patients found</td></tr>');
+		}
     }
 
     // get queue
@@ -398,11 +405,11 @@ form select {
                 </th>
 
                 <th class="ui-state-default" role="columnheader" style="width:60px;">
-                    <div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
+                    <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
                 </th>
 
                 <th class="ui-state-default" role="columnheader" style="width: 60px;">
-                    <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
+                    <div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
                 </th>
 
                 <th class="ui-state-default" role="columnheader" style="width:120px;">
@@ -416,9 +423,9 @@ form select {
             </thead>
 
             <tbody role="alert" aria-live="polite" aria-relevant="all">
-            <tr align="center">
-                <td colspan="6">No patients found</td>
-            </tr>
+				<tr align="center">
+					<td colspan="6">No patients found</td>
+				</tr>
             </tbody>
         </table>
 

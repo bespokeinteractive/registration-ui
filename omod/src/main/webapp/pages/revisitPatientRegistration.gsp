@@ -50,6 +50,9 @@ form input{
 .dashboard .info-section {
     margin: 2px 5px 5px;
 }
+.toast-item{
+    background-color: #222;
+}
 
 @media all and (max-width: 768px) {
     .onerow {
