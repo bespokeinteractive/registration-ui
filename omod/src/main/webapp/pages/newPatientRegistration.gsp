@@ -114,7 +114,7 @@ label span{
 	<div class="patient-header new-patient-header">
 		<div class="demographics">
 			<h1 class="name" style="border-bottom: 1px solid #ddd;">
-				<span>PATIENTS REGISTRATION &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span>PATIENT REGISTRATION &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			</h1>
 
 			<br>
