@@ -1,7 +1,7 @@
 <% ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"]) %>
 <style>
 .cell {
-    border-top: 1px solid lightgrey;
+    border-top: 1px solid #d3d3d3;
     padding: 20px;
 }
 
