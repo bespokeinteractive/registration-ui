@@ -36,8 +36,26 @@
             referralType: "${referralReasons}",
             TEMPORARYCAT: "${TEMPORARYCAT}"
         }
+		
+		jQuery('select').bind('change keyup', function() {
+			ADVSEARCH.delay();
+		});
 
     });//end of ready function
+	
+	jQuery.fn.clearForm = function() {
+		return this.each(function() {
+			var type = this.type, tag = this.tagName.toLowerCase();
+			if (tag == 'form')
+			  return jQuery(':input',this).clearForm();
+			if (type == 'text' && jQuery(this).attr('id') != 'searchPhrase')
+			  this.value = '';
+			else if (type == 'checkbox' || type == 'radio')
+			  this.checked = false;
+			else if (tag == 'select')
+			  this.selectedIndex = -1;
+		});
+	};
 
     PATIENTSEARCHRESULT = {
         oldBackgroundColor: "",
@@ -205,25 +223,28 @@
         jQuery('#dashboard').hide();
     }
     function ShowDashboard() {
-        jQuery('#dashboard').toggle(800);
-        jQuery("#patient-search-form")[0].reset();
+        jQuery('#dashboard').toggle(500);
+        jQuery('#patient-search-form').clearForm();
 
     }
 </script>
 
 <style>
 form .advanced {
-    background: #f0f0f0 none repeat scroll 0 0;
-    border-color: #ddd;
+    background: #363463 none repeat scroll 0 0;
+    border-color: #dddddd;
     border-style: solid;
     border-width: 1px;
+    color: #fff;
     cursor: pointer;
     float: right;
     padding: 5px 0;
     text-align: center;
-    width: 17%;
+    width: 27%;
 }
-
+form .advanced i{
+	font-size: 22px;
+}
 .col4 label {
     width: 110px;
     display: inline-block;
@@ -246,10 +267,10 @@ form select {
 
 <form onsubmit="return false" id="patient-search-form" method="get">
     <input type="text" autocomplete="off" placeholder="Search by ID or Name" id="searchPhrase"
-           style="width:80%;padding: 5px 10px;" onkeyup="ADVSEARCH.startSearch(event);">
-    <img id="ajaxLoader" style="display:none;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
+           style="float:left; width:70%; padding:6px 10px 7px;" onkeyup="ADVSEARCH.startSearch(event);">
+    <img id="ajaxLoader" style="display:none; float:left; margin: 0 -4%;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
 
-    <div id="advanced" class="advanced" onclick="ShowDashboard();">ADVANCED SEARCH</div>
+    <div id="advanced" class="advanced" onclick="ShowDashboard();"><i class="icon-filter"></i>ADVANCED SEARCH</div>
 
     <div id="dashboard" class="dashboard" style="display:none;">
         <div class="info-section">
@@ -259,7 +280,7 @@ form select {
                 <h3>ADVANCED SEARCH</h3>
                 <span id="as_close" onclick="HideDashboard();">
                     <div class="identifiers">
-                        <span style="background:#00463f">x</span>
+                        <span style="background:#00463f; padding-bottom: 5px;">x</span>
                     </div>
                 </span>
             </div>
@@ -270,7 +291,7 @@ form select {
                         <div class="onerow">
                             <div class="col4">
                                 <label for="gender">Gender</label>
-                                <select style="width: 170px" id="gender" name="gender" onblur="ADVSEARCH.delay();">
+                                <select style="width: 172px" id="gender" name="gender">
                                     <option value="Any">Any</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
@@ -299,7 +320,7 @@ form select {
 
                             <div class="col4">
                                 <label for="gender">Previous Visit</label>
-                                <select style="width: 170px" id="lastVisit" onblur="ADVSEARCH.delay();">
+                                <select style="width: 172px" id="lastVisit">
                                     <option value="Any">Anytime</option>
                                     <option value="31">Last month</option>
                                     <option value="183">Last 6 months</option>
@@ -317,7 +338,7 @@ form select {
                         <div class="onerow" style="padding-top: 0px;">
                             <div class="col4">
                                 <label for="ageRange">Range &plusmn;</label>
-                                <select id="ageRange" name="ageRange" style="width: 170px" onblur="ADVSEARCH.delay();">
+                                <select id="ageRange" name="ageRange" style="width: 172px">
                                     <option value="0">Exact</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -342,7 +363,7 @@ form select {
                         <div class="onerow" style="padding-top: 0px;">
                             <div class="col4">
                                 <label for="patientMaritalStatus">Marital Status</label>
-                                <select id="patientMaritalStatus" style="width: 170px" onblur="ADVSEARCH.delay();">
+                                <select id="patientMaritalStatus" style="width: 172px">
                                     <option value="Any">Any</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>
