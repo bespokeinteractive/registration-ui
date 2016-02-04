@@ -36,13 +36,13 @@
             referralType: "${referralReasons}",
             TEMPORARYCAT: "${TEMPORARYCAT}"
         }
-		
+
 		jQuery('select').bind('change keyup', function() {
 			ADVSEARCH.delay();
 		});
 
     });//end of ready function
-	
+
 	jQuery.fn.clearForm = function() {
 		return this.each(function() {
 			var type = this.type, tag = this.tagName.toLowerCase();
@@ -167,7 +167,8 @@
                     <% if (context.authenticatedUser.hasPrivilege('Print Duplicate Slip') ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
                     '</td>';
             <% } else {%>
-            row += '<td>' + item.${ it } + '</td>';
+
+            row += '<td>' + item.${ it} + '</td>';
             <% }
                } %>
             row += '</tr>';
@@ -405,6 +406,10 @@ form select {
 
                 <th class="ui-state-default" role="columnheader">
                     <div class="DataTables_sort_wrapper">Name<span class="DataTables_sort_icon"></span></div>
+                </th>
+
+                <th class="ui-state-default" role="columnheader" style="width: 60px;">
+                    <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
                 </th>
 
                 <th class="ui-state-default" role="columnheader" style="width:60px;">
