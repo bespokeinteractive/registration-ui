@@ -12,6 +12,9 @@
         jQuery("#advancedDetails").hide();
         jQuery("#showAdvancedSearch").click(function () {
             jQuery("#advancedDetails").toggle();
+            //clear the search fields so as not to affect next search
+//            jQuery("#patientRegistrationForm")[0].reset();
+
         });
 
         // Districts
@@ -104,30 +107,6 @@
             if (phrase.length >= 3) {
                 jQuery("#ajaxLoader").show();
                 getPatientQueue(1);
-
-//                jQuery.ajax({
-//                    type : "POST",
-//                    url : url,
-//                    data : ({
-//                        phrase : phrase,
-//                        gender : gender,
-//                        age : age,
-//                        ageRange : ageRange,
-//                        date : date,
-//                        dateRange : dateRange,
-//                        relativeName : relativeName,
-//                        view : view,
-//                        currentPage : currentPage,
-//                        pageSize : pageSize
-//                    }),
-//                    success : function(data) {
-//                        jQuery("#ajaxLoader", form).hide();
-//                    },
-//                    error : function(xhr, ajaxOptions, thrownError) {
-//                        alert(xhr);
-//                        jQuery("#ajaxLoader", form).hide();
-//                    }
-//                });
             }
         },
 

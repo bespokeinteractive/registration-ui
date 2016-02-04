@@ -59,7 +59,7 @@ public class ShowPatientInfoPageController {
         model.addAttribute("create", "");
         model.addAttribute("creates", "");
         model.addAttribute("observations", "");
-        model.addAttribute("encounterId", encounterId);
+//        model.addAttribute("encounterId", encounterId);
         model.addAttribute("registrationFee", "");
         model.addAttribute("revisit", false);
         model.addAttribute("selectedPaymentCategory", "");
