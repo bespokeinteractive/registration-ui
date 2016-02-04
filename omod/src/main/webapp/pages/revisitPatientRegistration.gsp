@@ -44,8 +44,11 @@ form input{
     cursor: pointer;
     display: inline-block;
     float: right;
-    margin-top: -3px;
+    margin-top: -2px;
     padding-right: 5px;
+}
+.dashboard .info-section {
+    margin: 2px 5px 5px;
 }
 
 @media all and (max-width: 768px) {
