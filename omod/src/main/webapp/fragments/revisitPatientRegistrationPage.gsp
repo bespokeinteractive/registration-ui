@@ -139,9 +139,12 @@
                   def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
                    %>
 
-            row += '<td> <a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i>' +
-                    '</a>  <a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>  ' +
-                    '<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i> </td>';
+            row += '<td> ' +
+
+                    '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
+                    <% if (context.authenticatedUser.hasPrivilege('Edit Patients') ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
+                    <% if (context.authenticatedUser.hasPrivilege('Print Duplicate Slip') ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
+                    '</td>';
             <% } else {%>
             row += '<td>' + item.${ it } + '</td>';
             <% }
