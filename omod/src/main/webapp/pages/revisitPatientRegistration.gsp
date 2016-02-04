@@ -93,7 +93,7 @@ form input{
 
         <div class="onepcssgrid-1000">
             <br/><br/>
-            ${ ui.includeFragment("registration", "newTest") }
+            ${ ui.includeFragment("registration", "revisitPatientRegistrationPage") }
 
         </div>
     </div>

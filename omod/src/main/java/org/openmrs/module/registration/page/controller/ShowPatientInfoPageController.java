@@ -59,7 +59,7 @@ public class ShowPatientInfoPageController {
         model.addAttribute("create", "");
         model.addAttribute("creates", "");
         model.addAttribute("observations", "");
-//        model.addAttribute("encounterId", encounterId);
+        model.addAttribute("encounterId", encounterId);
         model.addAttribute("registrationFee", "");
         model.addAttribute("revisit", false);
         model.addAttribute("selectedPaymentCategory", "");
@@ -147,7 +147,6 @@ public class ShowPatientInfoPageController {
 
         // If reprint, get the latest registration encounter
         if ((reprint != null) && reprint) {
-
             model.addAttribute("firstTimeVisit", false);
             model.addAttribute("revisit", false);
             model.addAttribute("reprint", reprint);
