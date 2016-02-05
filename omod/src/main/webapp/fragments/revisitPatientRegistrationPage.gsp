@@ -1,5 +1,5 @@
 <%
-    def props = ["patientId", "names", "age", "gender", "previous", "action"]
+    def props = ["wrapperIdentifier", "names", "age", "gender", "lastVisitTime", "action"]
 %>
 
 <script type="text/javascript">
@@ -56,6 +56,11 @@
 			  this.selectedIndex = -1;
 		});
 	};
+    function strReplace(word) {
+        var res = word.replace("[", "");
+        res=res.replace("]","");
+        return res;
+    }
 
     PATIENTSEARCHRESULT = {
         oldBackgroundColor: "",
@@ -169,6 +174,7 @@
             <% } else {%>
 
             row += '<td>' + item.${ it} + '</td>';
+            row=strReplace(row);
             <% }
                } %>
             row += '</tr>';

@@ -45,8 +45,9 @@ public class RevisitPatientRegistrationPageController {
         model.addAttribute("location", Context.getAdministrationService().getGlobalProperty("hospitalcore.hospitalName"));
         model.addAttribute("listOfPatients", new ArrayList<String>());
         model.addAttribute("currentTime",new Date());
-
     }
+
+
 
 
 }
