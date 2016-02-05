@@ -2125,6 +2125,12 @@
 			width: 150px;
 			display: inline-block;
 		}
+		.addon{
+			display: inline-block;
+			float: right;
+			margin: 10px 0 0 190px;
+			position: absolute;
+		}
 	</style>
 
 </head>
@@ -2248,9 +2254,11 @@
 									</div>
 
 									<div class="col4 last">
-										<field><input type="text" id="birthdate" name="patient.birthdate" class="required form-textbox1"/></field>
-										<inputbirthdateEstimated id="" type="hidden"
-																 name="patient.birthdateEstimate" value="true"/>
+										<field>
+											<div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
+											<input type="text" id="birthdate" name="patient.birthdate" class="required form-textbox1"/>
+										</field>
+										<inputbirthdateEstimated id="" type="hidden" name="patient.birthdateEstimate" value="true"/>
 									</div>
 								</div>
 								

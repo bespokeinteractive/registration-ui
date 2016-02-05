@@ -56,7 +56,6 @@
             changeYear: true,
             constrainInput: false
         }).on("change", function (dateText) {
-//            display("Got change event from field "+this.value);
             jQuery("#lastDayOfVisit").val(this.value);
             PAGE.checkBirthDate();
         });
@@ -298,6 +297,12 @@ form select {
     min-width: 50px;
     display: inline-block;
 }
+.addon{
+	display: inline-block;
+    float: right;
+    margin: 5px 0 0 145px;
+    position: absolute;
+}
 </style>
 
 <form onsubmit="return false" id="patient-search-form" method="get">
@@ -335,8 +340,8 @@ form select {
 
                             <div class="col4">
                                 <label for="lastDayOfVisit">Last Visit</label>
-                                <input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px"
-                                       placeholder="Last Visit Date">
+								<div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
+                                <input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px" placeholder="Last Visit Date">
                             </div>
 
                             <div class="col4 last">
