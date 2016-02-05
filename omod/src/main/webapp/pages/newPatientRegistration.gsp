@@ -84,6 +84,9 @@ label span{
 	color: #ff0000;
 	padding-left: 5px;
 }
+.toast-item{
+	background-color: #222;
+}
 
 @media all and (max-width: 768px) {
 	.onerow {
@@ -103,18 +106,25 @@ label span{
 				<a href="${ui.pageLink('referenceapplication','home')}">
 					<i class="icon-home small"></i></a>
 			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('registration','patientRegistration')}">Registration</a>
+			</li>
+			
 			<li>
 				<i class="icon-chevron-right link"></i>
 				<a href="#">Add New Patient</a>
 			</li>
-			<li>
+			
+			<li>&nbsp;
 			</li>
 		</ul>
 	</div>
 	<div class="patient-header new-patient-header">
 		<div class="demographics">
 			<h1 class="name" style="border-bottom: 1px solid #ddd;">
-				<span>PATIENT REGISTRATION &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span>NEW PATIENT REGISTRATION &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			</h1>
 
 			<br>

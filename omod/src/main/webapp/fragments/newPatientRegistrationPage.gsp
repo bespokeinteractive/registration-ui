@@ -469,8 +469,9 @@
                         jQuery("#calendar").val(data.datemodel.birthdate);
 
                     } else {
-                        alert(data.datemodel.error);
-                        jQuery("#birthdate").val("");
+                        jq().toastmessage('showNoticeToast', 'Age in wrong format');
+						jq("#birthdate").val("");
+						goto_previous_tab(5);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -1730,6 +1731,17 @@
 		else if (current_tab == 4){
 			jQuery('#rooms3').focus();
 			
+		}
+		else if (current_tab == 5){
+			while (jQuery(':focus') != jQuery('#maritalStatus')) {
+				if (jQuery(':focus').attr('id') == 'birthdate'){
+					jQuery("#ui-datepicker-div").hide();
+					break;
+				}
+				else {
+					NavigatorController.stepBackward();
+				}
+			}
 		}
 	}
 </script>
