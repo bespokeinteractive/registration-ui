@@ -4,6 +4,8 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 
 import java.io.Serializable;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Date;
  */
 public class PatientWrapper extends Patient implements Serializable {
     private Date lastVisitTime;
-    private String wrapperIdentifier;
+    private String wrapperIdentifier,formartedVisitDate;
 
     public PatientWrapper(Date lastVisitTime) {
         this.lastVisitTime = lastVisitTime;
@@ -33,6 +35,12 @@ public class PatientWrapper extends Patient implements Serializable {
     public Date getLastVisitTime() {
         return lastVisitTime;
     }
+    public String getFormartedVisitDate(){
+
+        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formartedVisitDate = formatter.format(lastVisitTime);
+        return formartedVisitDate;
+    }
 
     public void setLastVisitTime(Date lastVisitTime) {
         this.lastVisitTime = lastVisitTime;
@@ -44,5 +52,9 @@ public class PatientWrapper extends Patient implements Serializable {
 
     public void setWrapperIdentifier(String wrapperIdentifier) {
         this.wrapperIdentifier = wrapperIdentifier;
+    }
+
+    public void setFormartedVisitDate(String formartedVisitDate) {
+        this.formartedVisitDate = formartedVisitDate;
     }
 }

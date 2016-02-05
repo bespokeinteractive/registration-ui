@@ -1,5 +1,5 @@
 <%
-    def props = ["wrapperIdentifier", "names", "age", "gender", "lastVisitTime", "action"]
+    def props = ["wrapperIdentifier", "names", "age", "gender", "formartedVisitDate", "action"]
 %>
 
 <script type="text/javascript">
