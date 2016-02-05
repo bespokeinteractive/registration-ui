@@ -37,9 +37,29 @@
             TEMPORARYCAT: "${TEMPORARYCAT}"
         }
 
-		jQuery('select').bind('change keyup', function() {
+		jq('select').bind('change keyup', function() {
 			ADVSEARCH.delay();
 		});
+		
+		jq('input').keydown(function (e) {
+			var key = e.keyCode || e.which;
+			if ((key == 9 || key == 13) && jq(this).attr('id') != 'searchPhrase') {
+				ADVSEARCH.delay(); 
+			}
+		}); 
+		
+		jq('#lastDayOfVisit').datepicker({
+            yearRange: 'c-100:c',
+            maxDate: '0',
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: false
+        }).on("change", function (dateText) {
+//            display("Got change event from field "+this.value);
+            jQuery("#lastDayOfVisit").val(this.value);
+            PAGE.checkBirthDate();
+        });
 
     });//end of ready function
 
@@ -56,6 +76,7 @@
 			  this.selectedIndex = -1;
 		});
 	};
+	
     function strReplace(word) {
         var res = word.replace("[", "");
         res=res.replace("]","");
@@ -282,7 +303,7 @@ form select {
 <form onsubmit="return false" id="patient-search-form" method="get">
     <input type="text" autocomplete="off" placeholder="Search by ID or Name" id="searchPhrase"
            style="float:left; width:70%; padding:6px 10px 7px;" onkeyup="ADVSEARCH.startSearch(event);">
-    <img id="ajaxLoader" style="display:none; float:left; margin: 0 -4%;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
+    <img id="ajaxLoader" style="display:none; float:left; margin: 3px -4%;" src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
 
     <div id="advanced" class="advanced" onclick="ShowDashboard();"><i class="icon-filter"></i>ADVANCED SEARCH</div>
 
@@ -313,23 +334,22 @@ form select {
                             </div>
 
                             <div class="col4">
-                                <label for="lastDayOfVisit">Previous Visit</label>
+                                <label for="lastDayOfVisit">Last Visit</label>
                                 <input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px"
-                                       placeholder="Last Visit Date" onblur="ADVSEARCH.delay();">
+                                       placeholder="Last Visit Date">
                             </div>
 
                             <div class="col4 last">
                                 <label for="relativeName">Relative Name</label>
                                 <input id="relativeName" name="relativeName" style="width: 151px"
-                                       placeholder="Relative Name" onblur="ADVSEARCH.delay();">
+                                       placeholder="Relative Name">
                             </div>
                         </div>
 
                         <div class="onerow" style="padding-top: 0px;">
                             <div class="col4">
                                 <label for="age">Age</label>
-                                <input id="age" name="age" style="width: 149px" placeholder="Patient Age"
-                                       onblur="ADVSEARCH.delay();">
+                                <input id="age" name="age" style="width: 149px" placeholder="Patient Age">
                             </div>
 
                             <div class="col4">
@@ -344,8 +364,7 @@ form select {
 
                             <div class="col4 last">
                                 <label for="nationalId">National ID</label>
-                                <input id="nationalId" name="nationalId" style="width: 151px" placeholder="National ID"
-                                       onblur="ADVSEARCH.delay();">
+                                <input id="nationalId" name="nationalId" style="width: 151px" placeholder="National ID">
                             </div>
                         </div>
 
@@ -369,8 +388,7 @@ form select {
 
                             <div class="col4 last">
                                 <label for="fileNumber">File Number</label>
-                                <input id="fileNumber" name="fileNumber" style="width: 151px" placeholder="File Number"
-                                       onblur="ADVSEARCH.delay();">
+                                <input id="fileNumber" name="fileNumber" style="width: 151px" placeholder="File Number">
                             </div>
                         </div>
 
