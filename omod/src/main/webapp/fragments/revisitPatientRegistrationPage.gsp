@@ -418,10 +418,6 @@ form select {
                     <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader" style="width:60px;">
-                    <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
-                </th>
-
                 <th class="ui-state-default" role="columnheader" style="width: 60px;">
                     <div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
                 </th>
