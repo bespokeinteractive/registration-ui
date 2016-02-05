@@ -6,6 +6,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.matcher.*;
 import org.openmrs.module.hospitalcore.util.HospitalCoreConstants;
+import org.openmrs.module.registration.PatientWrapper;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
@@ -61,36 +62,9 @@ public class RevisitPatientRegistrationFormFragmentController {
                 .getService(HospitalCoreService.class);
         List<Patient> patients = hcs.searchPatient(phrase, gender, age,
                 ageRange, date, dateRange, relativeName);
+        List<PatientWrapper> wrapperList = patientsWithLastVisit(patients);
 
-        // List<Patient> patients = Context.getPatientService()
-        // .getPatients(phrase);
-        // try {
-        // patients = filterPatients(request, patients);
-        // } catch (NumberFormatException e) {
-        // model.addAttribute("error", e.getMessage());
-        // } catch (ParseException e) {
-        // e.printStackTrace();
-        // }
-
-//        for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
-//            String parameterName = (String) e.nextElement();
-//            model.addAttribute(parameterName,
-//                    request.getParameter(parameterName));
-//        }
-
-        // PAGING
-        if (currentPage > 0) {
-//            model.addAttribute("prevPage", currentPage - 1);
-        }
-        if ((currentPage + 1) * pageSize <= patients.size()) {
-//            model.addAttribute("nextPage", currentPage + 1);
-        }
-        List<Patient> renderedPatients = pagePatient(patients, currentPage,
-                pageSize);
-
-//        model.addAttribute("patients", renderedPatients);
-//        model.addAttribute("size", patients.size());
-        return SimpleObject.fromCollection(patients, uiUtils, "patientId", "patientIdentifier.identifier", "names", "age", "gender");
+        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender","lastVisitTime");
     }
 
     // Filter patient list using advance search criteria
@@ -154,6 +128,15 @@ public class RevisitPatientRegistrationFormFragmentController {
             }
         }
         return page;
+    }
+
+    private List<PatientWrapper> patientsWithLastVisit(List<Patient> patients){
+        HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
+        List<PatientWrapper> wrappers = new ArrayList<PatientWrapper>();
+        for (Patient patient : patients) {
+            wrappers.add(new PatientWrapper(patient, hcs.getLastVisitTime(patient)));
+        }
+        return  wrappers;
     }
 
 

@@ -1,5 +1,5 @@
 <%
-    def props = ["patientId", "names", "age", "gender", "previous", "action"]
+    def props = ["wrapperIdentifier", "names", "age", "gender", "lastVisitTime", "action"]
 %>
 
 <script type="text/javascript">
@@ -36,13 +36,13 @@
             referralType: "${referralReasons}",
             TEMPORARYCAT: "${TEMPORARYCAT}"
         }
-		
+
 		jQuery('select').bind('change keyup', function() {
 			ADVSEARCH.delay();
 		});
 
     });//end of ready function
-	
+
 	jQuery.fn.clearForm = function() {
 		return this.each(function() {
 			var type = this.type, tag = this.tagName.toLowerCase();
@@ -56,6 +56,11 @@
 			  this.selectedIndex = -1;
 		});
 	};
+    function strReplace(word) {
+        var res = word.replace("[", "");
+        res=res.replace("]","");
+        return res;
+    }
 
     PATIENTSEARCHRESULT = {
         oldBackgroundColor: "",
@@ -167,7 +172,9 @@
                     <% if (context.authenticatedUser.hasPrivilege('Print Duplicate Slip') ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
                     '</td>';
             <% } else {%>
-            row += '<td>' + item.${ it } + '</td>';
+
+            row += '<td>' + item.${ it} + '</td>';
+            row=strReplace(row);
             <% }
                } %>
             row += '</tr>';
@@ -407,7 +414,7 @@ form select {
                     <div class="DataTables_sort_wrapper">Name<span class="DataTables_sort_icon"></span></div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader" style="width:60px;">
+                <th class="ui-state-default" role="columnheader" style="width: 60px;">
                     <div class="DataTables_sort_wrapper">Age<span class="DataTables_sort_icon"></span></div>
                 </th>
 
