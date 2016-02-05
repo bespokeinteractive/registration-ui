@@ -511,7 +511,7 @@
 						} else {
 							jq().toastmessage('showNoticeToast', 'Age in wrong format');
 							jQuery("#birthdate").val("");
-							NavigatorController.stepBackward();
+							goto_previous_tab(5);
 						}
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
@@ -1773,7 +1773,7 @@
 						break;
 					}
 					else {
-						step_
+						NavigatorController.stepBackward();
 					}
 				}
 			}
@@ -2144,7 +2144,7 @@
 			</li>
 			<li>
 				<i class="icon-chevron-right link"></i>
-				<a href="${ui.pageLink('referenceapplication','patientRegistration')}">Registration</a>
+				<a href="${ui.pageLink('registration','patientRegistration')}">Registration</a>
 			</li>
 			<li>
 				<i class="icon-chevron-right link"></i>
@@ -2158,7 +2158,7 @@
 	<div class="patient-header new-patient-header">
 		<div class="demographics">
 			<h1 class="name" style="border-bottom: 1px solid #ddd;">
-				<span>EDIT PATIENT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<span>EDIT PATIENT DETAILS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			</h1>
 
 			<br>
