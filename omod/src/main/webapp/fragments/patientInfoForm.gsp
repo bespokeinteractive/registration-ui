@@ -808,28 +808,25 @@
     }
 </script>
 
+ <style>
+	.donotprint {
+		display: none;
+	}
+	.spacer {
+
+		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+		font-style: normal;
+		font-size: 12px;
+	}
+	.printfont {
+		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+		font-style: normal;
+		font-size: 12px;
+	}
+</style>
+
 <div class="onepcssgrid-1000">
-
     <div id="patientInfoPrintArea" style="width: 1000px; font-size: 0.2em">
-        <style>
-        .donotprint {
-            display: none;
-        }
-
-        .spacer {
-
-            font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-            font-style: normal;
-            font-size: 12px;
-        }
-
-        .printfont {
-            font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-            font-style: normal;
-            font-size: 12px;
-        }
-        </style>
-
         <center>
             <center>
                 <img width="60" height="60" align="center" title="OpenMRS" alt="OpenMRS"
