@@ -7,7 +7,11 @@
 <script type="text/javascript">
     var MODEL, _attributes;
     jQuery(document).ready(function () {
-		jq('#agerow').text('${patient.age}'.substring(1, 100));
+		var mnth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		var date = new Date('${currentDateTime}');
+		
+		jq('#agerow'  ).text('${patient.age}'.substring(1, 100));
+		jq('#vistdate').html(date.getDate()+' '+mnth[date.getMonth()]+' '+date.getFullYear()+'<br/> &nbsp; &nbsp; (Active since 04:10 PM)');
 
         var _attributes = new Array();
         <% patient.attributes.each { k, v -> %>
@@ -962,40 +966,17 @@
 					<li visitid="54" class="menu-item selected">
 						<span class="menu-date">
 							<i class="icon-time"></i>
-							20 May 2013 (active since 04:10 PM)
+							<span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
 						</span>
 						<span class="menu-title">
 							<i class="icon-stethoscope"></i>
-								No diagnosis yet.
+							No diagnosis yet.
 						</span>
 						<span class="arrow-border"></span>
 						<span class="arrow"></span>
 					</li>
 				
-					<li visitid="53" class="menu-item">
-						<span class="menu-date">
-							<i class="icon-time"></i>
-							15 May 2013 - 15 May 2013
-						</span>
-						<span class="menu-title">
-							<i class="icon-stethoscope"></i>
-								No diagnosis yet.
-						</span>
-						<span class="arrow-border"></span>
-						<span class="arrow"></span>
-					</li>
-				
-					<li visitid="19" class="menu-item">
-						<span class="menu-date">
-							<i class="icon-time"></i>
-							25 Feb 2013 - 25 Feb 2013
-						</span>
-						<span class="menu-title">
-							<i class="icon-stethoscope"></i>
-								No diagnosis yet.
-						</span>
-						<span class="arrow-border"></span>
-						<span class="arrow"></span>
+					<li visitid="53" class="menu-item" style="height: 230px;">
 					</li>
 				</ul>	
 			</div>
@@ -1104,7 +1085,7 @@
 						
 						<li>
 							<i class="icon-print"></i>
-							<a href="${pageLinkPrnt}?patientId=${patient.patientId}&revisit=true" id="org.openmrs.module.coreapps.createVisit">
+							<a href="${pageLinkPrnt}?patientId=${patient.patientId}&reprint=true" id="org.openmrs.module.coreapps.createVisit">
 								Reprint Receipt
 							</a>
 						</li>
