@@ -1,9 +1,13 @@
 <openmrs:globalProperty var="userLocation" key="hospital.location_user" defaultValue="false"/>
+<% 
+  def pageLinkEdit = ui.pageLink("registration", "editPatient");
+  def pageLinkPrnt = ui.pageLink("registration", "showPatientInfo");
+%>
 
 <script type="text/javascript">
     var MODEL, _attributes;
     jQuery(document).ready(function () {
-
+		jq('#agerow').text('${patient.age}'.substring(1, 100));
 
         var _attributes = new Array();
         <% patient.attributes.each { k, v -> %>
@@ -68,9 +72,10 @@
 
         jQuery("#specialSchemeNameField").hide();
 
-        jQuery("#triageField").hide();
-        jQuery("#opdWardField").hide();
-        jQuery("#specialClinicField").hide();
+        jQuery("#triage").hide();
+        jQuery("#opdWard").hide();
+        jQuery("#specialClinic").hide();
+        jQuery("#fileNumberRow").hide();
 
         jQuery("#nationalId").html(MODEL.patientAttributes[20]);
         jQuery("#phoneNumber").html(MODEL.patientAttributes[16]);
@@ -109,14 +114,14 @@
 
         // Set the selected triage
         if (!StringUtils.isBlank(MODEL.selectedTRIAGE)) {
-            jQuery("#triageField").show();
+            jQuery("#triage").show();
             jQuery("#triage").val(MODEL.selectedTRIAGE);
             jQuery("#triage").attr("disabled", "disabled");
         }
 
         // Set the selected OPD
         if (!StringUtils.isBlank(MODEL.selectedOPD)) {
-            jQuery("#opdWardField").show();
+            jQuery("#opdWard").show();
             jQuery("#opdWard").val(MODEL.selectedOPD);
             jQuery("#opdWard").attr("disabled", "disabled");
         }
@@ -323,14 +328,9 @@
         /** Validate and submit */
         submit: function (reprint) {
 
+
             if (PAGE.validate()) {
-
-                // Hide print button
-                jQuery("#printSlip").hide();
-                jQuery("#reprint").hide();
-
                 if (MODEL.revisit == "true") {
-
                     if (jQuery("#mlcCaseYes").is(':checked')) {
                         jQuery("#mlcCaseNoRowField").hide();
                         jQuery("#mlcCaseYesField").hide();
@@ -365,6 +365,7 @@
                     }
                     if (jQuery("#opdRoom").is(':checked')) {
                         jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#opdWard option:checked").html() + "</span>");
+						
                     }
                     if (jQuery("#specialClinicRoom").is(':checked')) {
                         jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#specialClinic option:checked").html() + "</span>");
@@ -505,60 +506,74 @@
 
         /** Validate Form */
         validate: function () {
-
-
             if (MODEL.revisit == "true") {
+				var verified = 0;
+				
+				if (jQuery("#mlcCaseYes").is(':checked') && StringUtils.isBlank(jQuery("#mlc").val())) {
+					jq().toastmessage('showNoticeToast', "Please select the medico legal case");
+					jQuery('#mlc').addClass("red-border");
+					verified++;
+				}
+				else {
+					jQuery('#mlc').removeClass("red-border");
+				}
+				
+				if (!jq('[name="patient.triage"]').is(':checked')){
+					jq().toastmessage('showNoticeToast', "You did not choose any room for visit");
+					verified++;
+				}
 
-
-                if (jQuery("#mlcCaseYes").attr('checked') == false
-                        && jQuery("#mlcCaseNo").attr('checked') == false) {
-                    alert("You did not choose any of the Medico Legal Case ");
-                    return false;
-                } else {
-
-                    if (jQuery("#mlcCaseYes").is(':checked')) {
-                        if (StringUtils.isBlank(jQuery("#mlc").val())) {
-                            alert("Please select the medico legal case");
-                            return false;
-                        }
-                    }
-
-                }
-
-                if (jQuery("#triageRoom").attr('checked') == false
-                        && jQuery("#opdRoom").attr('checked') == false
-                        && jQuery("#specialClinicRoom").attr('checked') == false) {
-                    alert("You did not choose any of the room");
-                    return false;
-                } else {
-                    if (jQuery("#triageRoom").attr('checked')) {
-                        if (StringUtils.isBlank(jQuery("#triage").val())) {
-                            alert("Please select the triage room to visit");
-                            return false;
-                        }
-                    }
-                    else if (jQuery("#opdRoom").attr('checked')) {
-                        if (StringUtils.isBlank(jQuery("#opdWard").val())) {
-                            alert("Please select the OPD room to visit");
-                            return false;
-                        }
-                    }
-                    else {
-                        if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                            alert("Please select the Special Clinic to visit");
-                            return false;
-                        }
-                        /*
-                         if (StringUtils.isBlank(jQuery("#fileNumber").val())) {
-                         alert("Please enter the File Number");
-                         return false;
-                         }
-                         */
-                    }
-                }
+                if (jQuery("#triageRoom").attr('checked') && StringUtils.isBlank(jQuery("#triage").val())) {
+					jq().toastmessage('showNoticeToast', "Please select the triage room to visit");
+					jQuery('#triage').addClass("red-border");
+					verified++;
+				}
+				else{
+					jQuery('#triage').removeClass("red-border");
+				}
+				
+				if (jQuery("#opdRoom").attr('checked') && StringUtils.isBlank(jQuery("#opdWard").val())) {
+					jq().toastmessage('showNoticeToast', "Please select the OPD room to visit");
+					jQuery('#opdWard').addClass("red-border");
+					verified++;
+				}
+				else{
+					jQuery('#opdWard').removeClass("red-border");
+				}
+				
+				if (jQuery("#specialClinicRoom").attr('checked')){
+					if (StringUtils.isBlank(jQuery("#specialClinic").val())){
+						jq().toastmessage('showNoticeToast', "Please select the Special Clinic to visit");
+						jQuery('#specialClinic').addClass("red-border");
+						verified++;
+					}
+					else{
+						jQuery('#specialClinic').removeClass("red-border");
+					}
+					
+					if (StringUtils.isBlank(jQuery("#fileNumber").val())){
+						jq().toastmessage('showNoticeToast', "Please specify the File Number");
+						jQuery('#fileNumber').addClass("red-border");
+						verified++;
+					}
+					else{
+						jQuery('#fileNumber').removeClass("red-border");
+					}
+				}
+				else{
+					jQuery('#specialClinic').removeClass("red-border");
+					jQuery('#fileNumber').removeClass("red-border");
+				}
+					
             }
-
-            return true;
+			
+			if (verified == 0){
+				return true;
+			}
+			else {
+				return false;
+			}
+            
         }
     };
 
@@ -620,52 +635,53 @@
 
         triageRoomCheck: function () {
             if (jQuery("#triageRoom").is(':checked')) {
-                jQuery("#opdRoom").removeAttr("checked");
-                jQuery("#specialClinicRoom").removeAttr("checked");
-                jQuery("#triageField").show();
+				jQuery("#triage").show();
+				
                 jQuery("#opdWard").val("");
-                jQuery("#opdWardField").hide();
+                jQuery("#opdWard").hide();
+				
                 jQuery("#specialClinic").val("");
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberRowField").hide();
+                jQuery("#specialClinic").hide();
+				
+                jQuery("#fileNumber").val("");
+                jQuery("#fileNumberRow").hide();
             }
             else {
-                jQuery("#triageField").hide();
+                jQuery("#triage").hide();
             }
         },
 
         opdRoomCheck: function () {
             if (jQuery("#opdRoom").is(':checked')) {
-                jQuery("#triageRoom").removeAttr("checked");
-                jQuery("#specialClinicRoom").removeAttr("checked");
+                jQuery("#opdWard").show();
+				
                 jQuery("#triage").val("");
-                jQuery("#triageField").hide();
-                jQuery("#opdWardField").show();
+                jQuery("#triage").hide();
+				
                 jQuery("#specialClinic").val("");
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberRowField").hide();
+                jQuery("#specialClinic").hide();
+				
+                jQuery("#fileNumber").val("");
+                jQuery("#fileNumberRow").hide();
             }
             else {
-                jQuery("#opdWardField").hide();
+                jQuery("#opdWard").hide();
             }
         },
 
         specialClinicRoomCheck: function () {
             if (jQuery("#specialClinicRoom").is(':checked')) {
-                jQuery("#triageRoom").removeAttr("checked");
-                jQuery("#opdRoom").removeAttr("checked");
+				jQuery("#fileNumberRow").show();
+				jQuery("#specialClinic").show();
+			
                 jQuery("#triage").val("");
-                jQuery("#triageField").hide();
+                jQuery("#triage").hide();
                 jQuery("#opdWard").val("");
-                jQuery("#opdWardField").hide();
-                jQuery("#specialClinicField").show();
-                if (!StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                    jQuery("#fileNumberRowField").show();
-                }
+                jQuery("#opdWard").hide();
             }
             else {
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberRowField").hide();
+                jQuery("#fileNumberRow").hide();
+                jQuery("#specialClinic").hide();
             }
         },
 
@@ -808,258 +824,332 @@
     }
 </script>
 
-<style>
-.donotprint {
-    display: none;
-}
-.spacer {
+ <style>
+	.donotprint {
+		display: none;
+	}
+	.spacer {
 
-    font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-size: 12px;
-}
-.printfont {
-    font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-size: 12px;
-}
+		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+		font-style: normal;
+		font-size: 12px;
+	}
+	.printfont {
+		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+		font-style: normal;
+		font-size: 12px;
+	}
+
+	.new-patient-header .identifiers {
+		padding-top: 15px;
+	}
+	ul.left-menu{
+	    border-color: #ccc #ccc #ccc -moz-use-text-color;
+        border-image: none;
+        border-style: solid solid solid solid;
+        border-width: 1px 1px 1px medium;
+	}
+	.col15{
+		min-width: 22%;
+		max-width: 22%;
+		float: left;
+		display: inline-block;
+	}
+	.col16{
+		min-width: 56%;
+		max-width: 56%;
+		float: left;
+		display: inline-block;
+	}
+	.dashboard .info-body label{
+		width:170px;
+		display: inline-block;
+		margin-bottom: 5px;
+		font-size: 90%;
+		font-weight: bold;
+	}
+	.checks{
+		width:			140px!important;
+		margin-bottom: 	0px!important;
+		font-size: 		100%!important;
+		font-weight: 	normal!important;
+		cursor: 		pointer;
+	}
+	input[type="radio"]{
+		cursor: pointer;
+	}
+	.dashboard .action-section {
+		margin-top: 35px;
+	}
+	input[type="text"], input[type="password"], select {
+		border: 1px solid #888;
+		border-radius: 3px !important;
+		box-shadow: none !important;
+		box-sizing: border-box !important;
+		height: 32px !important;
+		line-height: 18px !important;
+		padding: 0px 10px !important;
+		width: 200px !important;
+	}
+	#fileNumberRow{
+		margin: 2px 0px 10px 0px;
+	}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
+	.button{
+		height: 25px;
+		width: 150px!important;
+		text-align: center;
+		padding-top: 15px !important;
+	}
+	.toast-item{
+		background-color: #222;
+	}
+	.red-border {
+		border: 1px solid #f00 !important;
+	}
 </style>
 
-<div class="onepcssgrid-1000">
-    <div id="patientInfoPrintArea" style="width: 1000px; font-size: 0.2em">
-        <center>
-            <center>
-                <img width="60" height="60" align="center" title="OpenMRS" alt="OpenMRS"
-                     src="${ui.resourceLink("registration", "images/kenya_logo.bmp")}">
-            </center>
-
-        </center>
-
-        <form id="patientInfoForm" method="POST" class="spacer">
-            <h3><center><u><b>${userLocation}</b></u></center></h3>
-            <h4><center><b>${typeOfSlip}</b></center></h4>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Previous Day of Visit:</b></div>
-
-                <div class="col2" align="left"><span id="datetime"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Name:</b></div>
-
-                <div class="col2" align="left"><span id="patientName"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Patient ID:</b></div>
-
-                <div class="col2" align="left"><span id="identifier"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Age:</b></div>
-
-                <div class="col2" align="left"><span id="age"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Gender:</b></div>
-
-                <div class="col2" align="left"><span id="gender"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="printablePaymentCategoryRow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Payment Category:</b></div>
-
-                <div class="col2" align="left"><div id="printablePaymentCategory"></div></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="medicoLegalCaseRowField">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Medical Legal Case:</b></div>
-
-                <div class="col2" align="left">
-                    <div id="mlcCaseYesField">
-                        <input id="mlcCaseYes" type="checkbox" name="mlcCaseYes"/> Yes
-                        <select id="mlc" name="patient.mlc" style='width: 152px;'></select>
-                    </div>
-
-                    <div id="mlcCaseNoRowField">
-                        <div id="mlcCaseNoField">
-                            <input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/> No
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-
-            <div class="onerow" align="left" id="triageRowField">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Room to Visit:</b></div>
-
-                <div class="col2" align="left">
-                    <div id="triageRoomField">
-                        <input id="triageRoom" type="checkbox" name="triageRoom"/> Triage Room &nbsp;
-                        <div id="triageField">
-                            <select id="triage" name="patient.triage" onchange="triageRoomSelection();"
-                                    style='width: 152px;'></select>
-                        </div>
-                    </div>
-
-                    <div id="opdRowField">
-                        <div id="opdRoomField">
-                            <input id="opdRoom" type="checkbox" name="opdRoom"/> OPD Room&nbsp;
-                            <div id="opdWardField">
-                                <select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();"
-                                        style='width: 152px;'></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="specialClinicRowField">
-                        <div id="specialClinicRoomField">
-                            <input id="specialClinicRoom" type="checkbox"
-                                   name="specialClinicRoom"/> Special Clinic&nbsp;
-                            <div id="specialClinicField">
-                                <select id="specialClinic" name="patient.specialClinic"
-                                        onchange="specialClinicSelection();" style='width: 152px;'></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="fileNumberRowField">
-                        <div>
-                            <div id="fileNumberField">
-                                <input id="fileNumber" name="person.attribute.43" placeholder="File Number"
-                                       style='width: 152px;'/>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="printableRegistrationFeeForRevisitRow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Registration Fee:</b></div>
-
-                <div class="col2" align="left">
-                    ${registrationFee}
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="printableRegistrationFeeForFirstVisitAndReprintRow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Registration Fee:</b></div>
-
-                <div class="col2" align="left">
-                    <div id="printableRegistrationFee"></div>
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="patientrevisit" style="display:none">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><font color="#ff0000 ">(Patient Revisit with in 24 hr)</font></div>
-
-                <div class="col2" align="left">
-
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="printableUserRow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>You were served by:</b></div>
-
-                <div class="col2" align="left">
-                    ${user}
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left">
-                    <input type="hidden" id="selectedPaymentCategory" name="patient.selectedPaymentCategory"/>
-                </div>
-
-                <div class="col2" align="left">
-                    <input type="hidden" id="selectedPaymentSubCategory" name="patient.selectedPaymentSubCategory"/>
-                </div>
-
-                <div class="col4 last">
-                    <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
-                </div>
-            </div>
-
-            <div class="onerow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2">
-                    <input id="printSlip" type="button" value="Print"
-                           onClick="PAGE.submit(false);"/>
-                </div>
-
-                <div class="col2">
-                    <input id="reprint" type="button" value="Reprint"
-                           onClick="PAGE.submit(true);"/>
-                </div>
-
-                <div class="col4 last">
-                    <input id="buySlip" type="button" value="Buy a new slip"
-                           onClick="PAGE.buySlip();"/>
-                    <input id="save" type="button" value="Save" onClick="PAGE.save();"/>
-                    <span id="validationDate"></span>
-                </div>
-            </div>
-
-        </form>
-    </div>
-
-</div>
-
-</div>
+<header>
+</header>
+<body>
+	<div class="clear"></div>
+	<div class="container">
+		<div class="example">
+			<ul id="breadcrumbs">
+				<li>
+					<a href="${ui.pageLink('referenceapplication','home')}">
+						<i class="icon-home small"></i></a>
+				</li>
+				<li>
+					<i class="icon-chevron-right link"></i>
+					<a href="${ui.pageLink('registration','patientRegistration')}">Registration</a>
+				</li>
+				<li>
+					<i class="icon-chevron-right link"></i>
+					Revist Patient
+				</li>
+			</ul>
+		</div>
+
+		<div class="patient-header new-patient-header">
+			<div class="demographics">
+				<h1 class="name">
+					<span>${patient.surName},<em>surname</em></span>
+					<span>${patient.firstName} ${patient.otherName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em></span>
+				</h1>
+				
+				<br>
+				<div class="status-container">
+					<span class="status active"></span>
+					Active Visit
+				</div>
+				<div class="tag">Outpatient</div>
+			</div>
+
+			<div class="identifiers">
+				<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
+				<span>${patient.identifier}</span>
+				<br>
+			</div>
+			<div class="close"></div>
+		</div>
+
+		<div class="onerow">
+			<div class="col15 clear" style="padding-top: 15px;">
+				<ul class="left-menu" id="left-menu">
+					<li visitid="54" class="menu-item selected">
+						<span class="menu-date">
+							<i class="icon-time"></i>
+							20 May 2013 (active since 04:10 PM)
+						</span>
+						<span class="menu-title">
+							<i class="icon-stethoscope"></i>
+								No diagnosis yet.
+						</span>
+						<span class="arrow-border"></span>
+						<span class="arrow"></span>
+					</li>
+				
+					<li visitid="53" class="menu-item">
+						<span class="menu-date">
+							<i class="icon-time"></i>
+							15 May 2013 - 15 May 2013
+						</span>
+						<span class="menu-title">
+							<i class="icon-stethoscope"></i>
+								No diagnosis yet.
+						</span>
+						<span class="arrow-border"></span>
+						<span class="arrow"></span>
+					</li>
+				
+					<li visitid="19" class="menu-item">
+						<span class="menu-date">
+							<i class="icon-time"></i>
+							25 Feb 2013 - 25 Feb 2013
+						</span>
+						<span class="menu-title">
+							<i class="icon-stethoscope"></i>
+								No diagnosis yet.
+						</span>
+						<span class="arrow-border"></span>
+						<span class="arrow"></span>
+					</li>
+				</ul>	
+			</div>
+			
+			<div class="col16 dashboard">
+				<div class="info-section">
+					<div class="info-header">
+						<i class="icon-diagnosis"></i>
+						<h3>PATIENT DETAILS</h3>
+					</div>
+					<div class="info-body">
+						<label>Previous Visit:</label>
+						<span>${currentDateTime}</span>
+						<br/>
+						
+						<label>Patient Age :</label>
+						<span id="agerow">&nbsp;</span>
+						<br/>
+						
+						<label>Patient Gender :</label>
+						<span>${patient.gender}</span>
+					</div>
+				</div>
+				
+				<div class="info-section">
+					<div class="info-header">
+						<i class="icon-calendar"></i>
+						<h3>VISIT INFORMATION</h3>
+					</div>
+					<div class="info-body">
+						<label>Medical Legal Case:</label>
+						<label for="mlcCaseYes" class="checks">
+							<input type="radio" name="mlcCaseYes" id="mlcCaseYes"/> YES
+						</label>
+						<select id="mlc" name="patient.mlc" style='width: 152px;'></select>
+						
+						<br/>
+						
+						<label>&nbsp;</label>
+						<label for="mlcCaseNo" class="checks">
+							<input type="radio" name="mlcCaseYes" id="mlcCaseNo" checked=""/> NO
+						</label>
+						<br/>
+						<br/>
+						
+						<label>Room to Visit :</label>
+						<label for="triageRoom" class="checks">
+							<input type="radio" name="patient.triage" id="triageRoom"/> TRIAGE
+						</label>
+						<select id="triage" name="patient.triage" onchange="triageRoomSelection();" style='width: 152px;'></select>
+						<br/>
+						
+						<label>&nbsp;</label>
+						<label for="opdRoom" class="checks">
+							<input type="radio" name="patient.triage" id="opdRoom"/> OPD ROOM
+						</label>
+						 <select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();" style='width: 152px;'></select>
+						<br/>
+						
+						<label>&nbsp;</label>
+						<label for="specialClinicRoom" class="checks">
+							<input type="radio" name="patient.triage" id="specialClinicRoom"/> SPECIAL CLINIC
+						</label>
+						<select id="specialClinic" name="patient.specialClinic" onchange="specialClinicSelection();" style='width: 152px;'></select>
+						<br/>
+						
+						<div id="fileNumberRow" class="onerow">
+							<label>&nbsp;</label>
+							<label class="checks">&nbsp;</label>
+							<input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number" style='width: 152px;'/>
+						</div>
+						
+						
+						
+					</div>
+				</div>
+				
+				<div class="info-section">
+					<div class="info-header">
+						<i class="icon-diagnosis"></i>
+						<h3>REVISIT SUMMARY DETAILS</h3>
+					</div>
+					<div class="info-body">
+						<label>Registration Fee:</label>
+						<span>0.00${registrationFee}</span>
+						<br/>
+						
+						<label>Served By :</label>
+						<span>${user}</span>
+						<br/>
+					</div>
+				</div>
+			
+			</div>
+			
+			<div class="dashboard col15 last">
+				<div class="action-section">
+					<ul>
+						<h3> &nbsp; General Actions</h3>
+						<li>
+							<i class="icon-edit"></i>
+							<a href="${pageLinkEdit}?patientId=${patient.patientId}" id="org.openmrs.module.coreapps.createVisit">
+								Edit Patient
+							</a>
+						</li>
+						
+						<li>
+							<i class="icon-print"></i>
+							<a href="${pageLinkPrnt}?patientId=${patient.patientId}&revisit=true" id="org.openmrs.module.coreapps.createVisit">
+								Reprint Receipt
+							</a>
+						</li>
+						<br/>
+						
+						<h3> &nbsp; Visitation Actions</h3>
+						<a href="javascript:visit.showRetrospectiveVisitCreationDialog()" id="org.openmrs.module.coreapps.createRetrospectiveVisit">
+							<li> <i class="icon-plus"></i> Add Past Visit
+							</li>
+						</a>
+						<a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26" id="org.openmrs.module.coreapps.mergeVisits">
+							<li><i class="icon-link"></i>Merge Visits
+							</li>
+						</a>
+						
+						<br/>
+						<br/>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="onerow">
+			<div class="col15">
+				&nbsp;
+			</div>
+			
+			<div class="col16 dashboard">
+				<a class="button confirm" style="float: right;" onClick="PAGE.submit(false);">
+					<i class="icon-user-md" style="font-size: 20px; width: 40px; display: inline;"></i>
+					REVISIT PATIENT
+				</a>
+				
+			</div>
+			
+			<div class="row15 last">
+				&nbsp;
+			</div>
+		</div>
+		
+		
+		<div class="onerow" align="left">
+			<span id="validationDate"></span>
+		</div>
+	</div>
+	
+</body>

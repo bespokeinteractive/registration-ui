@@ -28,13 +28,11 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 /**
- * @author Stanslaus Odhiambo
- *         Created on 1/14/2016.
+ * Created by daugm on 2/8/2016.
  */
-public class ShowPatientInfoPageController {
-    private static Log logger = LogFactory.getLog(ShowPatientInfoPageController.class);
+public class RevisitPatientPageController {
+    private static Log logger = LogFactory.getLog(RevisitPatientPageController.class);
 
     public void controller() {
 
@@ -62,10 +60,7 @@ public class ShowPatientInfoPageController {
         model.addAttribute("encounterId", encounterId);
         model.addAttribute("registrationFee", "");
         model.addAttribute("revisit", false);
-        model.addAttribute("reprint", false);
         model.addAttribute("selectedPaymentCategory", "");
-        model.addAttribute("firstTimeVisit", true);
-
 
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
@@ -430,6 +425,4 @@ public class ShowPatientInfoPageController {
 
         return patient;
     }
-
-
 }

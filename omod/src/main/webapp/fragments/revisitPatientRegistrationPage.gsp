@@ -180,7 +180,7 @@
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "showPatientInfo");
+                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
                   def pageLinkEdit = ui.pageLink("registration", "editPatient");
                   def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
                    %>
@@ -251,8 +251,7 @@
 
         });
     }
-
-
+	
     function HideDashboard() {
         jQuery('#dashboard').hide();
     }

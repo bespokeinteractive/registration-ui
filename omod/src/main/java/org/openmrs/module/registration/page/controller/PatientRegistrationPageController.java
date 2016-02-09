@@ -1,6 +1,7 @@
 package org.openmrs.module.registration.page.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,7 @@ public class PatientRegistrationPageController {
 	public void get(HttpServletRequest request, PageModel model, UiUtils uiUtils)
 			throws JaxenException, DocumentException, IOException {
 		model.addAttribute("patientIdentifier", RegistrationUtils.getNewIdentifier());
+		model.addAttribute("date", new Date());
 	}
 
 }
