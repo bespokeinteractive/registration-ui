@@ -14,7 +14,7 @@
 				</li>
 				<li>
 					<i class="icon-chevron-right link"></i>
-					<a href="#">Patient Admission</a>
+					<a href="#">Registration</a>
 				</li>
 				<li>
 				</li>
