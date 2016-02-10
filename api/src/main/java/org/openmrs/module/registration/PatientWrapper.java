@@ -1,5 +1,6 @@
 package org.openmrs.module.registration;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 
@@ -7,6 +8,8 @@ import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Stanslaus Odhiambo
@@ -16,6 +19,7 @@ import java.util.Date;
 public class PatientWrapper extends Patient implements Serializable {
     private Date lastVisitTime;
     private String wrapperIdentifier,formartedVisitDate;
+    private static final Logger log = Logger.getLogger( PatientWrapper.class.getName() );
 
     public PatientWrapper(Date lastVisitTime) {
         this.lastVisitTime = lastVisitTime;
@@ -38,7 +42,18 @@ public class PatientWrapper extends Patient implements Serializable {
     public String getFormartedVisitDate(){
 
         Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-        formartedVisitDate = formatter.format(lastVisitTime);
+        try{
+            formartedVisitDate = formatter.format(lastVisitTime);
+        }catch(Exception e){
+            if(lastVisitTime!=null){
+                formartedVisitDate = lastVisitTime.toString();
+            }     else{
+                formartedVisitDate = "N/A";
+            }
+            log.log( Level.SEVERE, e.toString(), e );
+
+        }
+
         return formartedVisitDate;
     }
 
