@@ -403,6 +403,7 @@ public class NewPatientRegistrationFormFragmentController {
 								HttpServletRequest request, HttpServletResponse response) throws ParseException, IOException {
 
 		Map<String, String> parameters = RegistrationWebUtils.optimizeParameters(request);
+		System.out.println("these are the parameters:" + parameters);
 
 		// get patient
 		Patient patient = Context.getPatientService().getPatient(patientId);

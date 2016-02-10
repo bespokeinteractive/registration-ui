@@ -39,7 +39,6 @@ public class RevisitPatientPageController {
     }
 
     public void get(@RequestParam("patientId") Integer patientId,
-                    @RequestParam(value = "encounterId", required = false) Integer encounterId,
                     @RequestParam(value = "revisit", required = false) Boolean revisit,
                     @RequestParam(value = "reprint", required = false) Boolean reprint, PageModel model)
             throws IOException, ParseException {
@@ -57,7 +56,6 @@ public class RevisitPatientPageController {
         model.addAttribute("create", "");
         model.addAttribute("creates", "");
         model.addAttribute("observations", "");
-        model.addAttribute("encounterId", encounterId);
         model.addAttribute("registrationFee", "");
         model.addAttribute("revisit", false);
         model.addAttribute("selectedPaymentCategory", "");
@@ -85,7 +83,7 @@ public class RevisitPatientPageController {
             }
         }
 
-        // Get selected OPD room if this is the first time of visit
+       /* // Get selected OPD room if this is the first time of visit
         if (encounterId != null) {
             List<PersonAttribute> pas = hcs.getPersonAttributes(patientId);
             for (PersonAttribute pa : pas) {
@@ -123,7 +121,7 @@ public class RevisitPatientPageController {
             model.addAttribute("firstTimeVisit", firstTimeVisit);
             model.addAttribute("typeOfSlip", "Registration Receipt");
             model.addAttribute("reprint", false);
-        }
+        }*/
 
         if ((revisit != null) && revisit) {
             model.addAttribute("typeOfSlip", "Registration Receipt");

@@ -1,17 +1,17 @@
 <openmrs:globalProperty var="userLocation" key="hospital.location_user" defaultValue="false"/>
-<% 
-  def pageLinkEdit = ui.pageLink("registration", "editPatient");
-  def pageLinkPrnt = ui.pageLink("registration", "showPatientInfo");
+<%
+    def pageLinkEdit = ui.pageLink("registration", "editPatient");
+    def pageLinkPrnt = ui.pageLink("registration", "showPatientInfo");
 %>
 
 <script type="text/javascript">
     var MODEL, _attributes;
     jQuery(document).ready(function () {
-		var mnth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		var date = new Date('${currentDateTime}');
-		
-		jq('#agerow'  ).text('${patient.age}'.substring(1, 100));
-		jq('#vistdate').html(date.getDate()+' '+mnth[date.getMonth()]+' '+date.getFullYear()+'<br/> &nbsp; &nbsp; (Active since 04:10 PM)');
+        var mnth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var date = new Date('${currentDateTime}');
+
+        jq('#agerow').text('${patient.age}'.substring(1, 100));
+        jq('#vistdate').html(date.getDate() + ' ' + mnth[date.getMonth()] + ' ' + date.getFullYear() + '<br/> &nbsp; &nbsp; (Active since 04:10 PM)');
 
         var _attributes = new Array();
         <% patient.attributes.each { k, v -> %>
@@ -24,12 +24,12 @@
             _observations[key] = value;
         });
 
+
         /**
          ** VALUES FROM MODEL
          **/
         MODEL = {
             patientId: "${patient.patientId}",
-            encounterId: "${encounterId}",
             patientIdentifier: "${patient.identifier}",
             patientName: "${patient.fullname}",
             patientAge: "${patient.age}",
@@ -331,8 +331,6 @@
     PAGE = {
         /** Validate and submit */
         submit: function (reprint) {
-
-
             if (PAGE.validate()) {
                 if (MODEL.revisit == "true") {
                     if (jQuery("#mlcCaseYes").is(':checked')) {
@@ -369,7 +367,7 @@
                     }
                     if (jQuery("#opdRoom").is(':checked')) {
                         jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#opdWard option:checked").html() + "</span>");
-						
+
                     }
                     if (jQuery("#specialClinicRoom").is(':checked')) {
                         jQuery("#printableRoomToVisit").append("<span style='border:0px'>" + jQuery("#specialClinic option:checked").html() + "</span>");
@@ -384,14 +382,10 @@
                 // submit form and print
                 if (!reprint) {
                     jQuery.ajax({
-                        type: "GET",
+                        type: "POST",
                         url: '${ ui.actionLink("registration", "newPatientRegistrationForm", "savePatientInfo") }',
                         dataType: "json",
-                        data: ({
-                            patientId: MODEL.patientId,
-                            encounterId: MODEL.encounterId
-
-                        }),
+                        data: jQuery("#patientInfoForm").serialize(),
                         success: function (data) {
                             PAGE.print();
                             window.location.href = '${ ui.pageLink("registration", "patientRegistration")}';
@@ -409,7 +403,6 @@
 //                    });
                 } else {
                     PAGE.print();
-//                    window.location.href = getContextPath() + "/findPatient.htm";
                     window.location.href = '${ ui.pageLink("registration", "patientRegistration")}';
                 }
 
@@ -427,10 +420,6 @@
             printWindow.document.close();
             printWindow.print();
 
-//            jQuery("#patientInfoPrintArea").printArea({
-//                mode: "popup",
-//                popClose: true
-//            });
         },
 
         // harsh #244 Added a save button.
@@ -511,73 +500,73 @@
         /** Validate Form */
         validate: function () {
             if (MODEL.revisit == "true") {
-				var verified = 0;
-				
-				if (jQuery("#mlcCaseYes").is(':checked') && StringUtils.isBlank(jQuery("#mlc").val())) {
-					jq().toastmessage('showNoticeToast', "Please select the medico legal case");
-					jQuery('#mlc').addClass("red-border");
-					verified++;
-				}
-				else {
-					jQuery('#mlc').removeClass("red-border");
-				}
-				
-				if (!jq('[name="patient.triage"]').is(':checked')){
-					jq().toastmessage('showNoticeToast', "You did not choose any room for visit");
-					verified++;
-				}
+                var verified = 0;
+
+                if (jQuery("#mlcCaseYes").is(':checked') && StringUtils.isBlank(jQuery("#mlc").val())) {
+                    jq().toastmessage('showNoticeToast', "Please select the medico legal case");
+                    jQuery('#mlc').addClass("red-border");
+                    verified++;
+                }
+                else {
+                    jQuery('#mlc').removeClass("red-border");
+                }
+
+                if (!jq('[name="visitRoom"]').is(':checked')) {
+                    jq().toastmessage('showNoticeToast', "You did not choose any room for visit");
+                    verified++;
+                }
 
                 if (jQuery("#triageRoom").attr('checked') && StringUtils.isBlank(jQuery("#triage").val())) {
-					jq().toastmessage('showNoticeToast', "Please select the triage room to visit");
-					jQuery('#triage').addClass("red-border");
-					verified++;
-				}
-				else{
-					jQuery('#triage').removeClass("red-border");
-				}
-				
-				if (jQuery("#opdRoom").attr('checked') && StringUtils.isBlank(jQuery("#opdWard").val())) {
-					jq().toastmessage('showNoticeToast', "Please select the OPD room to visit");
-					jQuery('#opdWard').addClass("red-border");
-					verified++;
-				}
-				else{
-					jQuery('#opdWard').removeClass("red-border");
-				}
-				
-				if (jQuery("#specialClinicRoom").attr('checked')){
-					if (StringUtils.isBlank(jQuery("#specialClinic").val())){
-						jq().toastmessage('showNoticeToast', "Please select the Special Clinic to visit");
-						jQuery('#specialClinic').addClass("red-border");
-						verified++;
-					}
-					else{
-						jQuery('#specialClinic').removeClass("red-border");
-					}
-					
-					if (StringUtils.isBlank(jQuery("#fileNumber").val())){
-						jq().toastmessage('showNoticeToast', "Please specify the File Number");
-						jQuery('#fileNumber').addClass("red-border");
-						verified++;
-					}
-					else{
-						jQuery('#fileNumber').removeClass("red-border");
-					}
-				}
-				else{
-					jQuery('#specialClinic').removeClass("red-border");
-					jQuery('#fileNumber').removeClass("red-border");
-				}
-					
+                    jq().toastmessage('showNoticeToast', "Please select the triage room to visit");
+                    jQuery('#triage').addClass("red-border");
+                    verified++;
+                }
+                else {
+                    jQuery('#triage').removeClass("red-border");
+                }
+
+                if (jQuery("#opdRoom").attr('checked') && StringUtils.isBlank(jQuery("#opdWard").val())) {
+                    jq().toastmessage('showNoticeToast', "Please select the OPD room to visit");
+                    jQuery('#opdWard').addClass("red-border");
+                    verified++;
+                }
+                else {
+                    jQuery('#opdWard').removeClass("red-border");
+                }
+
+                if (jQuery("#specialClinicRoom").attr('checked')) {
+                    if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
+                        jq().toastmessage('showNoticeToast', "Please select the Special Clinic to visit");
+                        jQuery('#specialClinic').addClass("red-border");
+                        verified++;
+                    }
+                    else {
+                        jQuery('#specialClinic').removeClass("red-border");
+                    }
+
+                    if (StringUtils.isBlank(jQuery("#fileNumber").val())) {
+                        jq().toastmessage('showNoticeToast', "Please specify the File Number");
+                        jQuery('#fileNumber').addClass("red-border");
+                        verified++;
+                    }
+                    else {
+                        jQuery('#fileNumber').removeClass("red-border");
+                    }
+                }
+                else {
+                    jQuery('#specialClinic').removeClass("red-border");
+                    jQuery('#fileNumber').removeClass("red-border");
+                }
+
             }
-			
-			if (verified == 0){
-				return true;
-			}
-			else {
-				return false;
-			}
-            
+
+            if (verified == 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
         }
     };
 
@@ -639,14 +628,14 @@
 
         triageRoomCheck: function () {
             if (jQuery("#triageRoom").is(':checked')) {
-				jQuery("#triage").show();
-				
+                jQuery("#triage").show();
+
                 jQuery("#opdWard").val("");
                 jQuery("#opdWard").hide();
-				
+
                 jQuery("#specialClinic").val("");
                 jQuery("#specialClinic").hide();
-				
+
                 jQuery("#fileNumber").val("");
                 jQuery("#fileNumberRow").hide();
             }
@@ -658,13 +647,13 @@
         opdRoomCheck: function () {
             if (jQuery("#opdRoom").is(':checked')) {
                 jQuery("#opdWard").show();
-				
+
                 jQuery("#triage").val("");
                 jQuery("#triage").hide();
-				
+
                 jQuery("#specialClinic").val("");
                 jQuery("#specialClinic").hide();
-				
+
                 jQuery("#fileNumber").val("");
                 jQuery("#fileNumberRow").hide();
             }
@@ -675,9 +664,9 @@
 
         specialClinicRoomCheck: function () {
             if (jQuery("#specialClinicRoom").is(':checked')) {
-				jQuery("#fileNumberRow").show();
-				jQuery("#specialClinic").show();
-			
+                jQuery("#fileNumberRow").show();
+                jQuery("#specialClinic").show();
+
                 jQuery("#triage").val("");
                 jQuery("#triage").hide();
                 jQuery("#opdWard").val("");
@@ -828,309 +817,362 @@
     }
 </script>
 
- <style>
-	.donotprint {
-		display: none;
-	}
-	.spacer {
+<style>
+.donotprint {
+    display: none;
+}
 
-		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-		font-style: normal;
-		font-size: 12px;
-	}
-	.printfont {
-		font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-		font-style: normal;
-		font-size: 12px;
-	}
+.spacer {
 
-	.new-patient-header .identifiers {
-		padding-top: 15px;
-	}
-	ul.left-menu{
-	    border-color: #ccc #ccc #ccc -moz-use-text-color;
-        border-image: none;
-        border-style: solid solid solid solid;
-        border-width: 1px 1px 1px medium;
-	}
-	.col15{
-		min-width: 22%;
-		max-width: 22%;
-		float: left;
-		display: inline-block;
-	}
-	.col16{
-		min-width: 56%;
-		max-width: 56%;
-		float: left;
-		display: inline-block;
-	}
-	.dashboard .info-body label{
-		width:170px;
-		display: inline-block;
-		margin-bottom: 5px;
-		font-size: 90%;
-		font-weight: bold;
-	}
-	.checks{
-		width:			140px!important;
-		margin-bottom: 	0px!important;
-		font-size: 		100%!important;
-		font-weight: 	normal!important;
-		cursor: 		pointer;
-	}
-	input[type="radio"]{
-		cursor: pointer;
-	}
-	.dashboard .action-section {
-		margin-top: 35px;
-	}
-	input[type="text"], input[type="password"], select {
-		border: 1px solid #888;
-		border-radius: 3px !important;
-		box-shadow: none !important;
-		box-sizing: border-box !important;
-		height: 32px !important;
-		line-height: 18px !important;
-		padding: 0px 10px !important;
-		width: 200px !important;
-	}
-	#fileNumberRow{
-		margin: 2px 0px 10px 0px;
-	}
-	.status-container {
-		padding: 5px 10px 5px 5px;
-	}
-	.button{
-		height: 25px;
-		width: 150px!important;
-		text-align: center;
-		padding-top: 15px !important;
-	}
-	.toast-item{
-		background-color: #222;
-	}
-	.red-border {
-		border: 1px solid #f00 !important;
-	}
+    font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.printfont {
+    font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-size: 12px;
+}
+
+.new-patient-header .identifiers {
+    padding-top: 15px;
+}
+
+ul.left-menu {
+    border-color: #ccc #ccc #ccc -moz-use-text-color;
+    border-image: none;
+    border-style: solid solid solid solid;
+    border-width: 1px 1px 1px medium;
+}
+
+.col15 {
+    min-width: 22%;
+    max-width: 22%;
+    float: left;
+    display: inline-block;
+}
+
+.col16 {
+    min-width: 56%;
+    max-width: 56%;
+    float: left;
+    display: inline-block;
+}
+
+.dashboard .info-body label {
+    width: 170px;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: 90%;
+    font-weight: bold;
+}
+
+.checks {
+    width: 140px !important;
+    margin-bottom: 0px !important;
+    font-size: 100% !important;
+    font-weight: normal !important;
+    cursor: pointer;
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}
+
+.dashboard .action-section {
+    margin-top: 35px;
+}
+
+input[type="text"], input[type="password"], select {
+    border: 1px solid #888;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+    height: 32px !important;
+    line-height: 18px !important;
+    padding: 0px 10px !important;
+    width: 200px !important;
+}
+
+#fileNumberRow {
+    margin: 2px 0px 10px 0px;
+}
+
+.status-container {
+    padding: 5px 10px 5px 5px;
+}
+
+.button {
+    height: 25px;
+    width: 150px !important;
+    text-align: center;
+    padding-top: 15px !important;
+}
+
+.toast-item {
+    background-color: #222;
+}
+
+.red-border {
+    border: 1px solid #f00 !important;
+}
 </style>
 
 <header>
 </header>
+
 <body>
-	<div class="clear"></div>
-	<div class="container">
-		<div class="example">
-			<ul id="breadcrumbs">
-				<li>
-					<a href="${ui.pageLink('referenceapplication','home')}">
-						<i class="icon-home small"></i></a>
-				</li>
-				<li>
-					<i class="icon-chevron-right link"></i>
-					<a href="${ui.pageLink('registration','patientRegistration')}">Registration</a>
-				</li>
-				<li>
-					<i class="icon-chevron-right link"></i>
-					Revist Patient
-				</li>
-			</ul>
-		</div>
+<div class="clear"></div>
 
-		<div class="patient-header new-patient-header">
-			<div class="demographics">
-				<h1 class="name">
-					<span>${patient.surName},<em>surname</em></span>
-					<span>${patient.firstName} ${patient.otherName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em></span>
-				</h1>
-				
-				<br>
-				<div class="status-container">
-					<span class="status active"></span>
-					Active Visit
-				</div>
-				<div class="tag">Outpatient</div>
-			</div>
+<div class="container">
+    <div class="example">
+        <ul id="breadcrumbs">
+            <li>
+                <a href="${ui.pageLink('referenceapplication', 'home')}">
+                    <i class="icon-home small"></i></a>
+            </li>
+            <li>
+                <i class="icon-chevron-right link"></i>
+                <a href="${ui.pageLink('registration', 'patientRegistration')}">Registration</a>
+            </li>
+            <li>
+                <i class="icon-chevron-right link"></i>
+                Revist Patient
+            </li>
+        </ul>
+    </div>
 
-			<div class="identifiers">
-				<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
-				<span>${patient.identifier}</span>
-				<br>
-			</div>
-			<div class="close"></div>
-		</div>
+    <div class="patient-header new-patient-header">
+        <div class="demographics">
+            <h1 class="name">
+                <span>${patient.surName},<em>surname</em></span>
+                <span>${patient.firstName} ${patient.otherName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
+                </span>
+            </h1>
 
-		<div class="onerow">
-			<div class="col15 clear" style="padding-top: 15px;">
-				<ul class="left-menu" id="left-menu">
-					<li visitid="54" class="menu-item selected">
-						<span class="menu-date">
-							<i class="icon-time"></i>
-							<span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
-						</span>
-						<span class="menu-title">
-							<i class="icon-stethoscope"></i>
-							No diagnosis yet.
-						</span>
-						<span class="arrow-border"></span>
-						<span class="arrow"></span>
-					</li>
-				
-					<li visitid="53" class="menu-item" style="height: 230px;">
-					</li>
-				</ul>	
-			</div>
-			
-			<div class="col16 dashboard">
-				<div class="info-section">
-					<div class="info-header">
-						<i class="icon-diagnosis"></i>
-						<h3>PATIENT DETAILS</h3>
-					</div>
-					<div class="info-body">
-						<label>Previous Visit:</label>
-						<span>${currentDateTime}</span>
-						<br/>
-						
-						<label>Patient Age :</label>
-						<span id="agerow">&nbsp;</span>
-						<br/>
-						
-						<label>Patient Gender :</label>
-						<span>${patient.gender}</span>
-					</div>
-				</div>
-				
-				<div class="info-section">
-					<div class="info-header">
-						<i class="icon-calendar"></i>
-						<h3>VISIT INFORMATION</h3>
-					</div>
-					<div class="info-body">
-						<label>Medical Legal Case:</label>
-						<label for="mlcCaseYes" class="checks">
-							<input type="radio" name="mlcCaseYes" id="mlcCaseYes"/> YES
-						</label>
-						<select id="mlc" name="patient.mlc" style='width: 152px;'></select>
-						
-						<br/>
-						
-						<label>&nbsp;</label>
-						<label for="mlcCaseNo" class="checks">
-							<input type="radio" name="mlcCaseYes" id="mlcCaseNo" checked=""/> NO
-						</label>
-						<br/>
-						<br/>
-						
-						<label>Room to Visit :</label>
-						<label for="triageRoom" class="checks">
-							<input type="radio" name="patient.triage" id="triageRoom"/> TRIAGE
-						</label>
-						<select id="triage" name="patient.triage" onchange="triageRoomSelection();" style='width: 152px;'></select>
-						<br/>
-						
-						<label>&nbsp;</label>
-						<label for="opdRoom" class="checks">
-							<input type="radio" name="patient.triage" id="opdRoom"/> OPD ROOM
-						</label>
-						 <select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();" style='width: 152px;'></select>
-						<br/>
-						
-						<label>&nbsp;</label>
-						<label for="specialClinicRoom" class="checks">
-							<input type="radio" name="patient.triage" id="specialClinicRoom"/> SPECIAL CLINIC
-						</label>
-						<select id="specialClinic" name="patient.specialClinic" onchange="specialClinicSelection();" style='width: 152px;'></select>
-						<br/>
-						
-						<div id="fileNumberRow" class="onerow">
-							<label>&nbsp;</label>
-							<label class="checks">&nbsp;</label>
-							<input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number" style='width: 152px;'/>
-						</div>
-						
-						
-						
-					</div>
-				</div>
-				
-				<div class="info-section">
-					<div class="info-header">
-						<i class="icon-diagnosis"></i>
-						<h3>REVISIT SUMMARY DETAILS</h3>
-					</div>
-					<div class="info-body">
-						<label>Registration Fee:</label>
-						<span>0.00${registrationFee}</span>
-						<br/>
-						
-						<label>Served By :</label>
-						<span>${user}</span>
-						<br/>
-					</div>
-				</div>
-			
-			</div>
-			
-			<div class="dashboard col15 last">
-				<div class="action-section">
-					<ul>
-						<h3> &nbsp; General Actions</h3>
-						<li>
-							<i class="icon-edit"></i>
-							<a href="${pageLinkEdit}?patientId=${patient.patientId}" id="org.openmrs.module.coreapps.createVisit">
-								Edit Patient
-							</a>
-						</li>
-						
-						<li>
-							<i class="icon-print"></i>
-							<a href="${pageLinkPrnt}?patientId=${patient.patientId}&reprint=true" id="org.openmrs.module.coreapps.createVisit">
-								Reprint Receipt
-							</a>
-						</li>
-						<br/>
-						
-						<h3> &nbsp; Visitation Actions</h3>
-						<a href="javascript:visit.showRetrospectiveVisitCreationDialog()" id="org.openmrs.module.coreapps.createRetrospectiveVisit">
-							<li> <i class="icon-plus"></i> Add Past Visit
-							</li>
-						</a>
-						<a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26" id="org.openmrs.module.coreapps.mergeVisits">
-							<li><i class="icon-link"></i>Merge Visits
-							</li>
-						</a>
-						
-						<br/>
-						<br/>
-						
-					</ul>
-				</div>
-			</div>
-		</div>
-		
-		<div class="onerow">
-			<div class="col15">
-				&nbsp;
-			</div>
-			
-			<div class="col16 dashboard">
-				<a class="button confirm" style="float: right;" onClick="PAGE.submit(false);">
-					<i class="icon-user-md" style="font-size: 20px; width: 40px; display: inline;"></i>
-					REVISIT PATIENT
-				</a>
-				
-			</div>
-			
-			<div class="row15 last">
-				&nbsp;
-			</div>
-		</div>
-		
-		
-		<div class="onerow" align="left">
-			<span id="validationDate"></span>
-		</div>
-	</div>
-	
+            <br>
+
+            <div class="status-container">
+                <span class="status active"></span>
+                Active Visit
+            </div>
+
+            <div class="tag">Outpatient</div>
+        </div>
+
+        <div class="identifiers">
+            <em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
+            <span>${patient.identifier}</span>
+            <br>
+        </div>
+
+        <div class="close"></div>
+    </div>
+
+    <div class="onerow">
+        <div class="col15 clear" style="padding-top: 15px;">
+            <ul class="left-menu" id="left-menu">
+                <li visitid="54" class="menu-item selected">
+                    <span class="menu-date">
+                        <i class="icon-time"></i>
+                        <span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
+                    </span>
+                    <span class="menu-title">
+                        <i class="icon-stethoscope"></i>
+                        No diagnosis yet.
+                    </span>
+                    <span class="arrow-border"></span>
+                    <span class="arrow"></span>
+                </li>
+
+                <li visitid="53" class="menu-item" style="height: 230px;">
+                </li>
+            </ul>
+        </div>
+
+        <div id="patientInfoPrintArea">
+
+            <form id="patientInfoForm" method="POST">
+                <div class="col16 dashboard">
+                    <div class="info-section">
+                        <div class="info-header">
+                            <i class="icon-diagnosis"></i>
+
+                            <h3>PATIENT DETAILS</h3>
+                        </div>
+
+                        <div class="info-body">
+                            <label>Previous Visit:</label>
+                            <span>${currentDateTime}</span>
+                            <br/>
+
+                            <label>Patient Age :</label>
+                            <span id="agerow">&nbsp;</span>
+                            <br/>
+
+                            <label>Patient Gender :</label>
+                            <span>${patient.gender}</span>
+
+                            <br/>
+
+                            <div id="printablePaymentCategoryRow">
+                                <label>Payment Category :</label>
+                                <span id="printablePaymentCategory"></span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-header">
+                            <i class="icon-calendar"></i>
+
+                            <h3>VISIT INFORMATION</h3>
+                        </div>
+
+                        <div class="info-body">
+                            <input type="hidden" id="patientId" name="patientId" value="${patient.patientId}"/>
+                            <label>Medical Legal Case:</label>
+                            <label for="mlcCaseYes" class="checks">
+                                <input type="radio" name="mlcCaseYes" id="mlcCaseYes"/> YES
+                            </label>
+                            <select id="mlc" name="patient.mlc" style='width: 152px;'></select>
+
+                            <br/>
+
+                            <label>&nbsp;</label>
+                            <label for="mlcCaseNo" class="checks">
+                                <input type="radio" name="mlcCaseYes" id="mlcCaseNo" checked=""/> NO
+                            </label>
+                            <br/>
+                            <br/>
+
+                            <label>Room to Visit :</label>
+                            <label for="triageRoom" class="checks">
+                                <input type="radio" name="visitRoom" id="triageRoom"/> TRIAGE
+                            </label>
+                            <select id="triage" name="patient.triage" onchange="triageRoomSelection();"
+                                    style='width: 152px;'></select>
+                            <br/>
+
+                            <label>&nbsp;</label>
+                            <label for="opdRoom" class="checks">
+                                <input type="radio" name="visitRoom" id="opdRoom"/> OPD ROOM
+                            </label>
+                            <select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();"
+                                    style='width: 152px;'></select>
+                            <br/>
+
+                            <label>&nbsp;</label>
+                            <label for="specialClinicRoom" class="checks">
+                                <input type="radio" name="visitRoom" id="specialClinicRoom"/> SPECIAL CLINIC
+                            </label>
+                            <select id="specialClinic" name="patient.specialClinic" onchange="specialClinicSelection();"
+                                    style='width: 152px;'></select>
+                            <br/>
+
+                            <div id="fileNumberRow" class="onerow">
+                                <label>&nbsp;</label>
+                                <label class="checks">&nbsp;</label>
+                                <input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number"
+                                       style='width: 152px;'/>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-header">
+                            <i class="icon-diagnosis"></i>
+
+                            <h3>REVISIT SUMMARY DETAILS</h3>
+                        </div>
+
+                        <div class="info-body">
+                            <label>Registration Fee:</label>
+                            <span id="printableRegistrationFee">0.00</span>
+                            <br/>
+
+                            <label>Served By :</label>
+                            <span>${user}</span>
+                            <br/>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard col15 last">
+                    <div class="action-section">
+                        <ul>
+                            <h3>&nbsp; General Actions</h3>
+                            <li>
+                                <i class="icon-edit"></i>
+                                <a href="${pageLinkEdit}?patientId=${patient.patientId}"
+                                   id="org.openmrs.module.coreapps.createVisit">
+                                    Edit Patient
+                                </a>
+                            </li>
+
+                            <li>
+                                <i class="icon-print"></i>
+                                <a href="${pageLinkPrnt}?patientId=${patient.patientId}&reprint=true"
+                                   id="org.openmrs.module.coreapps.createVisit">
+                                    Reprint Receipt
+                                </a>
+                            </li>
+                            <br/>
+
+                            <h3>&nbsp; Visitation Actions</h3>
+                            <a href="javascript:visit.showRetrospectiveVisitCreationDialog()"
+                               id="org.openmrs.module.coreapps.createRetrospectiveVisit">
+                                <li><i class="icon-plus"></i> Add Past Visit
+                                </li>
+                            </a>
+                            <a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26"
+                               id="org.openmrs.module.coreapps.mergeVisits">
+                                <li><i class="icon-link"></i>Merge Visits
+                                </li>
+                            </a>
+
+                            <br/>
+                            <br/>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <input type="hidden" id="selectedPaymentCategory" name="patient.selectedPaymentCategory"/>
+                <input type="hidden" id="selectedPaymentSubCategory" name="patient.selectedPaymentSubCategory"/>
+                <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="onerow">
+        <div class="col15">
+            &nbsp;
+        </div>
+
+        <div class="col16 dashboard">
+            <a class="button confirm" style="float: right;" onClick="PAGE.submit(false);">
+                <i class="icon-user-md" style="font-size: 20px; width: 40px; display: inline;"></i>
+                REVISIT PATIENT
+            </a>
+
+        </div>
+
+        <div class="row15 last">
+            &nbsp;
+        </div>
+    </div>
+
+
+    <div class="onerow" align="left">
+        <span id="validationDate"></span>
+    </div>
+</div>
+
 </body>
