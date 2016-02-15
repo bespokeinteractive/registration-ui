@@ -1600,6 +1600,9 @@
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', false);
 			jQuery('#referralDescription').removeClass("required");
+			
+			jq('#rooms3').hide();
+			jq('#froom3').hide();
         }
         else if (jQuery("#rooms1").val() == 2) {
             PAGE.fillOptions("#rooms2", {
@@ -1616,6 +1619,9 @@
 			jQuery("#opdRoom").attr('checked', 'checked');
 			jQuery("#specialClinicRoom").attr('checked', false);
 			jQuery('#referralDescription').removeClass("required");
+			
+			jq('#rooms3').hide();
+			jq('#froom3').hide();
         }
         else if (jQuery("#rooms1").val() == 3) {
             PAGE.fillOptions("#rooms2", {
@@ -1632,6 +1638,9 @@
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', 'checked');
 			jQuery('#referralDescription').addClass("required");
+			
+			jq('#rooms3').show();
+			jq('#froom3').show();
         }
         else {
             var myOptions = {0: 'N/A'};
@@ -1649,6 +1658,9 @@
 			jQuery("#opdRoom").attr('checked', false);
 			jQuery("#specialClinicRoom").attr('checked', false);
 			jQuery('#referralDescription').removeClass("required");
+			
+			jq('#rooms3').hide();
+			jq('#froom3').hide();
         }
     }
 	

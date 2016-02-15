@@ -265,45 +265,45 @@
 </script>
 
 <style>
-form .advanced {
-    background: #363463 none repeat scroll 0 0;
-    border-color: #dddddd;
-    border-style: solid;
-    border-width: 1px;
-    color: #fff;
-    cursor: pointer;
-    float: right;
-    padding: 5px 0;
-    text-align: center;
-    width: 27%;
-}
-form .advanced i{
-	font-size: 22px;
-}
-.col4 label {
-    width: 110px;
-    display: inline-block;
-}
+	form .advanced {
+		background: #363463 none repeat scroll 0 0;
+		border-color: #dddddd;
+		border-style: solid;
+		border-width: 1px;
+		color: #fff;
+		cursor: pointer;
+		float: right;
+		padding: 5px 0;
+		text-align: center;
+		width: 27%;
+	}
+	form .advanced i{
+		font-size: 22px;
+	}
+	.col4 label {
+		width: 110px;
+		display: inline-block;
+	}
 
-.col4 input[type=text] {
-    display: inline-block;
-    padding: 2px 10px;
-}
+	.col4 input[type=text] {
+		display: inline-block;
+		padding: 2px 10px;
+	}
 
-.col4 select {
-    padding: 2px 10px;
-}
+	.col4 select {
+		padding: 2px 10px;
+	}
 
-form select {
-    min-width: 50px;
-    display: inline-block;
-}
-.addon{
-	display: inline-block;
-    float: right;
-    margin: 5px 0 0 145px;
-    position: absolute;
-}
+	form select {
+		min-width: 50px;
+		display: inline-block;
+	}
+	.addon{
+		display: inline-block;
+		float: right;
+		margin: 5px 0 0 145px;
+		position: absolute;
+	}
 </style>
 
 <form onsubmit="return false" id="patient-search-form" method="get">
