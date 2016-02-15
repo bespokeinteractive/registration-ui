@@ -823,6 +823,13 @@
     font-style: normal;
     font-size: 12px;
 }
+.printlabel{
+	display: inline-block;
+	width: 200px;
+}
+.printdata{
+	display: inline-block;
+}
 </style>
 
 <div class="onepcssgrid-1000">
@@ -838,72 +845,47 @@
         <form id="patientInfoForm" method="POST" class="spacer">
             <h3><center><u><b>${userLocation}</b></u></center></h3>
             <h4><center><b>${typeOfSlip}</b></center></h4>
+			<div style="display: block;	margin-left: auto; margin-right: auto; width: 350px">
+            <div class="onerow" align="left">
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Previous Day of Visit:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><span id="datetime"></span></div>
+                <div class="col4 last">&nbsp;</div>
+				
+				
+            </div>
 
             <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Previous Day of Visit:</b></div>
-
-                <div class="col2" align="left"><span id="datetime"></span></div>
-
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Name:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><span id="patientName"></span></div>
                 <div class="col4 last">&nbsp;</div>
             </div>
 
             <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Name:</b></div>
-
-                <div class="col2" align="left"><span id="patientName"></span></div>
-
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Patient ID:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><span id="identifier"></span></div>
                 <div class="col4 last">&nbsp;</div>
             </div>
 
             <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Patient ID:</b></div>
-
-                <div class="col2" align="left"><span id="identifier"></span></div>
-
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Age:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><span id="age"></span></div>
                 <div class="col4 last">&nbsp;</div>
             </div>
 
             <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Age:</b></div>
-
-                <div class="col2" align="left"><span id="age"></span></div>
-
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Gender:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><span id="gender"></span></div>
                 <div class="col4 last">&nbsp;</div>
             </div>
 
-            <div class="onerow" align="left">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Gender:</b></div>
-
-                <div class="col2" align="left"><span id="gender"></span></div>
-
-                <div class="col4 last">&nbsp;</div>
-            </div>
-
-            <div class="onerow" align="left" id="printablePaymentCategoryRow">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Payment Category:</b></div>
-
-                <div class="col2" align="left"><div id="printablePaymentCategory"></div></div>
-
+            <div class="onerow" align="left" id="printablePaymentCategoryRow">             
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Payment Category:</b></div>
+                <div class="col2" align="left" style="display:inline-block"><div id="printablePaymentCategory"></div></div>
                 <div class="col4 last">&nbsp;</div>
             </div>
 
             <div class="onerow" align="left" id="medicoLegalCaseRowField">
-                <div class="col4">&nbsp;</div>
-
-                <div class="col2" align="left"><b>Medical Legal Case:</b></div>
-
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Medical Legal Case:</b></div>
                 <div class="col2" align="left">
                     <div id="mlcCaseYesField">
                         <input id="mlcCaseYes" type="checkbox" name="mlcCaseYes"/> Yes
@@ -926,7 +908,7 @@
             <div class="onerow" align="left" id="triageRowField">
                 <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>Room to Visit:</b></div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Room to Visit:</b></div>
 
                 <div class="col2" align="left">
                     <div id="triageRoomField">
@@ -973,11 +955,10 @@
             </div>
 
             <div class="onerow" align="left" id="printableRegistrationFeeForRevisitRow">
-                <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>Registration Fee:</b></div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
 
-                <div class="col2" align="left">
+                <div class="col2" align="left" style="display:inline-block;>
                     ${registrationFee}
                 </div>
 
@@ -985,9 +966,8 @@
             </div>
 
             <div class="onerow" align="left" id="printableRegistrationFeeForFirstVisitAndReprintRow">
-                <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>Registration Fee:</b></div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
 
                 <div class="col2" align="left">
                     <div id="printableRegistrationFee"></div>
@@ -1009,11 +989,10 @@
             </div>
 
             <div class="onerow" align="left" id="printableUserRow">
-                <div class="col4">&nbsp;</div>
 
-                <div class="col2" align="left"><b>You were served by:</b></div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>You were served by:</b></div>
 
-                <div class="col2" align="left">
+                <div class="col2" align="left" style="display:inline-block;>
                     ${user}
                 </div>
 
@@ -1056,7 +1035,7 @@
                     <span id="validationDate"></span>
                 </div>
             </div>
-
+		</div>
         </form>
     </div>
 
