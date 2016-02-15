@@ -215,6 +215,7 @@
         var age = jQuery("#age").val();
         var ageRange = jQuery("#ageRange").val();
         var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
+        var lastDayOfVisit = jQuery("#lastDayOfVisit").val();
         var lastVisit = jQuery("#lastVisit").val();
         var phoneNumber = jQuery("#phoneNumber").val();
         var relativeName = jQuery("#relativeName").val();
@@ -237,7 +238,8 @@
                 phoneNumber: phoneNumber,
                 relativeName: relativeName,
                 nationalId: nationalId,
-                fileNumber: fileNumber
+                fileNumber: fileNumber,
+                lastDayOfVisit: lastDayOfVisit
             }),
             success: function (data) {
                 jQuery("#ajaxLoader").hide();
@@ -400,7 +402,7 @@ form select {
                             <div class="col4">
                                 <label for="patientMaritalStatus">Marital Status</label>
                                 <select id="patientMaritalStatus" style="width: 172px">
-                                    <option value="Any">Any</option>
+                                    <option value="">Any</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>
                                     <option value="Divorced">Divorced</option>

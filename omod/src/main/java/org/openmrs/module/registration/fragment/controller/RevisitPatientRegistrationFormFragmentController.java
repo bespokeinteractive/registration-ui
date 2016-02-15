@@ -50,21 +50,28 @@ public class RevisitPatientRegistrationFormFragmentController {
         }
 
         String gender = request.getParameter("gender");
-        if (gender.equalsIgnoreCase("any"))
+        if (gender.equalsIgnoreCase("any")) {
             gender = null;
+        }
+
         Integer age = getInt(request.getParameter("age"));
         Integer ageRange = getInt(request.getParameter("ageRange"));
         String relativeName = request.getParameter("relativeName");
-        String date = request.getParameter("date");
-        Integer dateRange = getInt(request.getParameter("dateRange"));
+        String lastDayOfVisit = request.getParameter("lastDayOfVisit");
+        Integer lastVisitRange = getInt(request.getParameter("lastVisit"));
+        String maritalStatus = request.getParameter("patientMaritalStatus");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String nationalId = request.getParameter("nationalId");
+        String fileNumber = request.getParameter("fileNumber");
 
         HospitalCoreService hcs = (HospitalCoreService) Context
                 .getService(HospitalCoreService.class);
-        List<Patient> patients = hcs.searchPatient(phrase, gender, age,
-                ageRange, date, dateRange, relativeName);
+        List<Patient> patients = hcs.searchPatient(phrase, gender, age, ageRange, lastDayOfVisit, lastVisitRange, relativeName
+                , maritalStatus, phoneNumber, nationalId, fileNumber
+        );
         List<PatientWrapper> wrapperList = patientsWithLastVisit(patients);
 
-        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender","formartedVisitDate");
+        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate");
     }
 
     // Filter patient list using advance search criteria
@@ -130,13 +137,13 @@ public class RevisitPatientRegistrationFormFragmentController {
         return page;
     }
 
-    private List<PatientWrapper> patientsWithLastVisit(List<Patient> patients){
+    private List<PatientWrapper> patientsWithLastVisit(List<Patient> patients) {
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         List<PatientWrapper> wrappers = new ArrayList<PatientWrapper>();
         for (Patient patient : patients) {
             wrappers.add(new PatientWrapper(patient, hcs.getLastVisitTime(patient)));
         }
-        return  wrappers;
+        return wrappers;
     }
 
 
