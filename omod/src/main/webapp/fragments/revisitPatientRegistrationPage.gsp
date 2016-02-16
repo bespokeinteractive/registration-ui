@@ -41,6 +41,10 @@
 			ADVSEARCH.delay();
 		});
 		
+		jq('#lastDayOfVisit-display').on("change", function (dateText) {
+			ADVSEARCH.delay();
+        });
+		
 		jq('input').keydown(function (e) {
 			var key = e.keyCode || e.which;
 			if ((key == 9 || key == 13) && jq(this).attr('id') != 'searchPhrase') {
@@ -48,17 +52,7 @@
 			}
 		}); 
 		
-		jq('#lastDayOfVisit').datepicker({
-            yearRange: 'c-100:c',
-            maxDate: '0',
-            dateFormat: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: false
-        }).on("change", function (dateText) {
-            jQuery("#lastDayOfVisit").val(this.value);
-            PAGE.checkBirthDate();
-        });
+		
 
     });//end of ready function
 
@@ -188,8 +182,8 @@
             row += '<td> ' +
 
                     '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege('Edit Patients') ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
-                    <% if (context.authenticatedUser.hasPrivilege('Print Duplicate Slip') ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
+                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
+                    <% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
                     '</td>';
             <% } else {%>
 
@@ -215,7 +209,7 @@
         var age = jQuery("#age").val();
         var ageRange = jQuery("#ageRange").val();
         var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
-        var lastDayOfVisit = jQuery("#lastDayOfVisit").val();
+        var lastDayOfVisit = moment(jq('#lastDayOfVisit-field').val()).format('DD/MM/YYYY');
         var lastVisit = jQuery("#lastVisit").val();
         var phoneNumber = jQuery("#phoneNumber").val();
         var relativeName = jQuery("#relativeName").val();
@@ -304,6 +298,22 @@
 		margin: 5px 0 0 145px;
 		position: absolute;
 	}
+	#lastDayOfVisit label{
+		display:none;
+	}
+	#lastDayOfVisit input{
+		width:150px !important;
+	}
+	.add-on {
+		float: right;
+		left: auto;
+		margin-left: -29px;
+		margin-top: 5px;
+		position: absolute;
+	}
+	.ui-widget-content a {
+		color: #007fff;
+	}
 </style>
 
 <form onsubmit="return false" id="patient-search-form" method="get">
@@ -341,8 +351,7 @@
 
                             <div class="col4">
                                 <label for="lastDayOfVisit">Last Visit</label>
-								<div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
-                                <input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px" placeholder="Last Visit Date">
+								${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'lastDayOfVisit', id: 'lastDayOfVisit', label: '', useTime: false, defaultToday: false, class: ['newdtp'], endDate: new Date()])}
                             </div>
 
                             <div class="col4 last">
