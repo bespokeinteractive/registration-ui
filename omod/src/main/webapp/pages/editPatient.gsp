@@ -128,7 +128,7 @@
             currentReligion.value = "${patient.attributes[40]}";
 
             document.getElementById('birthdate').value ="${patient.birthdate}";
-
+			
 
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
@@ -164,11 +164,13 @@
 
             //set the Patient Relative Relationship Type
             document.getElementById('relationshipType').value =checkForNulls("${patient.attributes[15]}");
+			alert('${patient.attributes[15]}');
 
             //set the Patient Relative Physical Address
             document.getElementById('relativePostalAddress').value =checkForNulls("${patient.attributes[28]}");
 
-
+			
+			PAGE.checkBirthDate();
 
 
             jQuery('input:text[id]').focus(function (event) {
@@ -755,8 +757,8 @@
                 var tab3 = 0;
                 var tab4 = 0;
 
-                var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-                var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+                //var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+                //var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
                 var str1 = '';
 
@@ -833,12 +835,13 @@
                     i++;
                     tab1++;
                 }
-                else if (select1 == 1 && select2 == 3 && jQuery("#patientGender").val() == "M") {
+                /* Revisit This after Additional Fields Added
+				else if (select1 == 1 && select2 == 3 && jQuery("#patientGender").val() == "M") {
                     str1 = 'The selected Scheme Doesnt Match the Gender Selected. ';
                     jQuery('#patientGender').addClass("red-border");
                     i++;
                     tab1++;
-                }
+                }*/
                 else if (jQuery("#patientGender").val() == "M" && jQuery("#maritalStatus").val() == "Widow") {
                     str1 = str1 + 'Widow marital status is only for Female. ';
                     jQuery('#maritalStatus').addClass("red-border");
@@ -932,6 +935,7 @@
                 }
 
                 //TAB3
+				/*
                 if (jQuery("#legal1").val() == 0) {
                     jQuery('#legal1').addClass("red-border");
                     i++;
@@ -1014,7 +1018,7 @@
                 //            else {
                 //                return false;
                 //            }
-
+				*/
 
                 if (i == 0) {
                     return true;
@@ -2638,11 +2642,11 @@
                                             <select id="relationshipType" name="person.attribute.15"
                                                     class="required form-combo1">
                                                 <option value=""></option>
-                                                <option value="1">Parent</option>
-                                                <option value="2">Spouse</option>
-                                                <option value="3">Guardian</option>
-                                                <option value="4">Friend</option>
-                                                <option value="5">Other</option>
+                                                <option value="Parent">Parent</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Guardian">Guardian</option>
+                                                <option value="Friend">Friend</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                         </field>
                                     </span>

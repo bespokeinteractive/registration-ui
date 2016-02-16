@@ -2323,11 +2323,11 @@
 									<select id="relationshipType" name="person.attribute.15"
 											class="required form-combo1">
 										<option value=""></option>
-										<option value="1">Parent</option>
-										<option value="2">Spouse</option>
-										<option value="3">Guardian</option>
-										<option value="4">Friend</option>
-										<option value="5">Other</option>
+										<option value="Parent">Parent</option>
+										<option value="Spouse">Spouse</option>
+										<option value="Guardian">Guardian</option>
+										<option value="Friend">Friend</option>
+										<option value="Other">Other</option>
 									</select>
 								</field>
 							</span>
