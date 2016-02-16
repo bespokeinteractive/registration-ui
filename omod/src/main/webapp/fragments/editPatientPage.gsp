@@ -4,7 +4,7 @@
 	emrMessages["requiredField"] = "Required";
 
     jQuery(document).ready(function () {
-
+		PAGE.checkBirthDate();
         // Districts
         var _districts = new Array();
         var districts = "${districts}";
@@ -442,6 +442,8 @@
                         } else {
                             jQuery("#birthdateEstimated").val("false");
                         }
+						
+						alert('Fired');
 						
                         jQuery("#summ_ages").html(data.datemodel.age.substr(1,1000));
                         jQuery("#estimatedAge").html(data.datemodel.age);

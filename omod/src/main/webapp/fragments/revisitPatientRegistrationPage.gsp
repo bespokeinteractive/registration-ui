@@ -122,7 +122,7 @@
         timeoutId: 0,
         showing: false,
         params: "",
-        delayDuration: 1000,
+        delayDuration: 1,
         pageSize: 10,
         beforeSearch: function () {
         },
