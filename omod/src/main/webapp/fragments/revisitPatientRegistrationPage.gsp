@@ -61,7 +61,7 @@
 			var type = this.type, tag = this.tagName.toLowerCase();
 			if (tag == 'form')
 			  return jQuery(':input',this).clearForm();
-			if (type == 'text' && jQuery(this).attr('id') != 'searchPhrase')
+			if ((type == 'text' || type == 'hidden') && jQuery(this).attr('id') != 'searchPhrase')
 			  this.value = '';
 			else if (type == 'checkbox' || type == 'radio')
 			  this.checked = false;
@@ -209,7 +209,7 @@
         var age = jQuery("#age").val();
         var ageRange = jQuery("#ageRange").val();
         var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
-        var lastDayOfVisit = moment(jq('#lastDayOfVisit-field').val()).format('DD/MM/YYYY');
+        var lastDayOfVisit = jq('#lastDayOfVisit-field').val() && moment(jq('#lastDayOfVisit-field').val()).format('DD/MM/YYYY');
         var lastVisit = jQuery("#lastVisit").val();
         var phoneNumber = jQuery("#phoneNumber").val();
         var relativeName = jQuery("#relativeName").val();
@@ -249,11 +249,12 @@
     }
 	
     function HideDashboard() {
-        jQuery('#dashboard').hide();
+        jq('#dashboard').hide();
+		jq('#patient-search-form').clearForm();
     }
     function ShowDashboard() {
-        jQuery('#dashboard').toggle(500);
-        jQuery('#patient-search-form').clearForm();
+        jq('#dashboard').toggle(500);
+        jq('#patient-search-form').clearForm();
 
     }
 </script>
