@@ -863,14 +863,19 @@ ul.left-menu {
 .dashboard .info-body label {
     width: 170px;
     display: inline-block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     font-size: 90%;
     font-weight: bold;
 }
+.dashboard .info-body label span{
+	color: #f00;
+    padding-left: 10px;
+}
 
 .checks {
-    width: 140px !important;
-    margin-bottom: 0px !important;
+    width: 			140px !important;
+    margin-bottom: 	0px !important;
+	margin-top:  	5px !important;
     font-size: 100% !important;
     font-weight: normal !important;
     cursor: pointer;
@@ -917,6 +922,18 @@ input[type="text"], input[type="password"], select {
 .red-border {
     border: 1px solid #f00 !important;
 }
+form label, .form label {
+    margin-top: 0px;
+}
+form input, form select, form textarea, form ul.select, .form input, .form select, .form textarea, .form ul.select {
+    margin: 0;
+}
+form input, form select, form textarea, form ul.select, .form input, .form select, .form textarea, .form ul.select {
+    min-width: 0;
+}
+form input[type="radio"]:focus {
+    outline: 2px none #007fff;
+}
 </style>
 
 <header>
@@ -924,255 +941,256 @@ input[type="text"], input[type="password"], select {
 
 <body>
 <div class="clear"></div>
+<form id="patientInfoForm" method="POST">
+	<div class="container">
+		<div class="example">
+			<ul id="breadcrumbs">
+				<li>
+					<a href="${ui.pageLink('referenceapplication', 'home')}">
+						<i class="icon-home small"></i></a>
+				</li>
+				<li>
+					<i class="icon-chevron-right link"></i>
+					<a href="${ui.pageLink('registration', 'patientRegistration')}">Registration</a>
+				</li>
+				<li>
+					<i class="icon-chevron-right link"></i>
+					Revist Patient
+				</li>
+			</ul>
+		</div>
 
-<div class="container">
-    <div class="example">
-        <ul id="breadcrumbs">
-            <li>
-                <a href="${ui.pageLink('referenceapplication', 'home')}">
-                    <i class="icon-home small"></i></a>
-            </li>
-            <li>
-                <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('registration', 'patientRegistration')}">Registration</a>
-            </li>
-            <li>
-                <i class="icon-chevron-right link"></i>
-                Revist Patient
-            </li>
-        </ul>
-    </div>
+		<div class="patient-header new-patient-header">
+			<div class="demographics">
+				<h1 class="name">
+					<span>${patient.surName},<em>surname</em></span>
+					<span>${patient.firstName} ${patient.otherName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
+					</span>
+				</h1>
 
-    <div class="patient-header new-patient-header">
-        <div class="demographics">
-            <h1 class="name">
-                <span>${patient.surName},<em>surname</em></span>
-                <span>${patient.firstName} ${patient.otherName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
-                </span>
-            </h1>
+				<br>
 
-            <br>
+				<div class="status-container">
+					<span class="status active"></span>
+					Active Visit
+				</div>
 
-            <div class="status-container">
-                <span class="status active"></span>
-                Active Visit
-            </div>
+				<div class="tag">Outpatient</div>
+			</div>
 
-            <div class="tag">Outpatient</div>
-        </div>
+			<div class="identifiers">
+				<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
+				<span>${patient.identifier}</span>
+				<br>
+			</div>
 
-        <div class="identifiers">
-            <em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
-            <span>${patient.identifier}</span>
-            <br>
-        </div>
+			<div class="close"></div>
+		</div>
 
-        <div class="close"></div>
-    </div>
+		<div class="onerow">
+			<div class="col15 clear" style="padding-top: 15px;">
+				<ul class="left-menu" id="left-menu">
+					<li visitid="54" class="menu-item selected">
+						<span class="menu-date">
+							<i class="icon-time"></i>
+							<span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
+						</span>
+						<span class="menu-title">
+							<i class="icon-stethoscope"></i>
+							No diagnosis yet.
+						</span>
+						<span class="arrow-border"></span>
+						<span class="arrow"></span>
+					</li>
 
-    <div class="onerow">
-        <div class="col15 clear" style="padding-top: 15px;">
-            <ul class="left-menu" id="left-menu">
-                <li visitid="54" class="menu-item selected">
-                    <span class="menu-date">
-                        <i class="icon-time"></i>
-                        <span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
-                    </span>
-                    <span class="menu-title">
-                        <i class="icon-stethoscope"></i>
-                        No diagnosis yet.
-                    </span>
-                    <span class="arrow-border"></span>
-                    <span class="arrow"></span>
-                </li>
+					<li visitid="53" class="menu-item" style="height: 230px;">
+					</li>
+				</ul>
+			</div>
 
-                <li visitid="53" class="menu-item" style="height: 230px;">
-                </li>
-            </ul>
-        </div>
+			<div id="patientInfoPrintArea">
 
-        <div id="patientInfoPrintArea">
+				
+					<div class="col16 dashboard">
+						<div class="info-section">
+							<div class="info-header">
+								<i class="icon-diagnosis"></i>
 
-            <form id="patientInfoForm" method="POST">
-                <div class="col16 dashboard">
-                    <div class="info-section">
-                        <div class="info-header">
-                            <i class="icon-diagnosis"></i>
+								<h3>PATIENT DETAILS</h3>
+							</div>
 
-                            <h3>PATIENT DETAILS</h3>
-                        </div>
+							<div class="info-body">
+								<label>Previous Visit:</label>
+								<span>${currentDateTime}</span>
+								<br/>
 
-                        <div class="info-body">
-                            <label>Previous Visit:</label>
-                            <span>${currentDateTime}</span>
-                            <br/>
+								<label>Patient Age :</label>
+								<span id="agerow">&nbsp;</span>
+								<br/>
 
-                            <label>Patient Age :</label>
-                            <span id="agerow">&nbsp;</span>
-                            <br/>
+								<label>Patient Gender :</label>
+								<span>${patient.gender}</span>
 
-                            <label>Patient Gender :</label>
-                            <span>${patient.gender}</span>
+								<br/>
 
-                            <br/>
+								<div id="printablePaymentCategoryRow">
+									<label>Payment Category :</label>
+									<span id="printablePaymentCategory"></span>
+								</div>
 
-                            <div id="printablePaymentCategoryRow">
-                                <label>Payment Category :</label>
-                                <span id="printablePaymentCategory"></span>
-                            </div>
+							</div>
+						</div>
 
-                        </div>
-                    </div>
+						<div class="info-section">
+							<div class="info-header">
+								<i class="icon-calendar"></i>
 
-                    <div class="info-section">
-                        <div class="info-header">
-                            <i class="icon-calendar"></i>
+								<h3>VISIT INFORMATION</h3>
+							</div>
 
-                            <h3>VISIT INFORMATION</h3>
-                        </div>
+							<div class="info-body">
+								<input type="hidden" id="patientId" name="patientId" value="${patient.patientId}"/>
+								<label>Medical Legal Case:<span>*</span></label>
+								<label for="mlcCaseYes" class="checks">
+									<input type="radio" name="mlcCaseYes" id="mlcCaseYes"/> YES
+								</label>
+								<select id="mlc" name="patient.mlc" style='width: 152px; display:inline-block;'></select>
 
-                        <div class="info-body">
-                            <input type="hidden" id="patientId" name="patientId" value="${patient.patientId}"/>
-                            <label>Medical Legal Case:</label>
-                            <label for="mlcCaseYes" class="checks">
-                                <input type="radio" name="mlcCaseYes" id="mlcCaseYes"/> YES
-                            </label>
-                            <select id="mlc" name="patient.mlc" style='width: 152px;'></select>
+								<br/>
 
-                            <br/>
+								<label>&nbsp;</label>
+								<label for="mlcCaseNo" class="checks">
+									<input type="radio" name="mlcCaseYes" id="mlcCaseNo" checked=""/> NO
+								</label>
+								<br/>
+								<br/>
 
-                            <label>&nbsp;</label>
-                            <label for="mlcCaseNo" class="checks">
-                                <input type="radio" name="mlcCaseYes" id="mlcCaseNo" checked=""/> NO
-                            </label>
-                            <br/>
-                            <br/>
+								<label>Room to Visit :<span>*</span></label>
+								<label for="triageRoom" class="checks">
+									<input type="radio" name="visitRoom" id="triageRoom"/> TRIAGE
+								</label>
+								<select id="triage" name="patient.triage" onchange="triageRoomSelection();"
+										style='width: 152px; display:inline-block;'></select>
+								<br/>
 
-                            <label>Room to Visit :</label>
-                            <label for="triageRoom" class="checks">
-                                <input type="radio" name="visitRoom" id="triageRoom"/> TRIAGE
-                            </label>
-                            <select id="triage" name="patient.triage" onchange="triageRoomSelection();"
-                                    style='width: 152px;'></select>
-                            <br/>
+								<label>&nbsp;</label>
+								<label for="opdRoom" class="checks">
+									<input type="radio" name="visitRoom" id="opdRoom"/> OPD ROOM
+								</label>
+								<select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();"
+										style='width: 152px; display:inline-block;'></select>
+								<br/>
 
-                            <label>&nbsp;</label>
-                            <label for="opdRoom" class="checks">
-                                <input type="radio" name="visitRoom" id="opdRoom"/> OPD ROOM
-                            </label>
-                            <select id="opdWard" name="patient.opdWard" onchange="opdRoomSelection();"
-                                    style='width: 152px;'></select>
-                            <br/>
+								<label>&nbsp;</label>
+								<label for="specialClinicRoom" class="checks">
+									<input type="radio" name="visitRoom" id="specialClinicRoom"/> SPECIAL CLINIC
+								</label>
+								<select id="specialClinic" name="patient.specialClinic" onchange="specialClinicSelection();"
+										style='width: 152px; display:inline-block;'></select>
+								<br/>
 
-                            <label>&nbsp;</label>
-                            <label for="specialClinicRoom" class="checks">
-                                <input type="radio" name="visitRoom" id="specialClinicRoom"/> SPECIAL CLINIC
-                            </label>
-                            <select id="specialClinic" name="patient.specialClinic" onchange="specialClinicSelection();"
-                                    style='width: 152px;'></select>
-                            <br/>
+								<div id="fileNumberRow" class="onerow">
+									<label>&nbsp;</label>
+									<label class="checks">&nbsp;</label>
+									<input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number"
+										   style='display:inline-block;'/>
+								</div>
 
-                            <div id="fileNumberRow" class="onerow">
-                                <label>&nbsp;</label>
-                                <label class="checks">&nbsp;</label>
-                                <input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number"
-                                       style='width: 152px;'/>
-                            </div>
+							</div>
+						</div>
 
-                        </div>
-                    </div>
+						<div class="info-section">
+							<div class="info-header">
+								<i class="icon-diagnosis"></i>
 
-                    <div class="info-section">
-                        <div class="info-header">
-                            <i class="icon-diagnosis"></i>
+								<h3>REVISIT SUMMARY DETAILS</h3>
+							</div>
 
-                            <h3>REVISIT SUMMARY DETAILS</h3>
-                        </div>
+							<div class="info-body">
+								<label>Registration Fee:</label>
+								<span id="printableRegistrationFee">0.00</span>
+								<br/>
 
-                        <div class="info-body">
-                            <label>Registration Fee:</label>
-                            <span id="printableRegistrationFee">0.00</span>
-                            <br/>
+								<label>Served By :</label>
+								<span>${user}</span>
+								<br/>
+							</div>
+						</div>
 
-                            <label>Served By :</label>
-                            <span>${user}</span>
-                            <br/>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="dashboard col15 last">
-                    <div class="action-section">
-                        <ul>
-                            <h3>&nbsp; General Actions</h3>
-                            <li>
-                                <i class="icon-edit"></i>
-                                <a href="${pageLinkEdit}?patientId=${patient.patientId}"
-                                   id="org.openmrs.module.coreapps.createVisit">
-                                    Edit Patient
-                                </a>
-                            </li>
-
-                            <li>
-                                <i class="icon-print"></i>
-                                <a href="${pageLinkPrnt}?patientId=${patient.patientId}&reprint=true"
-                                   id="org.openmrs.module.coreapps.createVisit">
-                                    Reprint Receipt
-                                </a>
-                            </li>
-                            <br/>
-
-                            <h3>&nbsp; Visitation Actions</h3>
-                            <a href="javascript:visit.showRetrospectiveVisitCreationDialog()"
-                               id="org.openmrs.module.coreapps.createRetrospectiveVisit">
-                                <li><i class="icon-plus"></i> Add Past Visit
-                                </li>
-                            </a>
-                            <a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26"
-                               id="org.openmrs.module.coreapps.mergeVisits">
-                                <li><i class="icon-link"></i>Merge Visits
-                                </li>
-                            </a>
-
-                            <br/>
-                            <br/>
-
-                        </ul>
-                    </div>
-                </div>
-
-                <input type="hidden" id="selectedPaymentCategory" name="patient.selectedPaymentCategory"/>
-                <input type="hidden" id="selectedPaymentSubCategory" name="patient.selectedPaymentSubCategory"/>
-                <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
-            </form>
-        </div>
-    </div>
+					</div>
 
 
-    <div class="onerow">
-        <div class="col15">
-            &nbsp;
-        </div>
+					<div class="dashboard col15 last">
+						<div class="action-section">
+							<ul>
+								<h3>&nbsp; General Actions</h3>
+								<li>
+									<i class="icon-edit"></i>
+									<a href="${pageLinkEdit}?patientId=${patient.patientId}"
+									   id="org.openmrs.module.coreapps.createVisit">
+										Edit Patient
+									</a>
+								</li>
 
-        <div class="col16 dashboard">
-            <a class="button confirm" style="float: right;" onClick="PAGE.submit(false);">
-                <i class="icon-user-md" style="font-size: 20px; width: 40px; display: inline;"></i>
-                REVISIT PATIENT
-            </a>
+								<li>
+									<i class="icon-print"></i>
+									<a href="${pageLinkPrnt}?patientId=${patient.patientId}&reprint=true"
+									   id="org.openmrs.module.coreapps.createVisit">
+										Reprint Receipt
+									</a>
+								</li>
+								<br/>
 
-        </div>
+								<h3>&nbsp; Visitation Actions</h3>
+								<a href="javascript:visit.showRetrospectiveVisitCreationDialog()"
+								   id="org.openmrs.module.coreapps.createRetrospectiveVisit">
+									<li><i class="icon-plus"></i> Add Past Visit
+									</li>
+								</a>
+								<a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26"
+								   id="org.openmrs.module.coreapps.mergeVisits">
+									<li><i class="icon-link"></i>Merge Visits
+									</li>
+								</a>
 
-        <div class="row15 last">
-            &nbsp;
-        </div>
-    </div>
+								<br/>
+								<br/>
+
+							</ul>
+						</div>
+					</div>
+
+					<input type="hidden" id="selectedPaymentCategory" name="patient.selectedPaymentCategory"/>
+					<input type="hidden" id="selectedPaymentSubCategory" name="patient.selectedPaymentSubCategory"/>
+					<input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
+				
+			</div>
+		</div>
 
 
-    <div class="onerow" align="left">
-        <span id="validationDate"></span>
-    </div>
-</div>
+		<div class="onerow">
+			<div class="col15">
+				&nbsp;
+			</div>
+
+			<div class="col16 dashboard">
+				<a class="button confirm" style="float: right;" onClick="PAGE.submit(false);">
+					<i class="icon-user-md" style="font-size: 20px; width: 40px; display: inline;"></i>
+					REVISIT PATIENT
+				</a>
+
+			</div>
+
+			<div class="row15 last">
+				&nbsp;
+			</div>
+		</div>
+
+
+		<div class="onerow" align="left">
+			<span id="validationDate"></span>
+		</div>
+	</div>
+</form>
 
 </body>
