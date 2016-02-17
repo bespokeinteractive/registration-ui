@@ -113,138 +113,6 @@
                 TEMPORARYCAT: "",
                 religions: "${religionList}"
             }
-            var g ="${patient.gender}";
-            var genderValue = document.getElementById('patientGender');
-            if (g === "Male") {
-                genderValue.value = 'M';
-            } else if (g === "Female") {
-                genderValue.value = 'F';
-            }
-
-            var currentMaritalStatus = document.getElementById('maritalStatus');
-            currentMaritalStatus.value = "${patient.attributes[26]}";
-
-            var currentReligion = document.getElementById('patientReligion');
-            currentReligion.value = "${patient.attributes[40]}";
-
-            document.getElementById('birthdate').value ="${patient.birthdate}";
-			
-
-            //set the nationality
-            var currentNationality = document.getElementById('patientNation');
-            currentNationality.value = "${patient.attributes[27]}";
-
-            //set the national ID
-            document.getElementById('patientNationalId').value =checkForNulls("${patient.attributes[20]}");
-
-            //set the Passport Number
-            document.getElementById('passportNumber').value =checkForNulls("${patient.attributes[38]}");
-
-            //set the Patient Phone Number
-            document.getElementById('patientPhoneNumber').value =checkForNulls("${patient.attributes[16]}");
-
-            //set the Patient Email Address
-            document.getElementById('patientEmail').value =checkForNulls("${patient.attributes[37]}");
-
-            //set the Patient Physical Address
-            document.getElementById('patientPostalAddress').value ="${patient.address}";
-            //set the Patient County
-            document.getElementById('districts').value ="${patient.address}";
-            //set the Patient SubCounty
-            document.getElementById('upazilas').value ="${patient.address}";
-            //set the Patient Location
-            document.getElementById('locations').value ="${patient.address}";
-            //set the Patient Village
-            document.getElementById('chiefdom').value =checkForNulls("${patient.attributes[41]}");
-
-
-
-            //set the Patient Relative Name
-            document.getElementById('patientRelativeName').value =checkForNulls("${patient.attributes[8]}");
-
-            //set the Patient Relative Relationship Type
-            document.getElementById('relationshipType').value =checkForNulls("${patient.attributes[15]}");
-			alert('${patient.attributes[15]}');
-
-            //set the Patient Relative Physical Address
-            document.getElementById('relativePostalAddress').value =checkForNulls("${patient.attributes[28]}");
-
-			
-			PAGE.checkBirthDate();
-
-
-            jQuery('input:text[id]').focus(function (event) {
-                var checkboxID = jQuery(event.target).attr('id');
-                jQuery('#' + checkboxID).removeClass("red-border");
-            });
-
-            jQuery('select').focus(function (event) {
-                var checkboxID = jQuery(event.target).attr('id');
-                jQuery('#' + checkboxID).removeClass("red-border");
-            });
-
-            jQuery('input:text[id]').focusout(function (event) {
-                var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", "otherNationalityId", ""];
-                var idd = jQuery(event.target).attr('id');
-
-                if (jQuery.inArray(idd, arr) != -1) {
-                    if (jQuery('#' + idd).val().trim() == "") {
-                        jQuery('#' + idd).addClass("red-border");
-                    }
-                    else {
-                        jQuery('#' + idd).removeClass("red-border");
-                    }
-                }
-            });
-
-            jQuery('input:text[id]').focusout(function (event) {
-                var arr = ["firstName", "", "", "", "", ""];
-                var idd = jQuery(event.target).attr('id');
-
-                if (jQuery.inArray(idd, arr) != -1) {
-                    if (idd == 'firstName') {
-                        jQuery('#summ_idnt').text("${patient.identifier}");
-                        jQuery('#summ_name').text(jQuery('#surName').val() + ', ' + jQuery('#firstName').val());
-                    }
-                }
-            });
-
-            jQuery('select').focusout(function (event) {
-                var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
-                var idd = jQuery(event.target).attr('id');
-
-                if (jQuery.inArray(idd, arr) != -1) {
-                    if (jQuery('#' + idd).val() == 0 || jQuery('#' + idd).val().trim() == "") {
-                        jQuery('#' + idd).addClass("red-border");
-                    }
-                    else {
-                        jQuery('#' + idd).removeClass("red-border");
-                    }
-
-                    if (idd == 'patientGender') {
-                        jQuery('#summ_gend').text(jQuery('#patientGender option:selected').text());
-                    }
-                }
-            });
-
-            jQuery(function () {
-                jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
-                jQuery("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-            });
-
-            jQuery('#birthdate').datepicker({
-                yearRange: 'c-100:c',
-                maxDate: '0',
-                dateFormat: 'dd/mm/yy',
-                changeMonth: true,
-                changeYear: true,
-                constrainInput: false
-            }).on("change", function (dateText) {
-                //            display("Got change event from field "+this.value);
-                jQuery("#birthdate").val(this.value);
-                PAGE.checkBirthDate();
-            });
-
 
             //jQuery('#birthdate').change(PAGE.checkBirthDate);
             MODEL.religions = "Religion, |"
@@ -364,6 +232,145 @@
                 delimiter: ",",
                 optionDelimiter: "|"
             });
+
+
+
+
+            var g ="${patient.gender}";
+            var genderValue = document.getElementById('patientGender');
+            if (g === "Male") {
+                genderValue.value = 'M';
+            } else if (g === "Female") {
+                genderValue.value = 'F';
+            }
+
+            var currentMaritalStatus = document.getElementById('maritalStatus');
+            currentMaritalStatus.value = "${patient.attributes[26]}";
+
+            //set the current religion
+            document.getElementById('patientReligion').value =checkForNulls("${patient.attributes[40]}");
+
+            document.getElementById('birthdate').value ="${patient.birthdate}";
+			
+
+            //set the nationality
+            var currentNationality = document.getElementById('patientNation');
+
+            currentNationality.value = "${patient.attributes[27]}";
+
+            //set the national ID
+            document.getElementById('patientNationalId').value =checkForNulls("${patient.attributes[20]}");
+
+            //set the Passport Number
+            document.getElementById('passportNumber').value =checkForNulls("${patient.attributes[38]}");
+
+            //set the Patient Phone Number
+            document.getElementById('patientPhoneNumber').value =checkForNulls("${patient.attributes[16]}");
+
+            //set the Patient Email Address
+            document.getElementById('patientEmail').value =checkForNulls("${patient.attributes[37]}");
+
+            //set the Patient Physical Address
+            document.getElementById('patientPostalAddress').value ="${patient.physicalAddress}";
+            //set the Patient County
+            document.getElementById('districts').value ="${patient.subCounty}";
+            //set the Patient SubCounty
+            document.getElementById('upazilas').value ="${patient.county}";
+            PAGE.changeUpazila();
+            //set the Patient Location
+            document.getElementById('locations').value ="${patient.location}";
+            //set the Patient Village
+            document.getElementById('chiefdom').value =checkForNulls("${patient.attributes[41]}");
+
+
+
+            //set the Patient Relative Name
+            document.getElementById('patientRelativeName').value =checkForNulls("${patient.attributes[8]}");
+
+            //set the Patient Relative Relationship Type
+            document.getElementById('relationshipType').value =checkForNulls("${patient.attributes[15]}");
+            //set the Patient Relative Physical Address
+            document.getElementById('relativePostalAddress').value =checkForNulls("${patient.attributes[28]}");
+
+			
+			PAGE.checkBirthDate();
+
+
+            jQuery('input:text[id]').focus(function (event) {
+                var checkboxID = jQuery(event.target).attr('id');
+                jQuery('#' + checkboxID).removeClass("red-border");
+            });
+
+            jQuery('select').focus(function (event) {
+                var checkboxID = jQuery(event.target).attr('id');
+                jQuery('#' + checkboxID).removeClass("red-border");
+            });
+
+            jQuery('input:text[id]').focusout(function (event) {
+                var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", "otherNationalityId", ""];
+                var idd = jQuery(event.target).attr('id');
+
+                if (jQuery.inArray(idd, arr) != -1) {
+                    if (jQuery('#' + idd).val().trim() == "") {
+                        jQuery('#' + idd).addClass("red-border");
+                    }
+                    else {
+                        jQuery('#' + idd).removeClass("red-border");
+                    }
+                }
+            });
+
+            jQuery('input:text[id]').focusout(function (event) {
+                var arr = ["firstName", "", "", "", "", ""];
+                var idd = jQuery(event.target).attr('id');
+
+                if (jQuery.inArray(idd, arr) != -1) {
+                    if (idd == 'firstName') {
+                        jQuery('#summ_idnt').text("${patient.identifier}");
+                        jQuery('#summ_name').text(jQuery('#surName').val() + ', ' + jQuery('#firstName').val());
+                    }
+                }
+            });
+
+            jQuery('select').focusout(function (event) {
+                var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
+                var idd = jQuery(event.target).attr('id');
+
+                if (jQuery.inArray(idd, arr) != -1) {
+                    if (jQuery('#' + idd).val() == 0 || jQuery('#' + idd).val().trim() == "") {
+                        jQuery('#' + idd).addClass("red-border");
+                    }
+                    else {
+                        jQuery('#' + idd).removeClass("red-border");
+                    }
+
+                    if (idd == 'patientGender') {
+                        jQuery('#summ_gend').text(jQuery('#patientGender option:selected').text());
+                    }
+                }
+            });
+
+            jQuery(function () {
+                jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+                jQuery("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
+            });
+
+            jQuery('#birthdate').datepicker({
+                yearRange: 'c-100:c',
+                maxDate: '0',
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                constrainInput: false
+            }).on("change", function (dateText) {
+                //            display("Got change event from field "+this.value);
+                jQuery("#birthdate").val(this.value);
+                PAGE.checkBirthDate();
+            });
+
+
+
+
 
             /* jQuery("#searchbox").showPatientSearchBox(
              {
@@ -2528,7 +2535,7 @@
 
                             <p>
 
-                            <h2>Patient Contact Information</h2>
+                            <h2>Patient Contact Information</h2>${patient.address}
 
                             <div class="onerow">
                                 <div class="col4"><label>Contact Number</label></div>

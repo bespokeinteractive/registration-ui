@@ -52,6 +52,7 @@ public class PatientModel {
 	private String address;
 	
 	private String birthdate;
+	private String physicalAddress,county,subCounty,location;
 	
 	private Map<Integer, String> attributes = new HashMap<Integer, String>();
 	
@@ -83,6 +84,10 @@ public class PatientModel {
 				   patient.getPersonAddress().getCityVillage() + ", " + 
 				   patient.getPersonAddress().getCountyDistrict() + ", " +
 				   patient.getPersonAddress().getAddress2());
+		setPhysicalAddress(patient.getPersonAddress().getAddress1());
+		setCounty(patient.getPersonAddress().getCityVillage());
+		setSubCounty(patient.getPersonAddress().getCountyDistrict());
+		setLocation(patient.getPersonAddress().getAddress2());
 		
 		setBirthdate(RegistrationUtils.formatDate(patient.getBirthdate()));
 		
@@ -186,5 +191,37 @@ public class PatientModel {
 	
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	public String getPhysicalAddress() {
+		return physicalAddress;
+	}
+
+	public void setPhysicalAddress(String physicalAddress) {
+		this.physicalAddress = physicalAddress;
+	}
+
+	public String getCounty() {
+		return county;
+	}
+
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	public String getSubCounty() {
+		return subCounty;
+	}
+
+	public void setSubCounty(String subCounty) {
+		this.subCounty = subCounty;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }
