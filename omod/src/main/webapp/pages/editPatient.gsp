@@ -251,7 +251,7 @@
             document.getElementById('patientReligion').value =checkForNulls("${patient.attributes[40]}");
 
             document.getElementById('birthdate').value ="${patient.birthdate}";
-			
+
 
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
@@ -292,7 +292,7 @@
             //set the Patient Relative Physical Address
             document.getElementById('relativePostalAddress').value =checkForNulls("${patient.attributes[28]}");
 
-			
+
 			PAGE.checkBirthDate();
 
 
@@ -764,8 +764,8 @@
                 var tab3 = 0;
                 var tab4 = 0;
 
-                //var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-                //var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+                var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+                var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
                 var str1 = '';
 
@@ -842,13 +842,12 @@
                     i++;
                     tab1++;
                 }
-                /* Revisit This after Additional Fields Added
 				else if (select1 == 1 && select2 == 3 && jQuery("#patientGender").val() == "M") {
                     str1 = 'The selected Scheme Doesnt Match the Gender Selected. ';
                     jQuery('#patientGender').addClass("red-border");
                     i++;
                     tab1++;
-                }*/
+                }
                 else if (jQuery("#patientGender").val() == "M" && jQuery("#maritalStatus").val() == "Widow") {
                     str1 = str1 + 'Widow marital status is only for Female. ';
                     jQuery('#maritalStatus').addClass("red-border");
@@ -1316,6 +1315,8 @@
             //if(MODEL.payingCategoryMap[selectedPayingCategory]=="CHILD LESS THAN 5 YEARS"){
             var estAge = jQuery("#estimatedAgeInYear").val();	//come back here
 
+
+
             if (select1 == 1 && select2 == 2) {
                 if (estAge < 6) {
                     jQuery("#selectedRegFeeValue").val(0);
@@ -1339,6 +1340,30 @@
                 else {
                     jQuery("#selectedRegFeeValue").val(0);
                 }
+            }
+
+			alert(select1);
+
+			if (select1 == 1) {
+                jQuery('#payingCategory option').eq(select2).prop('selected', true);
+                jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+                jQuery('#specialScheme option').eq(0).prop('selected', true);
+
+                jQuery('#summ_pays').text('Paying / ' + jQuery('#payingCategory option:selected').text());
+            }
+            else if (select1 == 2) {
+                jQuery('#nonPayingCategory option').eq(select2).prop('selected', true);
+                jQuery('#payingCategory option').eq(0).prop('selected', true);
+                jQuery('#specialScheme option').eq(0).prop('selected', true);
+
+                jQuery('#summ_pays').text('Non-Paying / ' + jQuery('#nonPayingCategory option:selected').text());
+            }
+            else {
+                jQuery('#specialScheme option').eq(select2).prop('selected', true);
+                jQuery('#payingCategory option').eq(0).prop('selected', true);
+                jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+
+                jQuery('#summ_pays').text('Special Scheme / ' + jQuery('#specialScheme option:selected').text());
             }
         }
 
@@ -2535,161 +2560,320 @@
 
                             <p>
 
-                            <h2>Patient Contact Information</h2>${patient.address}
 
-                            <div class="onerow">
-                                <div class="col4"><label>Contact Number</label></div>
+								<h2>Patient Contact Information</h2>
 
-                                <div class="col4"><label>Email Address</label></div>
+								<div class="onerow">
+									<div class="col4"><label>Contact Number</label></div>
 
-                                <div class="col4 last"><label>Physical Address <span>*</span></label></div>
-                            </div>
+									<div class="col4"><label>Email Address</label></div>
 
-                            <div class="onerow">
-                                <div class="col4">
-                                    <field><input type="text" id="patientPhoneNumber" name="person.attribute.16"
-                                                  class="form-textbox1"/></field>
-                                </div>
+									<div class="col4 last"><label>Physical Address <span>*</span></label></div>
+								</div>
 
-                                <div class="col4">
-                                    <field><input type="text" id="patientEmail" name="person.attribute.37"
-                                                  class="form-textbox1"/></field>
-                                </div>
+								<div class="onerow">
+									<div class="col4">
+										<field><input type="text" id="patientPhoneNumber" name="person.attribute.16"
+													  class="form-textbox1"/></field>
+									</div>
 
-                                <div class="col4 last">
-                                    <field><input type="text" id="patientPostalAddress"
-                                                  name="patient.address.postalAddress" class="required form-textbox1"/>
-                                    </field>
-                                </div>
-                            </div>
+									<div class="col4">
+										<field><input type="text" id="patientEmail" name="person.attribute.37"
+													  class="form-textbox1"/></field>
+									</div>
 
-                            <div class="onerow">
-                                <div class="col4"><label>County</label></div>
+									<div class="col4 last">
+										<field><input type="text" id="patientPostalAddress"
+													  name="patient.address.postalAddress" class="required form-textbox1"/>
+										</field>
+									</div>
+								</div>
 
-                                <div class="col4"><label>Sub-County</label></div>
+								<div class="onerow">
+									<div class="col4"><label>County</label></div>
 
-                                <div class="col4 last"><label>Location</label></div>
-                            </div>
+									<div class="col4"><label>Sub-County</label></div>
 
-                            <div class="onerow">
-                                <div class="col4">
-                                    <span class="select-arrow" style="width: 100%">
-                                        <field>
-                                            <select id="districts" name="patient.address.district"
-                                                    onChange="PAGE.changeDistrict();"
-                                                    class="form-combo1">
-                                            </select>
-                                        </field>
-                                    </span>
-                                </div>
+									<div class="col4 last"><label>Location</label></div>
+								</div>
 
-                                <div class="col4">
-                                    <span class="select-arrow" style="width: 100%">
-                                        <field>
-                                            <select id="upazilas" name="patient.address.upazila"
-                                                    onChange="PAGE.changeUpazila();" class="form-combo1"></select>
-                                        </field>
-                                    </span>
+								<div class="onerow">
+									<div class="col4">
+										<span class="select-arrow" style="width: 100%">
+											<field>
+												<select id="districts" name="patient.address.district"
+														onChange="PAGE.changeDistrict();"
+														class="form-combo1">
+												</select>
+											</field>
+										</span>
+									</div>
 
-                                </div>
+									<div class="col4">
+										<span class="select-arrow" style="width: 100%">
+											<field>
+												<select id="upazilas" name="patient.address.upazila"
+														onChange="PAGE.changeUpazila();" class="form-combo1"></select>
+											</field>
+										</span>
 
-                                <div class="col4 last">
-                                    <span class="select-arrow" style="width: 100%">
-                                        <field>
-                                            <select id="locations" name="patient.address.location"
-                                                    class="form-combo1"></select>
-                                        </field>
-                                    </span>
-                                </div>
-                            </div>
+									</div>
 
-                            <div class="onerow">
-                                <div class="col4"><label>Village</label></div>
+									<div class="col4 last">
+										<span class="select-arrow" style="width: 100%">
+											<field>
+												<select id="locations" name="patient.address.location"
+														class="form-combo1"></select>
+											</field>
+										</span>
+									</div>
+								</div>
 
-                                <div class="col4"><label></label></div>
+								<div class="onerow">
+									<div class="col4"><label>Village</label></div>
 
-                                <div class="col4 last"><label></label></div>
-                            </div>
+									<div class="col4"><label></label></div>
 
-                            <div class="onerow">
-                                <div class="col4">
-                                    <field>
-                                        <input type="text" id="chiefdom"
-                                               name="person.attribute.${personAttributeChiefdom.id}"
-                                               class="form-textbox1"/>
-                                    </field>
-                                </div>
+									<div class="col4 last"><label></label></div>
+								</div>
 
-                                <div class="col4">&nbsp;</div>
+								<div class="onerow">
+									<div class="col4">
+										<field>
+											<input type="text" id="chiefdom"
+												   name="person.attribute.${personAttributeChiefdom.id}"
+												   class="form-textbox1"/>
+										</field>
+									</div>
 
-                                <div class="col4 last">&nbsp;</div>
-                            </div>
+									<div class="col4">&nbsp;</div>
 
-                            <h2>&nbsp;</h2>
+									<div class="col4 last">&nbsp;</div>
+								</div>
 
-                            <h2>Next of Kin Details</h2>
+								<h2>&nbsp;</h2>
 
-                            <div class="onerow">
-                                <div class="col4"><label>Relative Name <span>*</span></label></div>
+								<h2>Next of Kin Details</h2>
 
-                                <div class="col4"><label>Relationship <span>*</span></label></div>
+								<div class="onerow">
+									<div class="col4"><label>Relative Name <span>*</span></label></div>
 
-                                <div class="col4 last"><label>Physical Address</label></div>
-                            </div>
+									<div class="col4"><label>Relationship <span>*</span></label></div>
 
-                            <div class="onerow">
-                                <div class="col4">
-                                    <field><input type="text" id="patientRelativeName" name="person.attribute.8"
-                                                  class="required form-textbox1"/></field>
-                                </div>
+									<div class="col4 last"><label>Physical Address</label></div>
+								</div>
 
-                                <div class="col4">
-                                    <span class="select-arrow" style="width: 100%">
-                                        <field>
-                                            <select id="relationshipType" name="person.attribute.15"
-                                                    class="required form-combo1">
-                                                <option value=""></option>
-                                                <option value="Parent">Parent</option>
-                                                <option value="Spouse">Spouse</option>
-                                                <option value="Guardian">Guardian</option>
-                                                <option value="Friend">Friend</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </field>
-                                    </span>
-                                </div>
+								<div class="onerow">
+									<div class="col4">
+										<field><input type="text" id="patientRelativeName" name="person.attribute.8"
+													  class="required form-textbox1"/></field>
+									</div>
 
-                                <div class="col4 last">
-                                    <field><input type="text" id="relativePostalAddress" name="person.attribute.28"
-                                                  class="form-textbox1"/></field>
-                                </div>
-                            </div>
+									<div class="col4">
+										<span class="select-arrow" style="width: 100%">
+											<field>
+												<select id="relationshipType" name="person.attribute.15"
+														class="required form-combo1">
+													<option value=""></option>
+													<option value="Parent">Parent</option>
+													<option value="Spouse">Spouse</option>
+													<option value="Guardian">Guardian</option>
+													<option value="Friend">Friend</option>
+													<option value="Other">Other</option>
+												</select>
+											</field>
+										</span>
+									</div>
 
-                            <div class="onerow" style="margin-top: 10px">
-                                <div class="col4"><label></label></div>
+									<div class="col4 last">
+										<field><input type="text" id="relativePostalAddress" name="person.attribute.28"
+													  class="form-textbox1"/></field>
+									</div>
+								</div>
 
-                                <div class="col4"><label></label></div>
+								<div class="onerow" style="margin-top: 10px">
+									<div class="col4"><label></label></div>
 
-                                <div class="col4 last">
-                                    <field>
-                                        <input id="sameAddress" type="checkbox"/> Same as Patient
-                                    </field>
-                                </div>
-                            </div>
+									<div class="col4"><label></label></div>
 
-                            <div class="onerow" style="margin-top: 50px">
-                                <a class="button task" onclick="goto_previous_tab(2);">
-                                    <span style="padding: 15px;">PREVIOUS</span>
-                                </a>
+									<div class="col4 last">
+										<field>
+											<input id="sameAddress" type="checkbox"/> Same as Patient
+										</field>
+									</div>
+								</div>
 
-                                <a class="button confirm" style="float:right; display:inline-block;"
-                                   onclick="goto_next_tab(2);">
-                                    <span>NEXT PAGE</span>
-                                </a>
-                            </div>
-                        </p>
+								<div class="onerow" style="margin-top: 50px">
+									<a class="button task" onclick="goto_previous_tab(2);">
+										<span style="padding: 15px;">PREVIOUS</span>
+									</a>
+
+									<a class="button confirm" style="float:right; display:inline-block;"
+									   onclick="goto_next_tab(2);">
+										<span>NEXT PAGE</span>
+									</a>
+								</div>
+							</p>
                         </fieldset>
+
+
+						<fieldset style="min-width: 500px; width: auto" class="no-confirmation">
+							<p>
+								<legend>Payment Category</legend>
+								<div>
+									<h2>Patient Payment Category</h2>
+
+									<div class="onerow">
+										<div class="col4">
+											<div class="tasks">
+												<header class="tasks-header">
+													<span class="tasks-title">Patients Category</span>
+													<a class="tasks-lists"></a>
+												</header>
+												<div class="tasks-list">
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_1" value="1" onchange="LoadPayCatg();" class="tasks-list-cb" checked>
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc">PAYING</span>
+													</label>
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_1" value="2" onchange="LoadPayCatg();" class="tasks-list-cb">
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc">NON-PAYING</span>
+													</label>
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_1" value="3" onchange="LoadPayCatg();" class="tasks-list-cb">
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc">SPECIAL SCHEMES</span>
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div class="col4">
+											<div class="tasks">
+												<header class="tasks-header">
+													<span id="tasktitle" class="tasks-title">Paying Category</span>
+													<a class="tasks-lists"></a>
+												</header>
+												<div class="tasks-list">
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_2" id="paym_201" value="1" onchange="LoadPayCatgMode();" class="tasks-list-cb" checked>
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc" id="ipaym_11">GENERAL</span>
+													</label>
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_2" id="paym_202" value="2" onchange="LoadPayCatgMode();" class="tasks-list-cb">
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc" id="ipaym_12">CHILD UNDER 5YRS</span>
+													</label>
+													<label class="tasks-list-item">
+														<input style="display:none!important" type="radio" name="paym_2" id="paym_203" value="3" onchange="LoadPayCatgMode();" class="tasks-list-cb">
+														<span class="tasks-list-mark"></span>
+														<span class="tasks-list-desc" id="ipaym_13">EXPECTANT MOTHER</span>
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div class="col4 last">
+											<div class="tasks">
+												<header class="tasks-header">
+													<span id="summtitle1" class="tasks-title">Summary</span>
+													<a class="tasks-lists"></a>
+												</header>
+											</div>
+
+											<span id="universitydiv" class="select-arrow" style="width: 100%">
+												<field><select style="width: 101%;" name="person.attribute.47" id="university">&nbsp;</select></field>
+											</span>
+
+											<field><input type="text" id="modesummary" name="modesummary" value="N/A" placeholder="WAIVER NUMBER" readonly="" style="width: 101%!important"/></field>
+										</div>
+									</div>
+
+
+									<h2> </h2>
+
+									<div class="onerow" style="margin-top: 150px">
+										<a class="button task ui-tabs-anchor" onclick="goto_previous_tab(3);">
+											<span style="padding: 15px;">PREVIOUS</span>
+										</a>
+
+										<a class="button confirm" onclick="PAGE.submit();" style="float:right; display:inline-block; margin-left: 5px;">
+											<span>FINISH</span>
+										</a>
+
+										<a class="button cancel" onclick="window.location.href = window.location.href" style="float:right; display:inline-block;"/>
+											<span>RESET</span>
+										</a>
+									</div>
+
+									<div class="onerow" style="display:none!important;">
+										<div class="col4">
+											<input id="paying" type="checkbox" name="person.attribute.14" value="Paying" checked /> Paying
+										</div>
+
+										<div class="col4">
+											<input id="nonPaying" type="checkbox" name="person.attribute.14" value="Non-Paying"/> Non-Paying
+										</div>
+
+										<div class="col4 last">
+											<input id="specialSchemes" type="checkbox" name="person.attribute.14" value="Special Schemes"/> Special Schemes
+										</div>
+
+										<input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">
+										<input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>
+										<input id="referredYes" type="checkbox" name="referredYes"/>
+										<input id="referredNo" type="checkbox" name="referredNo"/>
+
+										<input id="triageRoom" type="checkbox" name="triageRoom"/>
+										<input id="opdRoom" type="checkbox" name="opdRoom"/>
+										<input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
+									</div>
+
+									<div class="onerow" style="display:none!important;">
+										<div class="col4">&nbsp;
+											<span id="payingCategoryField">
+											<span class="select-arrow" style="width: 100%">
+												<select id="payingCategory" name="person.attribute.44"
+												<select id="payingCategory" name="person.attribute.44"
+														onchange="payingCategorySelection();"
+														class="form-combo1" style="display:block!important"></select></span>
+											</span>
+
+
+										</div>
+
+										<div class="col4">&nbsp;
+											<span id="nonPayingCategoryField">
+											<span class="select-arrow" style="width: 100%">
+												<select id="nonPayingCategory" name="person.attribute.45"
+														onchange="nonPayingCategorySelection();"
+														class="form-combo1" style="display:block!important"></select></span>
+											</span>
+
+										</div>
+
+										<div class="col4 last">&nbsp;
+											<span id="specialSchemeCategoryField">
+											<span class="select-arrow" style="width: 100%">
+												<select id="specialScheme" name="person.attribute.46"
+														onchange="specialSchemeSelection();"
+														class="form-combo1" style="display:block!important"></select>
+											</span>
+
+											</span>
+										</div>
+									</div>
+								</div>
+							</p>
+						</fieldset>
+
+
                     </section>
+
+
 
                     <div id="confirmation" style="width:74%; padding-top: 0px;">
                         <span id="confirmation_label" class="title">Confirmation</span>

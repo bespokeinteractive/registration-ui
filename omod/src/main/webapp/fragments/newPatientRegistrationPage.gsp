@@ -1225,6 +1225,28 @@
                 jQuery("#selectedRegFeeValue").val(${initialRegFee});
             }
         }
+		
+		if (select1 == 1){
+			jQuery('#payingCategory option').eq(select2).prop('selected', true);
+			jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+			jQuery('#specialScheme option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Paying / '+jQuery('#payingCategory option:selected').text());
+		}
+		else if (select1 == 2){
+			jQuery('#nonPayingCategory option').eq(select2).prop('selected', true);
+			jQuery('#payingCategory option').eq(0).prop('selected', true);
+			jQuery('#specialScheme option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Non-Paying / '+jQuery('#nonPayingCategory option:selected').text());
+		}
+		else{
+			jQuery('#specialScheme option').eq(select2).prop('selected', true);
+			jQuery('#payingCategory option').eq(0).prop('selected', true);
+			jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+			
+			jQuery('#summ_pays').text('Special Scheme / '+jQuery('#specialScheme option:selected').text());
+		}
     }
 
     function nonPayingCategorySelection() {
