@@ -45,6 +45,11 @@
 
         jQuery(document).ready(function () {
 
+            if('${status}'==='error'){
+                jq().toastmessage('showNoticeToast', '${message}');
+
+            }
+
             // Districts
             var _districts = new Array();
             var districts = "${districts}";
@@ -1342,7 +1347,6 @@
                 }
             }
 
-			alert(select1);
 
 			if (select1 == 1) {
                 jQuery('#payingCategory option').eq(select2).prop('selected', true);

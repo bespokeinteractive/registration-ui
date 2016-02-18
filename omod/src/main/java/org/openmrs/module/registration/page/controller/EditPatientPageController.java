@@ -56,6 +56,8 @@ public class EditPatientPageController {
         model.addAttribute("personAttributeReligion", personAttributeReligion);
         PersonAttributeType personAttributeChiefdom = hospitalCoreService.getPersonAttributeTypeByName("Chiefdom");
         model.addAttribute("personAttributeChiefdom", personAttributeChiefdom);
+        model.addAttribute("status", "success");
+        model.addAttribute("message", "none");
 
         //
         model.addAttribute(
