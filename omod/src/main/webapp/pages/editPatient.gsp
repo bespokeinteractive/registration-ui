@@ -497,9 +497,6 @@
         PAGE = {
             /** SUBMIT */
             submit: function () {
-
-                // Capitalize fullname and relative name
-                //            relativeNameInCaptital = StringUtils.capitalize(jQuery("#patientRelativeName").val());
                 relativeNameInCaptital = (jQuery("#patientRelativeName").val()).toUpperCase();
                 jQuery("#patientRelativeName").val(relativeNameInCaptital);
 
@@ -912,9 +909,7 @@
                     value = jQuery("#patientRelativeName").val();
                     //value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     //jQuery("#patientRelativeName").val(value);
-                    if (<%= "/^[a-zA-Z- ]*\$/" %>.
-                    test(value) == false
-                )
+                    if (<%= "/^[a-zA-Z- ]*\$/" %>.test(value) == false)
                     {
                         jQuery('#patientRelativeName').addClass("red-border");
                         i++;
@@ -2397,7 +2392,7 @@
                                         <input type="text" id="birthdate" name="patient.birthdate"
                                                class="required form-textbox1"/>
                                     </field>
-                                    <inputbirthdateEstimated id="" type="hidden" name="patient.birthdateEstimate"
+                                    <input  id="birthdateEstimated" type="hidden" name="patient.birthdateEstimate"
                                                              value="true"/>
                                 </div>
                             </div>

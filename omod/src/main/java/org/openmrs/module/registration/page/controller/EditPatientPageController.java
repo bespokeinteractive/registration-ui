@@ -129,10 +129,11 @@ public class EditPatientPageController {
             logger.info(String.format("Updated patient [id=%s]",
                     patient.getId()));
         } catch (Exception e) {
-            model.addAttribute("status", "error");
-            model.addAttribute("message", e.getMessage());
-            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId="+patientId);
-            return s;
+            e.printStackTrace();
+//            model.addAttribute("status", "error");
+//            model.addAttribute("message", e.getMessage());
+//            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId="+patientId);
+//            return s;
         }
 
         String s = "redirect:" + uiUtils.pageLink("registration", "patientRegistration");
