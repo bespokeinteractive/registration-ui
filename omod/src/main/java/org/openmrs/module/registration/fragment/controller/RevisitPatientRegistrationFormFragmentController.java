@@ -44,11 +44,6 @@ public class RevisitPatientRegistrationFormFragmentController {
             HttpServletRequest request) {
         String prefix = Context.getAdministrationService().getGlobalProperty(
                 HospitalCoreConstants.PROPERTY_IDENTIFIER_PREFIX);
-//        model.addAttribute("prefix", prefix);
-        if (phrase.contains("-") && !phrase.contains(prefix)) {
-            phrase = prefix + phrase;
-        }
-
         String gender = request.getParameter("gender");
         if (gender.equalsIgnoreCase("any")) {
             gender = null;
