@@ -958,7 +958,7 @@
 
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
 
-                <div class="col2" align="left" style="display:inline-block;>
+                <div class="col2" align="left" style="display:inline-block;">
                     ${registrationFee}
                 </div>
 
@@ -992,7 +992,7 @@
 
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>You were served by:</b></div>
 
-                <div class="col2" align="left" style="display:inline-block;>
+                <div class="col2" align="left" style="display:inline-block;">
                     ${user}
                 </div>
 

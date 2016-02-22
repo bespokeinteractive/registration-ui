@@ -130,10 +130,10 @@ public class EditPatientPageController {
                     patient.getId()));
         } catch (Exception e) {
             e.printStackTrace();
-//            model.addAttribute("status", "error");
-//            model.addAttribute("message", e.getMessage());
-//            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId="+patientId);
-//            return s;
+            model.addAttribute("status", "error");
+            model.addAttribute("message", e.getMessage());
+            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId="+patientId);
+            return s;
         }
 
         String s = "redirect:" + uiUtils.pageLink("registration", "patientRegistration");
