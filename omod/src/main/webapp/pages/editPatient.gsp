@@ -313,11 +313,11 @@
             var nhifNumber =checkForNulls("${patient.attributes[34]}");
 
             //set student college if present
-            var studentCollege =checkForNulls("${patient.attributes[47]}");
+            var University =checkForNulls("${patient.attributes[47]}");
             //set student id if present
-            var studentCollege =checkForNulls("${patient.attributes[42]}");
+            var StudentID =checkForNulls("${patient.attributes[42]}");
             //set student waiver number if present
-            var studentCollege =checkForNulls("${patient.attributes[32]}");
+            var WaiverNumber =checkForNulls("${patient.attributes[32]}");
 
 
             jQuery('input:text[id]').focus(function (event) {
