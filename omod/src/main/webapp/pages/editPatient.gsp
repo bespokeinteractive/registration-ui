@@ -301,23 +301,35 @@
 
             //TODO  - binding the Patient Payment Category values post updates
 			PAGE.checkBirthDate();
-            //set the Patient General Category
-            var patientCategory =checkForNulls("${patient.attributes[14]}");
+            //set the Patient Payment Category
+            var paymentCategory =checkForNulls("${patient.attributes[14]}");
             //set the Payment Category - Paying Specific
-            var paying =checkForNulls("${patient.attributes[44]}");
+            var payingCategorySpecific =checkForNulls("${patient.attributes[44]}");
             //set the Payment Category - Non-Paying Specific
-            var nonPaying =checkForNulls("${patient.attributes[45]}");
+            var nonPayingSpecific =checkForNulls("${patient.attributes[45]}");
             //set the Payment Category - Special scheme Specific
-            var specialScheme =checkForNulls("${patient.attributes[46]}");
+            var specialSchemeSpecific =checkForNulls("${patient.attributes[46]}");
             //set NHIF number if available
             var nhifNumber =checkForNulls("${patient.attributes[34]}");
 
             //set student college if present
-            var studentCollege =checkForNulls("${patient.attributes[47]}");
+            var studentUniversity =checkForNulls("${patient.attributes[47]}");
             //set student id if present
-            var studentCollege =checkForNulls("${patient.attributes[42]}");
-            //set student waiver number if present
-            var studentCollege =checkForNulls("${patient.attributes[32]}");
+            var studentUniversityId =checkForNulls("${patient.attributes[42]}");
+            //set waiver number if waiver case
+            var waiverNumber =checkForNulls("${patient.attributes[32]}");
+
+            if(paymentCategory == 'Paying'){
+                jQuery('input[name=paym_1][value="Paying"]').prop('checked', true);
+                LoadPayCatg();
+
+            }else if(paymentCategory == 'Non-Paying'){
+                jQuery('input[name=paym_1][value="Non-Paying"]').prop('checked', true);
+                LoadPayCatg();
+            }else if(paymentCategory == 'Special Schemes'){
+                jQuery('input[name=paym_1][value="Special Schemes"]').prop('checked', true);
+                LoadPayCatg();
+            }
 
 
             jQuery('input:text[id]').focus(function (event) {
