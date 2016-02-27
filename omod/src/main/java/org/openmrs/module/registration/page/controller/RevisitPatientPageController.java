@@ -83,45 +83,6 @@ public class RevisitPatientPageController {
             }
         }
 
-       /* // Get selected OPD room if this is the first time of visit
-        if (encounterId != null) {
-            List<PersonAttribute> pas = hcs.getPersonAttributes(patientId);
-            for (PersonAttribute pa : pas) {
-                PersonAttributeType attributeType = pa.getAttributeType();
-                PersonAttributeType personAttributePaymentCategory = hcs.getPersonAttributeTypeByName("Payment Category");
-                if (attributeType.getPersonAttributeTypeId() == personAttributePaymentCategory.getPersonAttributeTypeId()) {
-                    model.addAttribute("selectedPaymentCategory", pa.getValue());
-                }
-            }
-
-            Encounter encounter = Context.getEncounterService().getEncounter(encounterId);
-            for (Obs obs : encounter.getObs()) {
-                if (obs.getConcept().getName().getName().equalsIgnoreCase(RegistrationConstants.CONCEPT_NAME_TRIAGE)) {
-                    model.addAttribute("selectedTRIAGE", obs.getValueCoded().getConceptId());
-                }
-                if (obs.getConcept().getName().getName().equalsIgnoreCase(RegistrationConstants.CONCEPT_NAME_OPD_WARD)) {
-                    model.addAttribute("selectedOPD", obs.getValueCoded().getConceptId());
-                }
-                if (obs.getConcept().getName().getName().equalsIgnoreCase(RegistrationConstants.CONCEPT_NAME_SPECIAL_CLINIC)) {
-                    model.addAttribute("selectedSPECIALCLINIC", obs.getValueCoded().getConceptId());
-                }
-
-                if (obs.getConcept().getName().getName().equalsIgnoreCase(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE)) {
-                    model.addAttribute("selectedMLC", obs.getValueCoded().getConceptId());
-                }
-
-                if (obs.getConcept().getDisplayString().equalsIgnoreCase(RegistrationConstants.CONCEPT_NAME_REGISTRATION_FEE)) {
-                    double regFee = obs.getValueNumeric();
-                    int regFeeToInt = (int) regFee;
-                    model.addAttribute("registrationFee", regFeeToInt);
-                }
-
-            }
-            Boolean firstTimeVisit = true;
-            model.addAttribute("firstTimeVisit", firstTimeVisit);
-            model.addAttribute("typeOfSlip", "Registration Receipt");
-            model.addAttribute("reprint", false);
-        }*/
 
         if ((revisit != null) && revisit) {
             model.addAttribute("typeOfSlip", "Registration Receipt");
