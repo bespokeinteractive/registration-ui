@@ -324,34 +324,28 @@
             console.log(waiverNumber)
 
             if (paymentCategory == 'Paying') {
-                alert("is a paying person");
                 jQuery('input[name=paym_1][value="1"]').attr('checked', 'checked');
                 LoadPayCatg();
 
 
                 if (payingCategorySpecific == 'GENERAL') {
-                    alert("is a general person");
                     jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
 
 
                 } else if (payingCategorySpecific == 'CHILD LESS THAN 5 YEARS') {
-                    alert("is a child person");
                     jQuery('input[name=paym_2][value="2"]').attr('checked', 'checked');
 
 
                 } else if (payingCategorySpecific == 'EXPECTANT MOTHER') {
-                    alert("is a mother person");
                     jQuery('input[name=paym_2][value="3"]').attr('checked', 'checked');
 
                 }
 
 
             } else if (paymentCategory == 'Non-Paying'){
-                alert("is a non-paying person");
                 jQuery('input[name=paym_1][value="2"]').attr('checked', 'checked');
                 LoadPayCatg();
                 if (nonPayingSpecific == 'NHIF CIVIL SERVANT') {
-                    alert("is a civil servernt person");
                     jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                     jQuery("#modesummary").val(nhifNumber);
@@ -360,25 +354,20 @@
 
 
                 } else if (nonPayingSpecific == 'CCC PATIENT') {
-                    alert("is a ccc patient person");
                     jQuery('input[name=paym_2][value="2"]').attr('checked', 'checked');
                     LoadPayCatgMode();
 
                 } else if (nonPayingSpecific == 'TB PATIENT') {
-                    alert("is a tb person");
                     jQuery('input[name=paym_2][value="3"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                 } else if (nonPayingSpecific == 'PRISONER') {
-                    alert("is a prisoner person");
                     jQuery('input[name=paym_2][value="4"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                 }
             } else if (paymentCategory == 'Special Schemes') {
-                alert("is a special scheme person");
                 jQuery('input[name=paym_1][value="3"]').attr('checked', 'checked');
                 LoadPayCatg();
                 if (specialSchemeSpecific == 'STUDENT SCHEME') {
-                    alert('student scheme');
                     jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                     document.getElementById('university').value = studentUniversity;
@@ -386,13 +375,11 @@
 
 
                 } else if (specialSchemeSpecific == 'WAIVER CASE') {
-                    alert('waiver case');
                     jQuery('input[name=paym_2][value="2"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                     jQuery("#modesummary").val(waiverNumber);
 
                 } else if (specialSchemeSpecific == 'DELIVERY CASE') {
-                    alert('delivery case');
                     jQuery('input[name=paym_2][value="3"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                 }
@@ -599,33 +586,6 @@
                 if (this.validateRegisterForm()) {
 
                     jQuery("#patientRegistrationForm").submit();
-
-                    /*jQuery("#patientRegistrationForm")
-                     .mask(
-                     "<img src='" + '
-                    ${ ui.resourceLink("registration", "images/ajax-loader.gif") }' + "/>&nbsp;");
-
-
-                     jQuery("#patientRegistrationForm")
-                     .ajaxSubmit(
-                     {
-                     success : function(responseText,
-                     statusText, xhr) {
-                     json = jQuery.parseJSON(responseText);
-                     if (json.status == "success") {
-                     window.location.href = openmrsContextPath
-                     + "/module/registration/showPatientInfo.form?patientId="
-                     + json.patientId
-                     + "&encounterId="
-                     + json.encounterId;
-                     } else {
-                     alert(json.message);
-                     }
-                     jQuery("#patientRegistrationForm")
-                     .unmask();
-                     }
-                     });
-                     */
                 }
             },
 
