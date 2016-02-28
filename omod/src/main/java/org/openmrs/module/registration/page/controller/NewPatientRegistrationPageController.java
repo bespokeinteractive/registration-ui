@@ -207,7 +207,7 @@ public class NewPatientRegistrationPageController {
 		Map<String, Object> validationParameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes",
 				parameters);
 		String validateResult = validator.validate(validationParameters);
-		logger.info("Attirubte validation: " + validateResult);
+		logger.info("Attribute validation: " + validateResult);
 		if (StringUtils.isBlank(validateResult)) {
 			for (String name : parameters.keySet()) {
 				if ((name.contains(".attribute.")) && (!StringUtils.isBlank(parameters.get(name)))) {
@@ -225,7 +225,7 @@ public class NewPatientRegistrationPageController {
 	}
 
 	/**
-	 * Create Encouunter For The Visit Of Patient
+	 * Create Encounter For The Visit Of Patient
 	 *
 	 * @param patient
 	 * @param parameters
