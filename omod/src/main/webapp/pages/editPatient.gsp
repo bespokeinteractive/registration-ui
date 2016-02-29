@@ -119,6 +119,19 @@
                 religions: "${religionList}"
             }
 
+
+            jQuery("#modesummary").blur(function () {
+                var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+                var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+                if (select1 == 2 && select2 == 1) {
+                    jQuery('input[name="person.attribute.34"]').val(jQuery("#modesummary").val());
+                } else if (select1 == 3 && select2 == 1) {
+                    jQuery('input[name="person.attribute.42"]').val(jQuery("#modesummary").val());
+                } else if (select1 == 3 && select2 == 2) {
+                    jQuery('input[name="person.attribute.32"]').val(jQuery("#modesummary").val());
+                }
+            });
+
             //jQuery('#birthdate').change(PAGE.checkBirthDate);
             MODEL.religions = "Religion, |"
                     + MODEL.religions;
@@ -299,29 +312,29 @@
             PAGE.checkBirthDate();
             //set the Patient Payment Category
             var paymentCategory = checkForNulls("${patient.attributes[14]}");
-            console.log(paymentCategory)
+//            console.log(paymentCategory)
             //set the Payment Category - Paying Specific
             var payingCategorySpecific = checkForNulls("${patient.attributes[44]}");
-            console.log(payingCategorySpecific)
+//            console.log(payingCategorySpecific)
             //set the Payment Category - Non-Paying Specific
             var nonPayingSpecific = checkForNulls("${patient.attributes[45]}");
-            console.log(nonPayingSpecific)
+//            console.log(nonPayingSpecific)
             //set the Payment Category - Special scheme Specific
             var specialSchemeSpecific = checkForNulls("${patient.attributes[46]}");
-            console.log(specialSchemeSpecific)
+//            console.log(specialSchemeSpecific)
             //set NHIF number if available
             var nhifNumber = checkForNulls("${patient.attributes[34]}");
-            console.log(nhifNumber)
+//            console.log(nhifNumber)
 
             //set student college if present
             var studentUniversity = checkForNulls("${patient.attributes[47]}");
-            console.log(studentUniversity)
+//            console.log(studentUniversity)
             //set student id if present
             var studentUniversityId = checkForNulls("${patient.attributes[42]}");
-            console.log(studentUniversityId)
+//            console.log(studentUniversityId)
             //set waiver number if waiver case
             var waiverNumber = checkForNulls("${patient.attributes[32]}");
-            console.log(waiverNumber)
+//            console.log(waiverNumber)
 
             if (paymentCategory == 'Paying') {
                 jQuery('input[name=paym_1][value="1"]').attr('checked', 'checked');
@@ -341,16 +354,13 @@
 
                 }
 
-
-            } else if (paymentCategory == 'Non-Paying'){
+            } else if (paymentCategory == 'Non-Paying') {
                 jQuery('input[name=paym_1][value="2"]').attr('checked', 'checked');
                 LoadPayCatg();
                 if (nonPayingSpecific == 'NHIF CIVIL SERVANT') {
                     jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                     jQuery("#modesummary").val(nhifNumber);
-
-
 
 
                 } else if (nonPayingSpecific == 'CCC PATIENT') {
@@ -371,7 +381,7 @@
                     jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
                     LoadPayCatgMode();
                     document.getElementById('university').value = studentUniversity;
-                    document.getElementById('modesummary').value = studentUniversityId;
+                    jQuery("#modesummary").val(studentUniversityId);
 
 
                 } else if (specialSchemeSpecific == 'WAIVER CASE') {
@@ -1376,13 +1386,18 @@
             if (select1 == 1 && select2 == 2) {
                 if (estAge < 6) {
                     jQuery("#selectedRegFeeValue").val(0);
+                } else {
+                    jq().toastmessage('showNoticeToast', 'Selected Scheme should be for child at 5 years and below');
+                    jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
+
                 }
             }
             else {
 
                 if (select1 == 1 && select2 == 3) {
                     if (jQuery("#patientGender").val() == "M") {
-                        alert("This category is only valid for female");
+                        jq().toastmessage('showNoticeToast', 'This category is only valid for female');
+                        jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
                     }
                 }
 
@@ -2847,6 +2862,9 @@
                                         <div class="tasks">
                                             <header class="tasks-header">
                                                 <span id="summtitle1" class="tasks-title">Summary</span>
+                                                <input type="hidden" id="nhifNumber" name="person.attribute.34" />
+                                                <input type="hidden" id="studentId" name="person.attribute.42" />
+                                                <input type="hidden" id="waiverNumber" name="person.attribute.32" />
                                                 <a class="tasks-lists"></a>
                                             </header>
                                         </div>
@@ -2874,10 +2892,6 @@
                                        style="float:right; display:inline-block; margin-left: 5px;">
                                         <span>FINISH</span>
                                     </a>
-
-                                    <a class="button cancel" onclick="window.location.href = window.location.href"
-                                       style="float:right; display:inline-block;"/>
-                                    <span>RESET</span>
                                 </a>
                                 </div>
 
