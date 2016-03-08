@@ -76,16 +76,21 @@
         return res;
     }
 
+
+
     PATIENTSEARCHRESULT = {
+
+
         oldBackgroundColor: "",
 
         /** Click to view patient info */
         visit: function (patientId, deadInfo, admittedInfo) {
-            if (deadInfo == "true") {
+            //do an ajax request to check if the patient is dead or admitted
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
             }
-            if (admittedInfo == "true") {
+            if (admittedInfo) {
                 alert("This Patient is admitted");
                 return false;
             }
@@ -96,17 +101,16 @@
         },
 
         /** Edit a patient */
-        editPatient: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
+        editPatient: function (patientId, deadInfo,admittedInfo) {
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
             }
             window.location.href = emr.pageLink("registration", "showPatientInfo", {"patientId": patientId});
-            ;
         },
 
-        reprint: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
+        reprint: function (patientId, deadInfo,admittedInfo) {
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
             }

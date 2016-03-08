@@ -66,7 +66,7 @@ public class RevisitPatientRegistrationFormFragmentController {
         );
         List<PatientWrapper> wrapperList = patientsWithLastVisit(patients);
 
-        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate");
+        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate","voided","dead");
     }
 
     // Filter patient list using advance search criteria
@@ -136,7 +136,9 @@ public class RevisitPatientRegistrationFormFragmentController {
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         List<PatientWrapper> wrappers = new ArrayList<PatientWrapper>();
         for (Patient patient : patients) {
-            wrappers.add(new PatientWrapper(patient, hcs.getLastVisitTime(patient)));
+            PatientWrapper pw = new PatientWrapper(patient, hcs.getLastVisitTime(patient));
+            pw.setVoided(patient.getVoided());
+            wrappers.add(pw);
         }
         return wrappers;
     }
