@@ -80,24 +80,26 @@
         oldBackgroundColor: "",
 
         /** Click to view patient info */
-        visit: function (patientId, deadInfo, admittedInfo) {
-            if (deadInfo == "true") {
+        revisit: function (patientId, deadInfo, admittedInfo) {
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
-            }
-            if (admittedInfo == "true") {
+            }else if (admittedInfo) {
                 alert("This Patient is admitted");
                 return false;
+            }else{
+                alert("not dead or admitted")
+                window.location.href = emr.pageLink("registration", "showPatientInfo", {
+                    "patientId": patientId,
+                    "revisit": true
+                });
             }
-            window.location.href = emr.pageLink("registration", "showPatientInfo", {
-                "patientId": patientId,
-                "revisit": true
-            });
+
         },
 
         /** Edit a patient */
-        editPatient: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
+        editPatient: function (patientId, deadInfo, admittedInfo) {
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
             }
@@ -105,8 +107,8 @@
             ;
         },
 
-        reprint: function (patientId, deadInfo) {
-            if (deadInfo == "true") {
+        reprint: function (patientId, deadInfo,admittedInfo) {
+            if (deadInfo) {
                 alert("This Patient is Dead");
                 return false;
             }
@@ -170,7 +172,10 @@
         jq('#patient-search-results-table > tbody > tr').remove();
         var tbody = jq('#patient-search-results-table > tbody');
         for (index in data) {
+
             var item = data[index];
+            console.info(item.dead);
+            console.info(item.voided);
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
@@ -181,9 +186,9 @@
 
             row += '<td> ' +
 
-                    '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
-                    <% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" href="${pageLinkReprint}?patientId=' + item.patientId + '&reprint=true"><i class="icon-print small" ></i></a>'<% } %>  +
+                    '<a title="Patient Revisit" onclick="PATIENTSEARCHRESULT.revisit('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-user-md small" ></i></a>' +
+                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" onclick="PATIENTSEARCHRESULT.editPatient('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-edit small" ></i></a>'<% } %> +
+                    <% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" onclick="PATIENTSEARCHRESULT.reprint('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-print small" ></i></a>'<% } %>  +
                     '</td>';
             <% } else {%>
 
