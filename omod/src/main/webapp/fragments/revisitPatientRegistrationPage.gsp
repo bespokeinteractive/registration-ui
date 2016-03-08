@@ -86,13 +86,13 @@
         /** Click to view patient info */
         revisit: function (patientId, deadInfo, admittedInfo) {
             if (deadInfo) {
-                alert("This Patient is Dead");
+                jq().toastmessage('showNoticeToast', "This Patient is Dead");
                 return false;
             }else if (admittedInfo) {
-                alert("This Patient is admitted");
+                jq().toastmessage('showNoticeToast', "This Patient is admitted");
                 return false;
             }else{
-                alert("not dead or admitted")
+
                 window.location.href = emr.pageLink("registration", "showPatientInfo", {
                     "patientId": patientId,
                     "revisit": true
@@ -104,7 +104,7 @@
         /** Edit a patient */
         editPatient: function (patientId, deadInfo, admittedInfo) {
             if (deadInfo) {
-                alert("This Patient is Dead");
+                jq().toastmessage('showNoticeToast', "This Patient is Dead!");
                 return false;
             }
             window.location.href = emr.pageLink("registration", "showPatientInfo", {"patientId": patientId});
@@ -112,7 +112,7 @@
 
         reprint: function (patientId, deadInfo,admittedInfo) {
             if (deadInfo) {
-                alert("This Patient is Dead");
+                jq().toastmessage('showNoticeToast', "This Patient is Dead!");
                 return false;
             }
             window.location.href = emr.pageLink("registration", "showPatientInfo", {
@@ -177,14 +177,9 @@
         for (index in data) {
 
             var item = data[index];
-            console.info(item.dead);
-            console.info(item.voided);
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
-                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
-                  def pageLinkReprint = ui.pageLink("registration", "showPatientInfo");
                    %>
 
             row += '<td> ' +
