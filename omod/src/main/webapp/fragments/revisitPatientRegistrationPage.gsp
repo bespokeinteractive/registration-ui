@@ -107,7 +107,7 @@
                 jq().toastmessage('showNoticeToast', "This Patient is Dead!");
                 return false;
             }
-            window.location.href = emr.pageLink("registration", "showPatientInfo", {"patientId": patientId});
+            window.location.href = emr.pageLink("registration", "editPatient", {"patientId": patientId});
         },
 
         reprint: function (patientId, deadInfo,admittedInfo) {
@@ -317,6 +317,10 @@
 	}
 	.ui-widget-content a {
 		color: #007fff;
+	}
+	td a{
+		cursor: pointer;
+		text-decoration: none;
 	}
 </style>
 
