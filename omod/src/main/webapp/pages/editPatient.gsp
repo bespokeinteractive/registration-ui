@@ -1415,8 +1415,9 @@
 
                 if (select1 == 1 && select2 == 3) {
                     if (jq("#patientGender").val() == "M") {
-                        jq().toastmessage('showNoticeToast', 'This category is only valid for female');
-                        jq('input[name=paym_2][value="1"]').attr('checked', 'checked');
+                        jq().toastmessage('showErrorToast', 'This category is only valid for Females');
+                        jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+						return false;
                     }
                 }
 
