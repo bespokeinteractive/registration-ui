@@ -5,9 +5,6 @@
     ui.includeCss("registration", "main.css")
     ui.includeCss("registration", "jquery.steps.css")
 
-%>
-
-<%
     ui.includeJavascript("registration", "custom.js")
     ui.includeJavascript("registration", "jquery.cookie-1.3.1.js")
     ui.includeJavascript("registration", "jquery.steps.min.js")
@@ -16,9 +13,7 @@
     ui.includeJavascript("registration", "validations.js")
     ui.includeJavascript("registration", "jquery.loadmask.min.js")
     ui.includeJavascript("registration", "jquery.formfilling.js")
-%>
 
-<%
     ui.includeJavascript("uicommons", "navigator/validators.js", Integer.MAX_VALUE - 19)
     ui.includeJavascript("uicommons", "navigator/navigator.js", Integer.MAX_VALUE - 20)
     ui.includeJavascript("uicommons", "navigator/navigatorHandlers.js", Integer.MAX_VALUE - 21)
@@ -48,12 +43,6 @@
                 jq().toastmessage('showNoticeToast', '${message}');
             }
 			
-			jq("input[name='paym_2']:radio").change(function () {
-				
-				
-				console.log('This');
-			});
-			
 			jq("input[name='paym_1']:radio").change(function () {
 				var index = jq(this, '#simple-form-ui').val();
 				var arrey = MODEL.payingCategory.split("|");
@@ -61,22 +50,101 @@
 				
 				if (index == 1){
 					jq('#tasktitle').text('Paying Category');
+					
+					jq('#paying').attr('checked', 'checked').change();
+					jq('#nonPaying').attr('checked', false).change();
+					jq('#specialSchemes').attr('checked', false).change();
+					
 					arrey = MODEL.payingCategory.split("|");
+					
 				}
 				else if (index == 2){
 					jq('#tasktitle').text('Nonpaying Category');
+					
+					jq('#paying').attr('checked', false).change();
+					jq('#nonPaying').attr('checked', 'checked').change();
+					jq('#specialSchemes').attr('checked', false).change();
+					
 					arrey = MODEL.nonPayingCategory.split("|");
 				}
 				else {
 					jq('#tasktitle').text('Special Schemes');
+					
+					jq('#paying').attr('checked', false).change();
+					jq('#nonPaying').attr('checked', false).change();
+					jq('#specialSchemes').attr('checked', 'checked').change();
+					
 					arrey = MODEL.specialScheme.split("|");
 				}
 				
 				for (var i = 0; i < arrey.length-1; i++) {
-					alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20"+(i+1)+"' value='"+(i+1)+"' onchange='LoadPayCatgMode();' class='tasks-list-cb' checked> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1"+(i+1)+"'>"+arrey[i].substr(0, arrey[i].indexOf(','))+"</span> </label>";
+					alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20"+(i+1)+"' value='"+(i+1)+"' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i+1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
 				}
 				
 				jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+			});
+			
+			jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+				var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+				var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+
+				if ((select1 == 2) && (select2 == 1)) {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("");
+					jq('#universitydiv').hide();
+					jq('#summtitle1').text('NHIF Summary');
+					jq('#modesummary').attr("placeholder", "NHIF Number");
+				}
+				else if ((select1 == 3) && (select2 == 1)) {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("");
+					jq('#universitydiv').show();
+					jq('#summtitle1').text('Student Summary');
+					jq('#modesummary').attr("placeholder", "Student Number");
+				}
+				else if ((select1 == 3) && (select2 == 2)) {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("");
+					jq('#universitydiv').hide();
+					jq('#summtitle1').text('Waiver Summary');
+					jq('#modesummary').attr("placeholder", "Waiver Number");
+				}
+				else {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("N/A");
+					jq('#universitydiv').hide();
+					jq('#summtitle1').text('Summary');
+					jq('#modesummary').attr("placeholder", "Enter Value");
+
+				}
+
+				if (select1 == 1) {
+					jq('#payingCategory option').eq(select2).prop('selected', true);
+					
+					jq('#nonPayingCategory option').eq(0).prop('selected', true);
+					jq('#specialScheme option').eq(0).prop('selected', true);
+
+					jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+				}
+				else if (select1 == 2) {
+					jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+					jq('#payingCategory option').eq(0).prop('selected', true);
+					jq('#specialScheme option').eq(0).prop('selected', true);
+
+					jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+				}
+				else {
+					jq('#specialScheme option').eq(select2).prop('selected', true);
+					jq('#payingCategory option').eq(0).prop('selected', true);
+					jq('#nonPayingCategory option').eq(0).prop('selected', true);
+
+					jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+				}
+
+				payingCategorySelection();
+
+				jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+				
 			});
 			
 			
@@ -206,19 +274,19 @@
             };
 			
             PAGE.fillOptions("#payingCategory", {
-                data: MODEL.payingCategory,
+                data: ', |' + MODEL.payingCategory,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 			
             PAGE.fillOptions("#nonPayingCategory", {
-                data: MODEL.nonPayingCategory,
+                data: ', |' + MODEL.nonPayingCategory,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 
             PAGE.fillOptions("#specialScheme", {
-                data: MODEL.specialScheme,
+                data: ', |' + MODEL.specialScheme,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
@@ -360,62 +428,34 @@
             //set waiver number if waiver case
             var waiverNumber = checkForNulls("${patient.attributes[32]}");
 //            console.log(waiverNumber)
-
+			  
+			  
             if (paymentCategory == 'Paying') {
                 jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
-                
-                if (payingCategorySpecific == 'GENERAL') {
-                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked');
+                jq('#payingCategory').val(payingCategorySpecific).change();
+				jq('input[name=paym_2][value="' + jq('#payingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
 
-
-                } else if (payingCategorySpecific == 'CHILD LESS THAN 5 YEARS') {
-                    jq('input[name=paym_2][value="2"]').attr('checked', 'checked');
-
-
-                } else if (payingCategorySpecific == 'EXPECTANT MOTHER') {
-                    jq('input[name=paym_2][value="3"]').attr('checked', 'checked');
-
-                }
-
-            } else if (paymentCategory == 'Non-Paying') {
-                jq('input[name=paym_1][value="2"]').attr('checked', 'checked');
+				console.log(jq('#payingCategory').val());
+				console.log(jq('#payingCategory option:selected').index());
+            }
+			else if (paymentCategory == 'Non-Paying') {
+                jq('input[name=paym_1][value="2"]').attr('checked', 'checked').change();
+				jq('#nonPayingCategory').val(nonPayingCategorySpecific).change();
+				jq('input[name=paym_2][value="' + jq('#nonPayingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
 				
-                if (nonPayingSpecific == 'NHIF CIVIL SERVANT') {
-                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                    jq("#modesummary").val(nhifNumber);
-
-
-                } else if (nonPayingSpecific == 'CCC PATIENT') {
-                    jq('input[name=paym_2][value="2"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-
-                } else if (nonPayingSpecific == 'TB PATIENT') {
-                    jq('input[name=paym_2][value="3"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                } else if (nonPayingSpecific == 'PRISONER') {
-                    jq('input[name=paym_2][value="4"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                }
-            } else if (paymentCategory == 'Special Schemes') {
-                jq('input[name=paym_1][value="3"]').attr('checked', 'checked');
+				console.log(jq('#nonPayingCategory').val());
+				console.log(jq('#nonPayingCategory option:selected').index());
+            }
+			else if (paymentCategory == 'Special Schemes') {
+                jq('input[name=paym_1][value="3"]').attr('checked', 'checked').change();
+				jq('#specialScheme').val(specialSchemeSpecific).change();
+				jq('input[name=paym_2][value="' + jq('#specialScheme option:selected').index() + '"]').attr('checked', 'checked').change();
 				
-                if (specialSchemeSpecific == 'STUDENT SCHEME') {
-                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                    document.getElementById('university').value = studentUniversity;
-                    jq("#modesummary").val(studentUniversityId);
-
-
-                } else if (specialSchemeSpecific == 'WAIVER CASE') {
-                    jq('input[name=paym_2][value="2"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                    jq("#modesummary").val(waiverNumber);
-
-                } else if (specialSchemeSpecific == 'DELIVERY CASE') {
-                    jq('input[name=paym_2][value="3"]').attr('checked', 'checked');
-                    LoadPayCatgMode();
-                }
+				console.log(jq('#nonPayingCategory').val());
+				console.log(jq("select[name='specialScheme'] option:selected").index());
+				
+				
+               
             }
 
 
@@ -503,28 +543,8 @@
              beforeNewSearch: PAGE.searchPatientBefore
              });*/
 
-
-            jq("#payingCategoryField").hide();
-            jq("#nonPayingCategoryField").hide();
-            jq("#specialSchemeCategoryField").hide();
-
-            jq('#payingCategory option').eq(1).prop('selected', true);
-            jq('#university option').eq(1).prop('selected', true);
-            jq('#refer1 option').eq(2).prop('selected', true);
-            jq('#legal1 option').eq(2).prop('selected', true);
-
-            jq("#nhifNumberRow").hide();
-            jq("#universityRow").hide();
-            jq("#studentIdRow").hide();
-            jq("#waiverNumberRow").hide();
-
-            LoadLegalCases();
-            LoadReferralCases();
             showOtherNationality();
-//            LoadPayCatg();
-            LoadRoomsTypes();
 
-            //stans
             jq("#otherNationality").hide();
             jq("#referredFromColumn").hide();
             jq("#referralTypeRow").hide();
@@ -662,7 +682,7 @@
                             jq("#calendar").val(data.datemodel.birthdate);
 
                         } else {
-                            jq().toastmessage('showNoticeToast', 'Age in wrong format');
+                            jq().toastmessage('showErrorToast', 'Age in wrong format');
                             jq("#birthdate").val("");
                             goto_previous_tab(5);
                         }
@@ -839,6 +859,11 @@
 
                 var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
                 var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+				
+				if (!jq("input[name='paym_2']:checked").val()) {
+					jq().toastmessage('showErrorToast', 'Select and option for '+jq('#tasktitle').text());
+					return false;
+				}
 
                 var str1 = '';
 
@@ -1127,11 +1152,8 @@
             payingCheck: function () {
                 if (jq("#paying").is(':checked')) {
                     jq("#nonPaying").removeAttr("checked");
-                    jq("#payingCategoryField").show();
                     jq("#nonPayingCategory").val("");
-                    jq("#nonPayingCategoryField").hide();
                     jq("#specialScheme").val("");
-                    jq("#specialSchemeCategoryField").hide();
                     jq("#specialSchemes").removeAttr("checked");
 
                     jq("#nhifNumberRow").hide();
@@ -1139,21 +1161,15 @@
                     jq("#studentIdRow").hide();
                     jq("#waiverNumberRow").hide();
                 }
-                else {
-                    jq("#payingCategoryField").hide();
-                }
             },
 
             /** CHECK WHEN NONPAYING CATEGORY IS SELECTED */
             nonPayingCheck: function () {
                 if (jq("#nonPaying").is(':checked')) {
                     jq("#paying").removeAttr("checked");
-                    jq("#nonPayingCategoryField").show();
                     jq("#specialSchemes").removeAttr("checked");
                     jq("#payingCategory").val("");
-                    jq("#payingCategoryField").hide();
                     jq("#specialScheme").val("");
-                    jq("#specialSchemeCategoryField").hide();
 
                     var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
                     if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
@@ -1178,11 +1194,8 @@
                 if (jq("#specialSchemes").is(':checked')) {
                     jq("#paying").removeAttr("checked");
                     jq("#payingCategory").val("");
-                    jq("#payingCategoryField").hide();
                     jq("#nonPayingCategory").val("");
-                    jq("#nonPayingCategoryField").hide();
                     jq("#nonPaying").removeAttr("checked");
-                    jq("#specialSchemeCategoryField").show();
 
                     jq("#nhifNumberRow").hide();
 
@@ -1393,9 +1406,9 @@
                 if (estAge < 6) {
                     jq("#selectedRegFeeValue").val(0);
                 } else {
-                    jq().toastmessage('showNoticeToast', 'Selected Scheme should be for child at 5 years and below');
-                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked');
-
+                    jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+					return false;
                 }
             }
             else {
@@ -1567,66 +1580,7 @@
         }
 
         function LoadPayCatgMode() {
-            var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-			
-			
-
-            if ((select1 == 2) && (select2 == 1)) {
-                jq("#modesummary").attr("readonly", false);
-                jq("#modesummary").val("");
-                jq('#universitydiv').hide();
-                jq('#summtitle1').text('NHIF Summary');
-                jq('#modesummary').attr("placeholder", "NHIF Number");
-            }
-            else if ((select1 == 3) && (select2 == 1)) {
-                jq("#modesummary").attr("readonly", false);
-                jq("#modesummary").val("");
-                jq('#universitydiv').show();
-                jq('#summtitle1').text('Student Summary');
-                jq('#modesummary').attr("placeholder", "Student Number");
-            }
-            else if ((select1 == 3) && (select2 == 2)) {
-                jq("#modesummary").attr("readonly", false);
-                jq("#modesummary").val("");
-                jq('#universitydiv').hide();
-                jq('#summtitle1').text('Waiver Summary');
-                jq('#modesummary').attr("placeholder", "Waiver Number");
-            }
-            else {
-                jq("#modesummary").attr("readonly", false);
-                jq("#modesummary").val("N/A");
-                jq('#universitydiv').hide();
-                jq('#summtitle1').text('Summary');
-                jq('#modesummary').attr("placeholder", "Enter Value");
-
-            }
-
-            if (select1 == 1) {
-                jq('#payingCategory option').eq(select2).prop('selected', true);
-                jq('#nonPayingCategory option').eq(0).prop('selected', true);
-                jq('#specialScheme option').eq(0).prop('selected', true);
-
-                jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
-            }
-            else if (select1 == 2) {
-                jq('#nonPayingCategory option').eq(select2).prop('selected', true);
-                jq('#payingCategory option').eq(0).prop('selected', true);
-                jq('#specialScheme option').eq(0).prop('selected', true);
-
-                jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
-            }
-            else {
-                jq('#specialScheme option').eq(select2).prop('selected', true);
-                jq('#payingCategory option').eq(0).prop('selected', true);
-                jq('#nonPayingCategory option').eq(0).prop('selected', true);
-
-                jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
-            }
-
-            payingCategorySelection();
-
-            jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+            
         }
 
         function LoadPaymodes() {
@@ -2777,7 +2731,7 @@
                                             <div class="tasks-list">
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
-                                                           value="1" onchange="LoadPayCatg();" class="tasks-list-cb"
+                                                           value="1" class="tasks-list-cb"
                                                            checked>
                                                     <span class="tasks-list-mark"></span>
                                                     <span class="tasks-list-desc">PAYING</span>
@@ -2785,14 +2739,14 @@
 												
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
-                                                           value="2" onchange="LoadPayCatg();" class="tasks-list-cb">
+                                                           value="2" class="tasks-list-cb">
                                                     <span class="tasks-list-mark"></span>
                                                     <span class="tasks-list-desc">NON-PAYING</span>
                                                 </label>
 												
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
-                                                           value="3" onchange="LoadPayCatg();" class="tasks-list-cb">
+                                                           value="3" class="tasks-list-cb">
                                                     <span class="tasks-list-mark"></span>
                                                     <span class="tasks-list-desc">SPECIAL SCHEMES</span>
                                                 </label>
@@ -2849,13 +2803,8 @@
                                     </a>
                                 </a>
                                 </div>
-								
-								<div>
-									Hidden Data to Appear HERE<br/>
-									<div id="pasteData">x</div>
-								</div>
 
-                                <div class="onerow" style="display:nones!important;">
+                                <div class="onerow" style="display:none!important;">
                                     <div class="col4">
                                         <input id="paying" type="checkbox" name="person.attribute.14" value="Paying"
                                                checked/> Paying
@@ -2883,7 +2832,7 @@
 								
 								
 
-                                <div class="onerow" style="display:nones!important;">
+                                <div class="onerow" style="display:none!important;">
                                     <div class="col4">&nbsp;
                                         <span id="payingCategoryField">
                                             <span class="select-arrow" style="width: 100%">
