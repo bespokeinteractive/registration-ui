@@ -3,7 +3,114 @@
     var emrMessages = {};
     emrMessages["requiredField"] = "Required";
 
-    jQuery(document).ready(function () {
+    jq(document).ready(function () {
+		jq("input[name='paym_1']:radio").change(function () {
+			var index = jq(this, '#simple-form-ui').val();
+			var arrey = MODEL.payingCategory.split("|");
+			var alley = "";
+			
+			if (index == 1){
+				jq('#tasktitle').text('Paying Category');
+				
+				jq('#paying').attr('checked', 'checked').change();
+				jq('#nonPaying').attr('checked', false).change();
+				jq('#specialSchemes').attr('checked', false).change();
+				
+				arrey = MODEL.payingCategory.split("|");
+				
+			}
+			else if (index == 2){
+				jq('#tasktitle').text('Nonpaying Category');
+				
+				jq('#paying').attr('checked', false).change();
+				jq('#nonPaying').attr('checked', 'checked').change();
+				jq('#specialSchemes').attr('checked', false).change();
+				
+				arrey = MODEL.nonPayingCategory.split("|");
+			}
+			else {
+				jq('#tasktitle').text('Special Schemes');
+				
+				jq('#paying').attr('checked', false).change();
+				jq('#nonPaying').attr('checked', false).change();
+				jq('#specialSchemes').attr('checked', 'checked').change();
+				
+				arrey = MODEL.specialScheme.split("|");
+			}
+			
+			for (var i = 0; i < arrey.length-1; i++) {
+				alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20"+(i+1)+"' value='"+(i+1)+"' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i+1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
+			}
+			
+			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+			
+			if (!jq("input[name='paym_2']:checked").val()) {
+				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+			}
+		});
+		
+		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+
+			if ((select1 == 2) && (select2 == 1)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				jq('#universitydiv').hide();
+				jq('#summtitle1').text('NHIF Summary');
+				jq('#modesummary').attr("placeholder", "NHIF Number");
+			}
+			else if ((select1 == 3) && (select2 == 1)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				jq('#universitydiv').show();
+				jq('#summtitle1').text('Student Summary');
+				jq('#modesummary').attr("placeholder", "Student Number");
+			}
+			else if ((select1 == 3) && (select2 == 2)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				jq('#universitydiv').hide();
+				jq('#summtitle1').text('Waiver Summary');
+				jq('#modesummary').attr("placeholder", "Waiver Number");
+			}
+			else {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("N/A");
+				jq('#universitydiv').hide();
+				jq('#summtitle1').text('Summary');
+				jq('#modesummary').attr("placeholder", "Enter Value");
+
+			}
+
+			if (select1 == 1) {
+				jq('#payingCategory option').eq(select2).prop('selected', true);
+				
+				jq('#nonPayingCategory option').eq(0).prop('selected', true);
+				jq('#specialScheme option').eq(0).prop('selected', true);
+
+				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+			}
+			else if (select1 == 2) {
+				jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+				jq('#payingCategory option').eq(0).prop('selected', true);
+				jq('#specialScheme option').eq(0).prop('selected', true);
+
+				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+			}
+			else {
+				jq('#specialScheme option').eq(select2).prop('selected', true);
+				jq('#payingCategory option').eq(0).prop('selected', true);
+				jq('#nonPayingCategory option').eq(0).prop('selected', true);
+
+				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+			}
+
+			payingCategorySelection();
+
+			jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+			
+		});
 
         // Districts
         var _districts = new Array();
@@ -68,82 +175,82 @@
             religions: "${religionList}"
         }
 
-        jQuery("#modesummary").blur(function () {
-            var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-            var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+        jq("#modesummary").blur(function () {
+            var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
             if (select1 == 2 && select2 == 1) {
 //                alert("we setting the nhif number");
-                jQuery('input[name="person.attribute.34"]').val(jQuery("#modesummary").val());
+                jq('input[name="person.attribute.34"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 1) {
 //                alert("we setting the student id number");
-                jQuery('input[name="person.attribute.42"]').val(jQuery("#modesummary").val());
+                jq('input[name="person.attribute.42"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 2) {
 //                alert("we setting the waiver number");
-                jQuery('input[name="person.attribute.32"]').val(jQuery("#modesummary").val());
+                jq('input[name="person.attribute.32"]').val(jq("#modesummary").val());
             }
         });
 
 
-        jQuery('input:text[id]').focus(function (event) {
-            var checkboxID = jQuery(event.target).attr('id');
-            jQuery('#' + checkboxID).removeClass("red-border");
+        jq('input:text[id]').focus(function (event) {
+            var checkboxID = jq(event.target).attr('id');
+            jq('#' + checkboxID).removeClass("red-border");
         });
 
-        jQuery('select').focus(function (event) {
-            var checkboxID = jQuery(event.target).attr('id');
-            jQuery('#' + checkboxID).removeClass("red-border");
+        jq('select').focus(function (event) {
+            var checkboxID = jq(event.target).attr('id');
+            jq('#' + checkboxID).removeClass("red-border");
         });
 
-        jQuery('input:text[id]').focusout(function (event) {
+        jq('input:text[id]').focusout(function (event) {
             var arr = ["surName", "firstName", "birthdate", "patientRelativeName", "patientPostalAddress", "otherNationalityId", ""];
-            var idd = jQuery(event.target).attr('id');
+            var idd = jq(event.target).attr('id');
 
-            if (jQuery.inArray(idd, arr) != -1) {
-                if (jQuery('#' + idd).val().trim() == "") {
-                    jQuery('#' + idd).addClass("red-border");
+            if (jq.inArray(idd, arr) != -1) {
+                if (jq('#' + idd).val().trim() == "") {
+                    jq('#' + idd).addClass("red-border");
                 }
                 else {
-                    jQuery('#' + idd).removeClass("red-border");
+                    jq('#' + idd).removeClass("red-border");
                 }
             }
         });
 
-        jQuery('input:text[id]').focusout(function (event) {
+        jq('input:text[id]').focusout(function (event) {
             var arr = ["firstName", "", "", "", "", ""];
-            var idd = jQuery(event.target).attr('id');
+            var idd = jq(event.target).attr('id');
 
-            if (jQuery.inArray(idd, arr) != -1) {
+            if (jq.inArray(idd, arr) != -1) {
                 if (idd == 'firstName') {
-                    jQuery('#summ_idnt').text(jQuery('#patientIdnts').val());
-                    jQuery('#summ_name').text(jQuery('#surName').val() + ', ' + jQuery('#firstName').val());
+                    jq('#summ_idnt').text(jq('#patientIdnts').val());
+                    jq('#summ_name').text(jq('#surName').val() + ', ' + jq('#firstName').val());
                 }
             }
         });
 
-        jQuery('select').focusout(function (event) {
+        jq('select').focusout(function (event) {
             var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
-            var idd = jQuery(event.target).attr('id');
+            var idd = jq(event.target).attr('id');
 
-            if (jQuery.inArray(idd, arr) != -1) {
-                if (jQuery('#' + idd).val() == 0 || jQuery('#' + idd).val().trim() == "") {
-                    jQuery('#' + idd).addClass("red-border");
+            if (jq.inArray(idd, arr) != -1) {
+                if (jq('#' + idd).val() == 0 || jq('#' + idd).val().trim() == "") {
+                    jq('#' + idd).addClass("red-border");
                 }
                 else {
-                    jQuery('#' + idd).removeClass("red-border");
+                    jq('#' + idd).removeClass("red-border");
                 }
 
                 if (idd == 'patientGender') {
-                    jQuery('#summ_gend').text(jQuery('#patientGender option:selected').text());
+                    jq('#summ_gend').text(jq('#patientGender option:selected').text());
                 }
             }
         });
 
-        jQuery(function () {
-            jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
-            jQuery("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
+        jq(function () {
+            jq("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+            jq("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
         });
 
-        jQuery('#birthdate').datepicker({
+        jq('#birthdate').datepicker({
             yearRange: 'c-100:c',
             maxDate: '0',
             dateFormat: 'dd/mm/yy',
@@ -152,12 +259,12 @@
             constrainInput: false
         }).on("change", function (dateText) {
 //            display("Got change event from field "+this.value);
-            jQuery("#birthdate").val(this.value);
+            jq("#birthdate").val(this.value);
             PAGE.checkBirthDate();
         });
 
 
-        //jQuery('#birthdate').change(PAGE.checkBirthDate);
+        //jq('#birthdate').change(PAGE.checkBirthDate);
         MODEL.religions = "Religion, |"
                 + MODEL.religions;
         PAGE.fillOptions("#patientReligion", {
@@ -172,8 +279,8 @@
             data: typeof(MODEL.upazilas[0]) == "undefined" ? MODEL.upazilas : MODEL.upazilas[0].split(',')
         });
 
-        selectedDistrict = jQuery("#districts option:checked").val();
-        selectedUpazila = jQuery("#upazilas option:checked").val();
+        selectedDistrict = jq("#districts option:checked").val();
+        selectedUpazila = jq("#upazilas option:checked").val();
         var loc = ('${location}');
         var districtArr = loc.split("@");
         for (var i = 0; i < districtArr.length; i++) {
@@ -199,26 +306,21 @@
             }
         }
         ;
-        MODEL.payingCategory = ", |"
-                + MODEL.payingCategory;
+        
         PAGE.fillOptions("#payingCategory", {
-            data: MODEL.payingCategory,
+            data: ", |" + MODEL.payingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
-        MODEL.nonPayingCategory = ", |"
-                + MODEL.nonPayingCategory;
         PAGE.fillOptions("#nonPayingCategory", {
-            data: MODEL.nonPayingCategory,
+            data: ", |" + MODEL.nonPayingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
-        MODEL.specialScheme = ", |"
-                + MODEL.specialScheme;
         PAGE.fillOptions("#specialScheme", {
-            data: MODEL.specialScheme,
+            data: ", |" + MODEL.specialScheme,
             delimiter: ",",
             optionDelimiter: "|"
         });
@@ -276,7 +378,7 @@
             optionDelimiter: "|"
         });
 
-        /* jQuery("#searchbox").showPatientSearchBox(
+        /* jq("#searchbox").showPatientSearchBox(
          {
          searchBoxView: hospitalName + "/registration",
          resultView: "/module/registration/patientsearch/"
@@ -288,19 +390,19 @@
          });*/
 
 
-        jQuery("#payingCategoryField").hide();
-        jQuery("#nonPayingCategoryField").hide();
-        jQuery("#specialSchemeCategoryField").hide();
+        jq("#payingCategoryField").hide();
+        jq("#nonPayingCategoryField").hide();
+        jq("#specialSchemeCategoryField").hide();
 
-        jQuery('#payingCategory option').eq(1).prop('selected', true);
-        jQuery('#university option').eq(1).prop('selected', true);
-        jQuery('#refer1 option').eq(2).prop('selected', true);
-        jQuery('#legal1 option').eq(2).prop('selected', true);
+        jq('#payingCategory option').eq(1).prop('selected', true);
+        jq('#university option').eq(1).prop('selected', true);
+        jq('#refer1 option').eq(2).prop('selected', true);
+        jq('#legal1 option').eq(2).prop('selected', true);
 
-        jQuery("#nhifNumberRow").hide();
-        jQuery("#universityRow").hide();
-        jQuery("#studentIdRow").hide();
-        jQuery("#waiverNumberRow").hide();
+        jq("#nhifNumberRow").hide();
+        jq("#universityRow").hide();
+        jq("#studentIdRow").hide();
+        jq("#waiverNumberRow").hide();
 
         LoadLegalCases();
         LoadReferralCases();
@@ -309,58 +411,60 @@
         LoadRoomsTypes();
 
         //stans
-        jQuery("#otherNationality").hide();
-        jQuery("#referredFromColumn").hide();
-        jQuery("#referralTypeRow").hide();
-        jQuery("#referralDescriptionRow").hide();
-        jQuery("#triageField").hide();
-        jQuery("#opdWardField").hide();
-        jQuery("#specialClinicField").hide();
-        jQuery("#fileNumberField").hide();
+        jq("#otherNationality").hide();
+        jq("#referredFromColumn").hide();
+        jq("#referralTypeRow").hide();
+        jq("#referralDescriptionRow").hide();
+        jq("#triageField").hide();
+        jq("#opdWardField").hide();
+        jq("#specialClinicField").hide();
+        jq("#fileNumberField").hide();
 
         // binding
-        jQuery("#paying").click(function () {
+        jq("#paying").click(function () {
             VALIDATORS.payingCheck();
         });
-        jQuery("#nonPaying").click(function () {
+        jq("#nonPaying").click(function () {
             VALIDATORS.nonPayingCheck();
         });
-        jQuery("#specialSchemes").click(function () {
+        jq("#specialSchemes").click(function () {
             VALIDATORS.specialSchemeCheck();
         });
 
-        jQuery("#mlcCaseYes").click(function () {
+        jq("#mlcCaseYes").click(function () {
             VALIDATORS.mlcYesCheck();
         });
 
-        jQuery("#mlcCaseNo").click(function () {
+        jq("#mlcCaseNo").click(function () {
             VALIDATORS.mlcNoCheck();
         });
 
-        jQuery("#referredYes").click(function () {
+        jq("#referredYes").click(function () {
             VALIDATORS.referredYesCheck();
         });
 
-        jQuery("#referredNo").click(function () {
+        jq("#referredNo").click(function () {
             VALIDATORS.referredNoCheck();
         });
 
-        jQuery("#triageRoom").click(function () {
+        jq("#triageRoom").click(function () {
             VALIDATORS.triageRoomCheck();
         });
 
-        jQuery("#opdRoom").click(function () {
+        jq("#opdRoom").click(function () {
             VALIDATORS.opdRoomCheck();
         });
 
-        jQuery("#specialClinicRoom").click(function () {
+        jq("#specialClinicRoom").click(function () {
             VALIDATORS.specialClinicRoomCheck();
         });
 
-        jQuery("#sameAddress").click(function () {
+        jq("#sameAddress").click(function () {
             VALIDATORS.copyaddress();
         });
-
+		
+		jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
+		jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
         //end of doc ready
     });
 
@@ -372,21 +476,21 @@
         submit: function () {
 
             // Capitalize fullname and relative name
-//            relativeNameInCaptital = StringUtils.capitalize(jQuery("#patientRelativeName").val());
-            relativeNameInCaptital = (jQuery("#patientRelativeName").val()).toUpperCase();
-            jQuery("#patientRelativeName").val(relativeNameInCaptital);
+//            relativeNameInCaptital = StringUtils.capitalize(jq("#patientRelativeName").val());
+            relativeNameInCaptital = (jq("#patientRelativeName").val()).toUpperCase();
+            jq("#patientRelativeName").val(relativeNameInCaptital);
 
             // Validate and submit
             if (this.validateRegisterForm()) {
 
-                jQuery("#patientRegistrationForm").submit();
+                jq("#patientRegistrationForm").submit();
 
             }
         },
 
         checkNationalID: function () {
-            nationalId = jQuery("#patientNationalId").val();
-            jQuery.ajax({
+            nationalId = jq("#patientNationalId").val();
+            jq.ajax({
                 type: "GET",
                 url: '${ ui.actionLink("registration", "registrationUtils", "main") }',
                 dataType: "json",
@@ -394,15 +498,15 @@
                     nationalId: nationalId
                 }),
                 success: function (data) {
-//                    jQuery("#divForNationalId").html(data);
+//                    jq("#divForNationalId").html(data);
                     validateNationalID(data);
                 }
             });
         },
 
         checkPassportNumber: function () {
-            passportNumber = jQuery("#passportNumber").val();
-            jQuery.ajax({
+            passportNumber = jq("#passportNumber").val();
+            jq.ajax({
                 type: "GET",
                 url: '${ ui.actionLink("registration", "registrationUtils", "main") }',
                 dataType: "json",
@@ -410,7 +514,7 @@
                     passportNumber: passportNumber
                 }),
                 success: function (data) {
-//                    jQuery("#divForpassportNumber").html(data);
+//                    jq("#divForpassportNumber").html(data);
                     validatePassportNumber(data);
                 }
             });
@@ -418,8 +522,8 @@
 
         /** VALIDATE BIRTHDATE */
         checkBirthDate: function () {
-            var submitted = jQuery("#birthdate").val();
-            jQuery.ajax({
+            var submitted = jq("#birthdate").val();
+            jq.ajax({
                 type: "GET",
                 url: '${ ui.actionLink("registration", "registrationUtils", "processPatientBirthDate") }',
                 dataType: "json",
@@ -429,19 +533,19 @@
                 success: function (data) {
                     if (data.datemodel.error == undefined) {
                         if (data.datemodel.estimated == "true") {
-                            jQuery("#birthdateEstimated").val("true")
+                            jq("#birthdateEstimated").val("true")
                         } else {
-                            jQuery("#birthdateEstimated").val("false");
+                            jq("#birthdateEstimated").val("false");
                         }
 
-                        jQuery("#summ_ages").html(data.datemodel.age.substr(1, 1000));
-                        jQuery("#estimatedAge").html(data.datemodel.age);
-                        jQuery("#estimatedAgeInYear").val(data.datemodel.ageInYear);
-                        jQuery("#birthdate").val(data.datemodel.birthdate);
-                        jQuery("#calendar").val(data.datemodel.birthdate);
+                        jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
+                        jq("#estimatedAge").html(data.datemodel.age);
+                        jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
+                        jq("#birthdate").val(data.datemodel.birthdate);
+                        jq("#calendar").val(data.datemodel.birthdate);
 
                     } else {
-                        jq().toastmessage('showNoticeToast', 'Age in wrong format');
+                        jq().toastmessage('showErrorToast', 'Age in wrong format');
                         jq("#birthdate").val("");
                         goto_previous_tab(5);
                     }
@@ -462,20 +566,20 @@
 		 * }
          */
         fillOptions: function (divId, option) {
-            jQuery(divId).empty();
+            jq(divId).empty();
             if (option.delimiter == undefined) {
                 if (option.index == undefined) {
-                    jQuery.each(option.data, function (index, value) {
+                    jq.each(option.data, function (index, value) {
                         if (value.length > 0) {
-                            jQuery(divId).append(
+                            jq(divId).append(
                                     "<option value='" + value + "'>" + value
                                     + "</option>");
                         }
                     });
                 } else {
-                    jQuery.each(option.data, function (index, value) {
+                    jq.each(option.data, function (index, value) {
                         if (value.length > 0) {
-                            jQuery(divId).append(
+                            jq(divId).append(
                                     "<option value='" + option.index[index] + "'>"
                                     + value + "</option>");
                         }
@@ -483,13 +587,13 @@
                 }
             } else {
                 options = option.data.split(option.optionDelimiter);
-                jQuery.each(options, function (index, value) {
+                jq.each(options, function (index, value) {
                     values = value.split(option.delimiter);
                     optionValue = values[0];
                     optionLabel = values[1];
                     if (optionLabel != undefined) {
                         if (optionLabel.length > 0) {
-                            jQuery(divId).append(
+                            jq(divId).append(
                                     "<option value='" + optionValue + "'>"
                                     + optionLabel + "</option>");
                         }
@@ -503,8 +607,8 @@
 
             // get the list of upazilas
             upazilaList = "";
-            selectedDistrict = jQuery("#districts option:checked").val();
-            jQuery.each(MODEL.districts, function (index, value) {
+            selectedDistrict = jq("#districts option:checked").val();
+            jq.each(MODEL.districts, function (index, value) {
                 if (value == selectedDistrict) {
                     upazilaList = MODEL.upazilas[index];
                 }
@@ -516,7 +620,7 @@
             });
 
 
-            selectedUpazila = jQuery("#upazilas option:checked").val();
+            selectedUpazila = jq("#upazilas option:checked").val();
 
             var loc = ('${location}');
             var districtArr = loc.split("@");
@@ -548,8 +652,8 @@
 
         /** CHANGE UPAZILA */
         changeUpazila: function () {
-            selectedDistrict = jQuery("#districts option:checked").val();
-            selectedUpazila = jQuery("#upazilas option:checked").val();
+            selectedDistrict = jq("#districts option:checked").val();
+            selectedUpazila = jq("#upazilas option:checked").val();
             var loc = ('${location}');
             var districtArr = loc.split("@");
             for (var i = 0; i < districtArr.length; i++) {
@@ -578,17 +682,17 @@
 
         /** SHOW OR HIDE REFERRAL INFO */
         toogleReferralInfo: function (obj) {
-            checkbox = jQuery(obj);
+            checkbox = jq(obj);
             if (checkbox.is(":checked")) {
-                jQuery("#referralDiv").show();
+                jq("#referralDiv").show();
             } else {
-                jQuery("#referralDiv").hide();
+                jq("#referralDiv").hide();
             }
         },
 
         /** CALLBACK WHEN SEARCH PATIENT SUCCESSFULLY */
         searchPatientSuccess: function (data) {
-            jQuery("#numberOfFoundPatients")
+            jq("#numberOfFoundPatients")
                     .html(
                     "Similar Patients: "
                     + data.totalRow
@@ -597,15 +701,15 @@
 
         /** CALLBACK WHEN BEFORE SEARCHING PATIENT */
         searchPatientBefore: function (data) {
-            jQuery("#numberOfFoundPatients")
+            jq("#numberOfFoundPatients")
                     .html(
                     "<center><img src='" + openmrsContextPath + "/moduleResources/hospitalcore/ajax-loader.gif" + "'/></center>");
-            jQuery("#patientSearchResult").hide();
+            jq("#patientSearchResult").hide();
         },
 
         /** TOGGLE PATIENT RESULT */
         togglePatientResult: function () {
-            jQuery("#patientSearchResult").toggle();
+            jq("#patientSearchResult").toggle();
         },
 
         /** VALIDATE FORM */
@@ -616,133 +720,133 @@
             var tab3 = 0;
             var tab4 = 0;
 
-            var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-            var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+            var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
             var str1 = '';
 
-//            if (StringUtils.isBlank(jQuery("#surName").val())) {
-            if (!(jQuery("#surName").val().trim())) {
-                jQuery('#surName').addClass("red-border");
+//            if (StringUtils.isBlank(jq("#surName").val())) {
+            if (!(jq("#surName").val().trim())) {
+                jq('#surName').addClass("red-border");
                 tab1++;
                 i++;
             }
             else {
-                value = jQuery("#surName").val();
+                value = jq("#surName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                jQuery("#surName").val(value);
+                jq("#surName").val(value);
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
-                    jQuery('#surName').addClass("red-border");
+                    jq('#surName').addClass("red-border");
                     tab1++;
                     i++;
                 }
                 else {
-                    jQuery('#surName').removeClass("red-border");
+                    jq('#surName').removeClass("red-border");
                 }
 
             }
 
-            //if (StringUtils.isBlank(jQuery("#firstName").val())) {
-            if (!(jQuery("#firstName").val().trim())) {
-                jQuery('#firstName').addClass("red-border");
+            //if (StringUtils.isBlank(jq("#firstName").val())) {
+            if (!(jq("#firstName").val().trim())) {
+                jq('#firstName').addClass("red-border");
                 tab1++;
                 i++;
             }
             else {
-                value = jQuery("#firstName").val();
+                value = jq("#firstName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                jQuery("#firstName").val(value);
+                jq("#firstName").val(value);
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
-                    jQuery('#firstName').addClass("red-border");
+                    jq('#firstName').addClass("red-border");
                     tab1++;
                     i++;
                 }
                 else {
-                    jQuery('#firstName').removeClass("red-border");
+                    jq('#firstName').removeClass("red-border");
                 }
             }
 
-//            if (!StringUtils.isBlank(jQuery("#otherName").val())) {
-            if ((jQuery("#otherName").val())) {
-                value = jQuery("#otherName").val();
+//            if (!StringUtils.isBlank(jq("#otherName").val())) {
+            if ((jq("#otherName").val())) {
+                value = jq("#otherName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                jQuery("#otherName").val(value);
+                jq("#otherName").val(value);
                 //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
                 if (/^[a-zA-Z- ]*\$/.test(value) == false) {
-                    jQuery('#otherName').addClass("red-border");
+                    jq('#otherName').addClass("red-border");
                     tab1++;
                     i++;
                 }
                 else {
-                    jQuery('#otherName').removeClass("red-border");
+                    jq('#otherName').removeClass("red-border");
                 }
             }
 
-            if (!(jQuery("#birthdate").val().trim())) {
-                jQuery('#birthdate').addClass("red-border");
+            if (!(jq("#birthdate").val().trim())) {
+                jq('#birthdate').addClass("red-border");
                 tab1++;
                 i++;
             }
             else {
-                jQuery('#birthdate').removeClass("red-border");
+                jq('#birthdate').removeClass("red-border");
             }
 
-            if (jQuery("#patientGender").val() == 0 || jQuery("#patientGender").val().trim() == "") {
-                jQuery('#patientGender').addClass("red-border");
+            if (jq("#patientGender").val() == 0 || jq("#patientGender").val().trim() == "") {
+                jq('#patientGender').addClass("red-border");
                 i++;
                 tab1++;
             }
-            else if (select1 == 1 && select2 == 3 && jQuery("#patientGender").val() == "M") {
+            else if (select1 == 1 && select2 == 3 && jq("#patientGender").val() == "M") {
                 str1 = 'The selected Scheme Doesnt Match the Gender Selected. ';
-                jQuery('#patientGender').addClass("red-border");
+                jq('#patientGender').addClass("red-border");
                 i++;
                 tab1++;
             }
-            else if (jQuery("#patientGender").val() == "M" && jQuery("#maritalStatus").val() == "Widow") {
+            else if (jq("#patientGender").val() == "M" && jq("#maritalStatus").val() == "Widow") {
                 str1 = str1 + 'Widow marital status is only for Female. ';
-                jQuery('#maritalStatus').addClass("red-border");
+                jq('#maritalStatus').addClass("red-border");
                 i++;
                 tab1++;
             }
-            else if (jQuery("#patientGender").val() == "F" && jQuery("#maritalStatus").val() == "Widower") {
+            else if (jq("#patientGender").val() == "F" && jq("#maritalStatus").val() == "Widower") {
                 str1 = str1 + 'Widower marital status is only for Male. ';
-                jQuery('#maritalStatus').addClass("red-border");
+                jq('#maritalStatus').addClass("red-border");
                 i++;
                 tab1++;
             }
             else {
-                jQuery('#patientGender').removeClass("red-border");
+                jq('#patientGender').removeClass("red-border");
             }
 
 
             //TAB2
-            if (!(jQuery("#patientPostalAddress").val().trim())) {
-                jQuery('#patientPostalAddress').addClass("red-border");
+            if (!(jq("#patientPostalAddress").val().trim())) {
+                jq('#patientPostalAddress').addClass("red-border");
                 tab2++;
                 i++;
             }
-            else if (jQuery("#patientPostalAddress").val().length > 255) {
+            else if (jq("#patientPostalAddress").val().length > 255) {
                 str1 = str1 + 'Too much information provided for Physical Address. ';
-                jQuery('#patientPostalAddress').addClass("red-border");
+                jq('#patientPostalAddress').addClass("red-border");
                 tab2++;
                 i++;
             }
             else {
-                jQuery('#patientPostalAddress').removeClass("red-border");
+                jq('#patientPostalAddress').removeClass("red-border");
             }
 
-            if ((jQuery("#patientEmail").val().trim())) {
-                var x = jQuery("#patientEmail").val();
+            if ((jq("#patientEmail").val().trim())) {
+                var x = jq("#patientEmail").val();
                 var regExpForEmail =
                 <%= "/^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)\$/i;" %>
                 if (regExpForEmail.test(x)) {
-                    jQuery('#patientEmail').removeClass("red-border");
+                    jq('#patientEmail').removeClass("red-border");
                 }
                 else {
                     str1 = str1 + "Please enter the patient's e-mail address in correct format. ";
-                    jQuery('#patientEmail').addClass("red-border");
+                    jq('#patientEmail').addClass("red-border");
                     i++;
                     tab2++;
                 }
@@ -750,121 +854,121 @@
             }
 
             //NOK HERE
-            if (!(jQuery("#patientRelativeName").val().trim())) {
-                jQuery('#patientRelativeName').addClass("red-border");
+            if (!(jq("#patientRelativeName").val().trim())) {
+                jq('#patientRelativeName').addClass("red-border");
                 i++;
                 tab2++;
             }
             else {
-                value = jQuery("#patientRelativeName").val();
+                value = jq("#patientRelativeName").val();
                 //value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                //jQuery("#patientRelativeName").val(value);
+                //jq("#patientRelativeName").val(value);
                 if (<%= "/^[a-zA-Z- ]*\$/" %>.
                 test(value) == false
             )
                 {
-                    jQuery('#patientRelativeName').addClass("red-border");
+                    jq('#patientRelativeName').addClass("red-border");
                     i++;
                     tab2++;
                 }
             else
                 {
-                    jQuery('#patientRelativeName').removeClass("red-border");
+                    jq('#patientRelativeName').removeClass("red-border");
                 }
             }
 
-            if (jQuery("#relationshipType").val() == 0 || jQuery("#relationshipType").val().trim() == "") {
-                jQuery('#relationshipType').addClass("red-border");
+            if (jq("#relationshipType").val() == 0 || jq("#relationshipType").val().trim() == "") {
+                jq('#relationshipType').addClass("red-border");
                 i++;
                 tab2++;
             }
             else {
-                jQuery('#relationshipType').removeClass("red-border");
+                jq('#relationshipType').removeClass("red-border");
             }
 
-            if (jQuery("#relativePostalAddress").val().length > 255) {
+            if (jq("#relativePostalAddress").val().length > 255) {
                 str1 = str1 + "Next of Kin Physical Address should not exceed more than 255 characters. ";
-                jQuery('#relativePostalAddress').addClass("red-border");
+                jq('#relativePostalAddress').addClass("red-border");
                 i++;
                 tab2++;
             }
             else {
-                jQuery('#relativePostalAddress').removeClass("red-border");
+                jq('#relativePostalAddress').removeClass("red-border");
             }
 
             //TAB3
-            if (jQuery("#legal1").val() == 0) {
-                jQuery('#legal1').addClass("red-border");
+            if (jq("#legal1").val() == 0) {
+                jq('#legal1').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#legal1').removeClass("red-border");
+                jq('#legal1').removeClass("red-border");
             }
 
-            if ((jQuery("#legal1").val() == 1 && jQuery("#mlc").val().trim() == "") || jQuery('#mlc').val() == null) {
-                jQuery('#mlc').addClass("red-border");
+            if ((jq("#legal1").val() == 1 && jq("#mlc").val().trim() == "") || jq('#mlc').val() == null) {
+                jq('#mlc').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#mlc').removeClass("red-border");
+                jq('#mlc').removeClass("red-border");
             }
 
-            if (jQuery("#refer1").val() == 0) {
-                jQuery('#refer1').addClass("red-border");
+            if (jq("#refer1").val() == 0) {
+                jq('#refer1').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#refer1').removeClass("red-border");
+                jq('#refer1').removeClass("red-border");
             }
 
-            if ((jQuery("#refer1").val() == 1 && jQuery("#referredFrom").val().trim() == "") || jQuery('#referredFrom').val() == null) {
-                jQuery('#referredFrom').addClass("red-border");
+            if ((jq("#refer1").val() == 1 && jq("#referredFrom").val().trim() == "") || jq('#referredFrom').val() == null) {
+                jq('#referredFrom').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#referredFrom').removeClass("red-border");
+                jq('#referredFrom').removeClass("red-border");
             }
 
-            if ((jQuery("#refer1").val() == 1 && jQuery("#referralType").val().trim() == "") || jQuery('#referralType').val() == null) {
-                jQuery('#referralType').addClass("red-border");
+            if ((jq("#refer1").val() == 1 && jq("#referralType").val().trim() == "") || jq('#referralType').val() == null) {
+                jq('#referralType').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#referralType').removeClass("red-border");
+                jq('#referralType').removeClass("red-border");
             }
 
 
-            if (jQuery("#rooms1").val() == "") {
-                jQuery('#rooms1').addClass("red-border");
+            if (jq("#rooms1").val() == "") {
+                jq('#rooms1').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#rooms1').removeClass("red-border");
+                jq('#rooms1').removeClass("red-border");
             }
 
 
-            if (jQuery("#rooms2").val() == 0 || jQuery("#rooms2").val() == "" || jQuery("#rooms2").val() == null) {
-                jQuery('#rooms2').addClass("red-border");
+            if (jq("#rooms2").val() == 0 || jq("#rooms2").val() == "" || jq("#rooms2").val() == null) {
+                jq('#rooms2').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#rooms2').removeClass("red-border");
+                jq('#rooms2').removeClass("red-border");
             }
 
-            if (jQuery("#rooms1").val() == 3 && jQuery("#rooms3").val().trim() == "") {
-                jQuery('#rooms3').addClass("red-border");
+            if (jq("#rooms1").val() == 3 && jq("#rooms3").val().trim() == "") {
+                jq('#rooms3').addClass("red-border");
                 i++;
                 tab3++;
             }
             else {
-                jQuery('#rooms3').removeClass("red-border");
+                jq('#rooms3').removeClass("red-border");
             }
 
 
@@ -887,9 +991,9 @@
                     str0 = str0 + '<p><span style="color:#f00;"><i class="icon-quote-left" style="font-size: 18px">&nbsp;</i>Also Note: </span>' + str1 + '</p>'
                 }
 
-                jQuery('#form-verification-failed').html(str0);
-                jQuery('#form-verification-failed').show();
-                jQuery('html, body').animate({scrollTop: 100}, 'slow');
+                jq('#form-verification-failed').html(str0);
+                jq('#form-verification-failed').show();
+                jq('html, body').animate({scrollTop: 100}, 'slow');
                 return false;
             }
         }
@@ -903,194 +1007,194 @@
 
         /** CHECK WHEN PAYING CATEGORY IS SELECTED */
         payingCheck: function () {
-            if (jQuery("#paying").is(':checked')) {
-                jQuery("#nonPaying").removeAttr("checked");
-                jQuery("#payingCategoryField").show();
-                jQuery("#nonPayingCategory").val("");
-                jQuery("#nonPayingCategoryField").hide();
-                jQuery("#specialScheme").val("");
-                jQuery("#specialSchemeCategoryField").hide();
-                jQuery("#specialSchemes").removeAttr("checked");
-                //jQuery("#selectedRegFeeValue").val(${initialRegFee});
+            if (jq("#paying").is(':checked')) {
+                jq("#nonPaying").removeAttr("checked");
+                jq("#payingCategoryField").show();
+                jq("#nonPayingCategory").val("");
+                jq("#nonPayingCategoryField").hide();
+                jq("#specialScheme").val("");
+                jq("#specialSchemeCategoryField").hide();
+                jq("#specialSchemes").removeAttr("checked");
+                //jq("#selectedRegFeeValue").val(${initialRegFee});
 
-                jQuery("#nhifNumberRow").hide();
-                jQuery("#universityRow").hide();
-                jQuery("#studentIdRow").hide();
-                jQuery("#waiverNumberRow").hide();
+                jq("#nhifNumberRow").hide();
+                jq("#universityRow").hide();
+                jq("#studentIdRow").hide();
+                jq("#waiverNumberRow").hide();
             }
             else {
-                jQuery("#payingCategoryField").hide();
+                jq("#payingCategoryField").hide();
             }
         },
 
         /** CHECK WHEN NONPAYING CATEGORY IS SELECTED */
         nonPayingCheck: function () {
-            if (jQuery("#nonPaying").is(':checked')) {
-                jQuery("#paying").removeAttr("checked");
-                jQuery("#nonPayingCategoryField").show();
-                jQuery("#specialSchemes").removeAttr("checked");
-                jQuery("#payingCategory").val("");
-                jQuery("#payingCategoryField").hide();
-                jQuery("#specialScheme").val("");
-                jQuery("#specialSchemeCategoryField").hide();
-                //jQuery("#selectedRegFeeValue").val(0);
+            if (jq("#nonPaying").is(':checked')) {
+                jq("#paying").removeAttr("checked");
+                jq("#nonPayingCategoryField").show();
+                jq("#specialSchemes").removeAttr("checked");
+                jq("#payingCategory").val("");
+                jq("#payingCategoryField").hide();
+                jq("#specialScheme").val("");
+                jq("#specialSchemeCategoryField").hide();
+                //jq("#selectedRegFeeValue").val(0);
 
-                var selectedNonPayingCategory = jQuery("#nonPayingCategory option:checked").val();
+                var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
                 //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]==="NHIF CIVIL SERVANT"){
                 if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
-                    jQuery("#nhifNumberRow").show();
+                    jq("#nhifNumberRow").show();
                 }
                 else {
-                    jQuery("#nhifNumberRow").hide();
+                    jq("#nhifNumberRow").hide();
                 }
 
-                jQuery("#universityRow").hide();
-                jQuery("#studentIdRow").hide();
-                jQuery("#waiverNumberRow").hide();
+                jq("#universityRow").hide();
+                jq("#studentIdRow").hide();
+                jq("#waiverNumberRow").hide();
             }
             else {
-                jQuery("#nonPayingCategoryField").hide();
-                jQuery("#nhifNumberRow").hide();
+                jq("#nonPayingCategoryField").hide();
+                jq("#nhifNumberRow").hide();
             }
         },
 
         /** CHECK WHEN SPECIAL SCHEME CATEGORY IS SELECTED */
         specialSchemeCheck: function () {
-            if (jQuery("#specialSchemes").is(':checked')) {
-                jQuery("#paying").removeAttr("checked");
-                jQuery("#payingCategory").val("");
-                jQuery("#payingCategoryField").hide();
-                jQuery("#nonPayingCategory").val("");
-                jQuery("#nonPayingCategoryField").hide();
-                jQuery("#nonPaying").removeAttr("checked");
-                jQuery("#specialSchemeCategoryField").show();
-                //jQuery("#selectedRegFeeValue").val(0);
+            if (jq("#specialSchemes").is(':checked')) {
+                jq("#paying").removeAttr("checked");
+                jq("#payingCategory").val("");
+                jq("#payingCategoryField").hide();
+                jq("#nonPayingCategory").val("");
+                jq("#nonPayingCategoryField").hide();
+                jq("#nonPaying").removeAttr("checked");
+                jq("#specialSchemeCategoryField").show();
+                //jq("#selectedRegFeeValue").val(0);
 
-                jQuery("#nhifNumberRow").hide();
+                jq("#nhifNumberRow").hide();
 
-                var selectedSpecialScheme = jQuery("#specialScheme option:checked").val();
+                var selectedSpecialScheme = jq("#specialScheme option:checked").val();
                 //if(MODEL.specialSchemeMap[selectedSpecialScheme]==="STUDENT SCHEME"){
                 if (selectedSpecialScheme == "STUDENT SCHEME") {
-                    jQuery("#universityRow").show();
-                    jQuery("#studentIdRow").show();
+                    jq("#universityRow").show();
+                    jq("#studentIdRow").show();
                 }
                 else {
-                    jQuery("#universityRow").hide();
-                    jQuery("#studentIdRow").hide();
+                    jq("#universityRow").hide();
+                    jq("#studentIdRow").hide();
                 }
 
                 //if(MODEL.specialSchemeMap[selectedSpecialScheme]==="WAIVER CASE"){
                 if (selectedSpecialScheme == "WAIVER CASE") {
-                    jQuery("#waiverNumberRow").show();
+                    jq("#waiverNumberRow").show();
                 }
                 else {
-                    jQuery("#waiverNumberRow").hide();
+                    jq("#waiverNumberRow").hide();
                 }
             }
             else {
-                jQuery("#specialSchemeCategoryField").hide();
-                jQuery("#universityRow").hide();
-                jQuery("#studentIdRow").hide();
-                jQuery("#waiverNumberRow").hide();
+                jq("#specialSchemeCategoryField").hide();
+                jq("#universityRow").hide();
+                jq("#studentIdRow").hide();
+                jq("#waiverNumberRow").hide();
             }
         },
 
         mlcYesCheck: function () {
-            if (jQuery("#mlcCaseYes").is(':checked')) {
-                jQuery("#mlcCaseNo").removeAttr("checked");
-                jQuery("#mlc").show();
+            if (jq("#mlcCaseYes").is(':checked')) {
+                jq("#mlcCaseNo").removeAttr("checked");
+                jq("#mlc").show();
             }
             else {
-                jQuery("#mlc").hide();
+                jq("#mlc").hide();
             }
         },
 
         mlcNoCheck: function () {
-            if (jQuery("#mlcCaseNo").is(':checked')) {
-                jQuery("#mlcCaseYes").removeAttr("checked");
-                jQuery("#mlc").hide();
+            if (jq("#mlcCaseNo").is(':checked')) {
+                jq("#mlcCaseYes").removeAttr("checked");
+                jq("#mlc").hide();
             }
         },
 
         referredYesCheck: function () {
-            if (jQuery("#referredYes").is(':checked')) {
-                jQuery("#referredNo").removeAttr("checked");
-                jQuery("#referredFromColumn").show();
-                jQuery("#referralTypeRow").show();
-                jQuery("#referralDescriptionRow").show();
+            if (jq("#referredYes").is(':checked')) {
+                jq("#referredNo").removeAttr("checked");
+                jq("#referredFromColumn").show();
+                jq("#referralTypeRow").show();
+                jq("#referralDescriptionRow").show();
             }
             else {
-                jQuery("#referredFromColumn").hide();
-                jQuery("#referralTypeRow").hide();
-                jQuery("#referralDescriptionRow").hide();
+                jq("#referredFromColumn").hide();
+                jq("#referralTypeRow").hide();
+                jq("#referralDescriptionRow").hide();
             }
         },
 
         referredNoCheck: function () {
-            if (jQuery("#referredNo").is(':checked')) {
-                jQuery("#referredYes").removeAttr("checked");
-                jQuery("#referredFromColumn").hide();
-                jQuery("#referralTypeRow").hide();
-                jQuery("#referralDescriptionRow").hide();
+            if (jq("#referredNo").is(':checked')) {
+                jq("#referredYes").removeAttr("checked");
+                jq("#referredFromColumn").hide();
+                jq("#referralTypeRow").hide();
+                jq("#referralDescriptionRow").hide();
             }
         },
 
         triageRoomCheck: function () {
-            if (jQuery("#triageRoom").is(':checked')) {
-                jQuery("#opdRoom").removeAttr("checked");
-                jQuery("#specialClinicRoom").removeAttr("checked");
-                jQuery("#triageField").show();
-                jQuery("#opdWard").val("");
-                jQuery("#opdWardField").hide();
-                jQuery("#specialClinic").val("");
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberField").hide();
+            if (jq("#triageRoom").is(':checked')) {
+                jq("#opdRoom").removeAttr("checked");
+                jq("#specialClinicRoom").removeAttr("checked");
+                jq("#triageField").show();
+                jq("#opdWard").val("");
+                jq("#opdWardField").hide();
+                jq("#specialClinic").val("");
+                jq("#specialClinicField").hide();
+                jq("#fileNumberField").hide();
             }
             else {
-                jQuery("#triageField").hide();
+                jq("#triageField").hide();
             }
         },
 
         opdRoomCheck: function () {
-            if (jQuery("#opdRoom").is(':checked')) {
-                jQuery("#triageRoom").removeAttr("checked");
-                jQuery("#specialClinicRoom").removeAttr("checked");
-                jQuery("#triage").val("");
-                jQuery("#triageField").hide();
-                jQuery("#opdWardField").show();
-                jQuery("#specialClinic").val("");
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberField").hide();
+            if (jq("#opdRoom").is(':checked')) {
+                jq("#triageRoom").removeAttr("checked");
+                jq("#specialClinicRoom").removeAttr("checked");
+                jq("#triage").val("");
+                jq("#triageField").hide();
+                jq("#opdWardField").show();
+                jq("#specialClinic").val("");
+                jq("#specialClinicField").hide();
+                jq("#fileNumberField").hide();
             }
             else {
-                jQuery("#opdWardField").hide();
+                jq("#opdWardField").hide();
             }
         },
 
         specialClinicRoomCheck: function () {
-            if (jQuery("#specialClinicRoom").is(':checked')) {
-                jQuery("#triageRoom").removeAttr("checked");
-                jQuery("#opdRoom").removeAttr("checked");
-                jQuery("#triage").val("");
-                jQuery("#triageField").hide();
-                jQuery("#opdWard").val("");
-                jQuery("#opdWardField").hide();
-                jQuery("#specialClinicField").show();
-                jQuery("#fileNumberField").show();
+            if (jq("#specialClinicRoom").is(':checked')) {
+                jq("#triageRoom").removeAttr("checked");
+                jq("#opdRoom").removeAttr("checked");
+                jq("#triage").val("");
+                jq("#triageField").hide();
+                jq("#opdWard").val("");
+                jq("#opdWardField").hide();
+                jq("#specialClinicField").show();
+                jq("#fileNumberField").show();
             }
             else {
-                jQuery("#specialClinicField").hide();
-                jQuery("#fileNumberField").hide();
+                jq("#specialClinicField").hide();
+                jq("#fileNumberField").hide();
             }
         },
 
         copyaddress: function () {
-            if (jQuery("#sameAddress").is(':checked')) {
-                jQuery("#relativePostalAddress").val(jQuery("#patientPostalAddress").val());
+            if (jq("#sameAddress").is(':checked')) {
+                jq("#relativePostalAddress").val(jq("#patientPostalAddress").val());
 
             }
             else {
-                jQuery("#relativePostalAddress").val('');
+                jq("#relativePostalAddress").val('');
             }
         },
 
@@ -1099,13 +1203,13 @@
          */
         genderCheck: function () {
 
-            jQuery("#patientRelativeNameSection").empty();
-            if (jQuery("#patientGender").val() == "M") {
-                jQuery("#patientRelativeNameSection")
+            jq("#patientRelativeNameSection").empty();
+            if (jq("#patientGender").val() == "M") {
+                jq("#patientRelativeNameSection")
                         .html(
                         '<input type="radio" name="person.attribute.15" value="Son of" checked="checked"/> Son of');
-            } else if (jQuery("#patientGender").val() == "F") {
-                jQuery("#patientRelativeNameSection")
+            } else if (jq("#patientGender").val() == "F") {
+                jq("#patientRelativeNameSection")
                         .html(
                         '<input type="radio" name="person.attribute.15" value="Daughter of"/> Daughter of <input type="radio" name="person.attribute.15" value="Wife of"/> Wife of');
             }
@@ -1114,15 +1218,15 @@
     };
 
     function showOtherNationality() {
-        var optionValue = jQuery("#patientNation option:selected").text();
+        var optionValue = jq("#patientNation option:selected").text();
         if (optionValue == "Other") {
-            jQuery("#otherNationality").show();
-            jQuery('#otherNationalityId').removeClass("disabled");
+            jq("#otherNationality").show();
+            jq('#otherNationalityId').removeClass("disabled");
 
         }
         else {
-            jQuery("#otherNationality").hide();
-            jQuery('#otherNationalityId').addClass("disabled");
+            jq("#otherNationality").hide();
+            jq('#otherNationalityId').addClass("disabled");
         }
     }
 
@@ -1134,11 +1238,11 @@
 
         if (data.nid == "1") {
             document.getElementById("nationalIdValidationMessage").innerHTML = "Patient already registered with this National ID";
-            jQuery("#nationalIdValidationMessage").show();
+            jq("#nationalIdValidationMessage").show();
             return false;
         }
         else {
-            jQuery("#nationalIdValidationMessage").hide();
+            jq("#nationalIdValidationMessage").hide();
         }
     }
 
@@ -1151,11 +1255,11 @@
 
         if (data.pnum == "1") {
             document.getElementById("passportNumberValidationMessage").innerHTML = "Patient already registered with this Passport Number";
-            jQuery("#passportNumberValidationMessage").show();
+            jq("#passportNumberValidationMessage").show();
             return false;
         }
         else {
-            jQuery("#passportNumberValidationMessage").hide();
+            jq("#passportNumberValidationMessage").hide();
         }
     }
 
@@ -1165,326 +1269,325 @@
 
 
     function payingCategorySelection() {
-        var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-        var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+        var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
-        var selectedPayingCategory = jQuery("#payingCategory option:checked").val();
+        var selectedPayingCategory = jq("#payingCategory option:checked").val();
         //if(MODEL.payingCategoryMap[selectedPayingCategory]=="CHILD LESS THAN 5 YEARS"){
-        var estAge = jQuery("#estimatedAgeInYear").val();	//come back here
+        var estAge = jq("#estimatedAgeInYear").val();	//come back here
 
         if (select1 == 1 && select2 == 2) {
             if (estAge < 6) {
-                jQuery("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
+                jq("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
             } else {
-                jq().toastmessage('showNoticeToast', 'Selected Scheme should be for child at 5 years and below');
-                jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
-
+                jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+                jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+				return false;
             }
         }
         else {
-
             if (select1 == 1 && select2 == 3) {
-                if (jQuery("#patientGender").val() == "M") {
-                    jq().toastmessage('showNoticeToast', 'This category is only valid for female');
-                    jQuery('input[name=paym_2][value="1"]').attr('checked', 'checked');
+                if (jq("#patientGender").val() == "M") {
+                    jq().toastmessage('showErrorToast', 'This category is only valid for female');
+                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+					return false;
                 }
             }
-
 
             if (select1 == 3) {
                 var initialRegFee = parseInt('${initialRegFee}');
                 var specialClinicRegFee = parseInt('${specialClinicRegFee}');
                 var totalRegFee = initialRegFee + specialClinicRegFee;
-                jQuery("#selectedRegFeeValue").val(totalRegFee);
+                jq("#selectedRegFeeValue").val(totalRegFee);
             }
             else {
-                jQuery("#selectedRegFeeValue").val(${initialRegFee});
+                jq("#selectedRegFeeValue").val(${initialRegFee});
             }
         }
 
         if (select1 == 1) {
-            jQuery('#payingCategory option').eq(select2).prop('selected', true);
-            jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
-            jQuery('#specialScheme option').eq(0).prop('selected', true);
+            jq('#payingCategory option').eq(select2).prop('selected', true);
+            jq('#nonPayingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Paying / ' + jQuery('#payingCategory option:selected').text());
+            jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
         }
         else if (select1 == 2) {
-            jQuery('#nonPayingCategory option').eq(select2).prop('selected', true);
-            jQuery('#payingCategory option').eq(0).prop('selected', true);
-            jQuery('#specialScheme option').eq(0).prop('selected', true);
+            jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+            jq('#payingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Non-Paying / ' + jQuery('#nonPayingCategory option:selected').text());
+            jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
         }
         else {
-            jQuery('#specialScheme option').eq(select2).prop('selected', true);
-            jQuery('#payingCategory option').eq(0).prop('selected', true);
-            jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(select2).prop('selected', true);
+            jq('#payingCategory option').eq(0).prop('selected', true);
+            jq('#nonPayingCategory option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Special Scheme / ' + jQuery('#specialScheme option:selected').text());
+            jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
         }
     }
 
     function nonPayingCategorySelection() {
-        var selectedNonPayingCategory = jQuery("#nonPayingCategory option:checked").val();
+        var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="NHIF CIVIL SERVANT"){
         if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
-            jQuery("#nhifNumberRow").show();
+            jq("#nhifNumberRow").show();
         }
         else {
-            jQuery("#nhifNumberRow").hide();
+            jq("#nhifNumberRow").hide();
         }
 
-        var selectedNonPayingCategory = jQuery("#nonPayingCategory option:checked").val();
+        var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="TB PATIENT" || MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="CCC PATIENT"){
         if (selectedNonPayingCategory == "TB PATIENT" || selectedNonPayingCategory == "CCC PATIENT") {
-            if (jQuery("#specialClinic").val()) {
-                jQuery("#selectedRegFeeValue").val(${specialClinicRegFee});
+            if (jq("#specialClinic").val()) {
+                jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
             else {
-                jQuery("#selectedRegFeeValue").val(0);
+                jq("#selectedRegFeeValue").val(0);
             }
         }
         else {
-            jQuery("#selectedRegFeeValue").val(0);
+            jq("#selectedRegFeeValue").val(0);
         }
 
     }
 
     function specialSchemeSelection() {
-        var selectedSpecialScheme = jQuery("#specialScheme option:checked").val();
+        var selectedSpecialScheme = jq("#specialScheme option:checked").val();
 
         if (selectedSpecialScheme == "DELIVERY CASE") {
-            if (jQuery("#patientGender").val() == "M") {
+            if (jq("#patientGender").val() == "M") {
                 alert("This category is only valid for female");
             }
         }
 
         //if(MODEL.specialSchemeMap[selectedSpecialScheme]=="STUDENT SCHEME"){
         if (selectedSpecialScheme == "STUDENT SCHEME") {
-            jQuery("#universityRow").show();
-            jQuery("#studentIdRow").show();
+            jq("#universityRow").show();
+            jq("#studentIdRow").show();
         }
         else {
-            jQuery("#universityRow").hide();
-            jQuery("#studentIdRow").hide();
+            jq("#universityRow").hide();
+            jq("#studentIdRow").hide();
         }
 
         //if(MODEL.specialSchemeMap[selectedSpecialScheme]=="WAIVER CASE"){
         if (selectedSpecialScheme == "WAIVER CASE") {
-            jQuery("#waiverNumberRow").show();
+            jq("#waiverNumberRow").show();
         }
         else {
-            jQuery("#waiverNumberRow").hide();
+            jq("#waiverNumberRow").hide();
         }
 
-        jQuery("#selectedRegFeeValue").val(0);
+        jq("#selectedRegFeeValue").val(0);
     }
 
     function triageRoomSelectionFor() {
-        if (jQuery("#payingCategory").val() != " ") {
-            var selectedPayingCategory = jQuery("#payingCategory option:checked").val();
+        if (jq("#payingCategory").val() != " ") {
+            var selectedPayingCategory = jq("#payingCategory option:checked").val();
             if (selectedPayingCategory == "CHILD LESS THAN 5 YEARS") {
-                jQuery("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
+                jq("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
             }
             else {
-                jQuery("#selectedRegFeeValue").val(${initialRegFee});
+                jq("#selectedRegFeeValue").val(${initialRegFee});
             }
         }
-        else if (jQuery("#nonPayingCategory").val() != " ") {
-            jQuery("#selectedRegFeeValue").val(0);
+        else if (jq("#nonPayingCategory").val() != " ") {
+            jq("#selectedRegFeeValue").val(0);
         }
-        else if (jQuery("#specialScheme").val() != " ") {
-            jQuery("#selectedRegFeeValue").val(0);
+        else if (jq("#specialScheme").val() != " ") {
+            jq("#selectedRegFeeValue").val(0);
         }
     }
 
     function opdRoomSelectionForReg() {
-        if (jQuery("#payingCategory").val() != " ") {
-            var selectedPayingCategory = jQuery("#payingCategory option:checked").val();
+        if (jq("#payingCategory").val() != " ") {
+            var selectedPayingCategory = jq("#payingCategory option:checked").val();
             if (selectedPayingCategory == "CHILD LESS THAN 5 YEARS") {
-                jQuery("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
+                jq("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
             }
             else {
-                jQuery("#selectedRegFeeValue").val(${initialRegFee});
+                jq("#selectedRegFeeValue").val(${initialRegFee});
             }
         }
-        else if (jQuery("#nonPayingCategory").val() != " ") {
-            jQuery("#selectedRegFeeValue").val(0);
+        else if (jq("#nonPayingCategory").val() != " ") {
+            jq("#selectedRegFeeValue").val(0);
         }
-        else if (jQuery("#specialScheme").val() != " ") {
-            jQuery("#selectedRegFeeValue").val(0);
+        else if (jq("#specialScheme").val() != " ") {
+            jq("#selectedRegFeeValue").val(0);
         }
     }
 
     function specialClinicSelectionForReg() {
-        if (jQuery("#payingCategory").val() != " ") {
-            var selectedPayingCategory = jQuery("#payingCategory option:checked").val();
+        if (jq("#payingCategory").val() != " ") {
+            var selectedPayingCategory = jq("#payingCategory option:checked").val();
             if (selectedPayingCategory == "CHILD LESS THAN 5 YEARS") {
-                jQuery("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
+                jq("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
             }
             else {
                 var initialRegFee = parseInt('${initialRegFee}');
                 var specialClinicRegFee = parseInt('${specialClinicRegFee}');
                 var totalRegFee = initialRegFee + specialClinicRegFee;
-                jQuery("#selectedRegFeeValue").val(totalRegFee);
+                jq("#selectedRegFeeValue").val(totalRegFee);
             }
         }
-        else if (jQuery("#nonPayingCategory").val() != " ") {
-            var selectedNonPayingCategory = jQuery("#nonPayingCategory option:checked").val();
+        else if (jq("#nonPayingCategory").val() != " ") {
+            var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
             if (selectedNonPayingCategory == "TB PATIENT" || selectedNonPayingCategory == "CCC PATIENT") {
-                jQuery("#selectedRegFeeValue").val(${specialClinicRegFee});
+                jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
             else {
-                jQuery("#selectedRegFeeValue").val(0);
+                jq("#selectedRegFeeValue").val(0);
             }
         }
-        else if (jQuery("#specialScheme").val() != " ") {
-            jQuery("#selectedRegFeeValue").val(0);
+        else if (jq("#specialScheme").val() != " ") {
+            jq("#selectedRegFeeValue").val(0);
         }
     }
     function LoadPayCatg() {
-        jQuery("#paym_201").attr('checked', 'checked');
+        jq("#paym_201").attr('checked', 'checked');
 
-        var selectn = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var selectn = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         if (selectn == 1) {
-            jQuery('#ipaym_11').text('GENERAL');
-            jQuery('#ipaym_12').text('CHILD UNDER 5YRS');
-            jQuery('#ipaym_13').text('EXPECTANT MOTHER');
+            jq('#ipaym_11').text('GENERAL');
+            jq('#ipaym_12').text('CHILD UNDER 5YRS');
+            jq('#ipaym_13').text('EXPECTANT MOTHER');
 
-            jQuery('#tasktitle').text('Paying Category');
+            jq('#tasktitle').text('Paying Category');
 
-            jQuery("#paying").attr('checked', 'checked');
-            jQuery("#nonPaying").attr('checked', false);
-            jQuery("#specialSchemes").attr('checked', false);
+            jq("#paying").attr('checked', 'checked');
+            jq("#nonPaying").attr('checked', false);
+            jq("#specialSchemes").attr('checked', false);
         }
         else if (selectn == 2) {
-            jQuery('#ipaym_11').text('NHIF/CIVIL SERVANT');
-            jQuery('#ipaym_12').text('CCC PATIENT');
-            jQuery('#ipaym_13').text('TB PATIENT');
+            jq('#ipaym_11').text('NHIF/CIVIL SERVANT');
+            jq('#ipaym_12').text('CCC PATIENT');
+            jq('#ipaym_13').text('TB PATIENT');
 
-            jQuery('#tasktitle').text('Non-Paying Category');
+            jq('#tasktitle').text('Non-Paying Category');
 
-            jQuery("#nonPaying").attr('checked', 'checked');
-            jQuery("#paying").attr('checked', false);
-            jQuery("#specialSchemes").attr('checked', false);
+            jq("#nonPaying").attr('checked', 'checked');
+            jq("#paying").attr('checked', false);
+            jq("#specialSchemes").attr('checked', false);
 
         }
         else if (selectn == 3) {
-            jQuery('#ipaym_11').text('STUDENT SCHEME');
-            jQuery('#ipaym_12').text('WAIVER CASE');
-            jQuery('#ipaym_13').text('DELIVERY CASE');
-            jQuery('#tasktitle').text('Special Schemes');
+            jq('#ipaym_11').text('STUDENT SCHEME');
+            jq('#ipaym_12').text('WAIVER CASE');
+            jq('#ipaym_13').text('DELIVERY CASE');
+            jq('#tasktitle').text('Special Schemes');
 
-            jQuery("#specialSchemes").attr('checked', 'checked');
-            jQuery("#paying").attr('checked', false);
-            jQuery("#nonPaying").attr('checked', false);
+            jq("#specialSchemes").attr('checked', 'checked');
+            jq("#paying").attr('checked', false);
+            jq("#nonPaying").attr('checked', false);
         }
 
         LoadPayCatgMode();
     }
 
     function LoadPayCatgMode() {
-        var select1 = jQuery('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-        var select2 = jQuery('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+        var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
         if ((select1 == 2) && (select2 == 1)) {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("");
-            jQuery('#universitydiv').hide();
-            jQuery('#summtitle1').text('NHIF Summary');
-            jQuery('#modesummary').attr("placeholder", "NHIF Number");
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("");
+            jq('#universitydiv').hide();
+            jq('#summtitle1').text('NHIF Summary');
+            jq('#modesummary').attr("placeholder", "NHIF Number");
         }
         else if ((select1 == 3) && (select2 == 1)) {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("");
-            jQuery('#universitydiv').show();
-            jQuery('#summtitle1').text('Student Summary');
-            jQuery('#modesummary').attr("placeholder", "Student Number");
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("");
+            jq('#universitydiv').show();
+            jq('#summtitle1').text('Student Summary');
+            jq('#modesummary').attr("placeholder", "Student Number");
         }
         else if ((select1 == 3) && (select2 == 2)) {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("");
-            jQuery('#universitydiv').hide();
-            jQuery('#summtitle1').text('Waiver Summary');
-            jQuery('#modesummary').attr("placeholder", "Waiver Number");
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("");
+            jq('#universitydiv').hide();
+            jq('#summtitle1').text('Waiver Summary');
+            jq('#modesummary').attr("placeholder", "Waiver Number");
         }
         else {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("N/A");
-            jQuery('#universitydiv').hide();
-            jQuery('#summtitle1').text('Summary');
-            jQuery('#modesummary').attr("placeholder", "Enter Value");
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("N/A");
+            jq('#universitydiv').hide();
+            jq('#summtitle1').text('Summary');
+            jq('#modesummary').attr("placeholder", "Enter Value");
 
         }
 
         if (select1 == 1) {
-            jQuery('#payingCategory option').eq(select2).prop('selected', true);
-            jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
-            jQuery('#specialScheme option').eq(0).prop('selected', true);
+            jq('#payingCategory option').eq(select2).prop('selected', true);
+            jq('#nonPayingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Paying / ' + jQuery('#payingCategory option:selected').text());
+            jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
         }
         else if (select1 == 2) {
-            jQuery('#nonPayingCategory option').eq(select2).prop('selected', true);
-            jQuery('#payingCategory option').eq(0).prop('selected', true);
-            jQuery('#specialScheme option').eq(0).prop('selected', true);
+            jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+            jq('#payingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Non-Paying / ' + jQuery('#nonPayingCategory option:selected').text());
+            jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
         }
         else {
-            jQuery('#specialScheme option').eq(select2).prop('selected', true);
-            jQuery('#payingCategory option').eq(0).prop('selected', true);
-            jQuery('#nonPayingCategory option').eq(0).prop('selected', true);
+            jq('#specialScheme option').eq(select2).prop('selected', true);
+            jq('#payingCategory option').eq(0).prop('selected', true);
+            jq('#nonPayingCategory option').eq(0).prop('selected', true);
 
-            jQuery('#summ_pays').text('Special Scheme / ' + jQuery('#specialScheme option:selected').text());
+            jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
         }
 
         payingCategorySelection();
 
-        jQuery('#summ_fees').text(jQuery('#selectedRegFeeValue').val() + '.00');
+        jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
     }
 
     function LoadPaymodes() {
-        jQuery('#modetype1').empty();
+        jq('#modetype1').empty();
 
-        if (jQuery("#paymode1").val() == 1) {
+        if (jq("#paymode1").val() == 1) {
             var myOptions = {1: 'GENERAL', 2: 'CHILD UNDER 5YRS', 3: 'EXPECTANT MOTHER'};
 
-            var mySelect = jQuery('#modetype1');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#modetype1');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
         }
-        else if (jQuery("#paymode1").val() == 2) {
+        else if (jq("#paymode1").val() == 2) {
             var myOptions = {4: 'PULSE', 5: 'CCC PATIENT', 6: 'TB PATIENT'};
 
-            var mySelect = jQuery('#modetype1');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#modetype1');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
         }
-        else if (jQuery("#paymode1").val() == 3) {
+        else if (jq("#paymode1").val() == 3) {
             var myOptions = {7: 'BLOOD OXYGEN SATURATION', 8: 'WAIVER CASE', 9: 'DELIVERY CASE'};
 
-            var mySelect = jQuery('#modetype1');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#modetype1');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
         }
         else {
             var myOptions = {0: ''};
 
-            var mySelect = jQuery('#modetype1');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#modetype1');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
         }
@@ -1493,57 +1596,57 @@
     }
 
     function LoadModeChange() {
-        if (jQuery("#modetype1").val() == 8) {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("");
-            jQuery('#forpaymode1').text('Waiver Number');
+        if (jq("#modetype1").val() == 8) {
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("");
+            jq('#forpaymode1').text('Waiver Number');
         }
         else {
-            jQuery("#modesummary").attr("readonly", false);
-            jQuery("#modesummary").val("N/A");
-            jQuery('#forpaymode1').text('Summary');
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("N/A");
+            jq('#forpaymode1').text('Summary');
         }
     }
 
     function LoadLegalCases() {
-        jQuery('#mlc').empty();
+        jq('#mlc').empty();
 
-        if (jQuery("#legal1").val() == 1) {
+        if (jq("#legal1").val() == 1) {
             PAGE.fillOptions("#mlc", {
                 data: MODEL.TEMPORARYCAT,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 
-            jQuery("#mlcCaseYes").attr('checked', 'checked');
-            jQuery("#mlcCaseNo").attr('checked', false);
+            jq("#mlcCaseYes").attr('checked', 'checked');
+            jq("#mlcCaseNo").attr('checked', false);
         }
         else {
             var myOptions = {" ": 'N/A'};
-            var mySelect = jQuery('#mlc');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#mlc');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
 
-            jQuery("#mlcCaseYes").attr('checked', false);
-            jQuery("#mlcCaseNo").attr('checked', 'checked');
+            jq("#mlcCaseYes").attr('checked', false);
+            jq("#mlcCaseNo").attr('checked', 'checked');
         }
     }
     function LoadReferralCases() {
-        jQuery('#referredFrom').empty();
-        jQuery('#referralType').empty();
+        jq('#referredFrom').empty();
+        jq('#referralType').empty();
 
-        if (jQuery("#refer1").val() == 1) {
+        if (jq("#refer1").val() == 1) {
             PAGE.fillOptions("#referredFrom", {
                 data: MODEL.referredFrom,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 
-            jQuery("#referralDescription").attr("readonly", false);
-            jQuery("#referralDescription").val("");
+            jq("#referralDescription").attr("readonly", false);
+            jq("#referralDescription").val("");
 
             PAGE.fillOptions("#referralType", {
                 data: MODEL.referralType,
@@ -1551,111 +1654,111 @@
                 optionDelimiter: "|"
             });
 
-            jQuery("#referredYes").attr('checked', 'checked');
-            jQuery("#referredNo").attr('checked', false);
-            jQuery("#referraldiv").show();
-            jQuery('#referralDescription').removeClass("disabled");
+            jq("#referredYes").attr('checked', 'checked');
+            jq("#referredNo").attr('checked', false);
+            jq("#referraldiv").show();
+            jq('#referralDescription').removeClass("disabled");
         }
         else {
             var myOptions = {" ": 'N/A'};
-            var mySelect = jQuery('#referredFrom');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#referredFrom');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
 
-            mySelect = jQuery('#referralType');
-            jQuery.each(myOptions, function (val, text) {
+            mySelect = jq('#referralType');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
 
-            jQuery("#referralDescription").attr("readonly", true);
-            jQuery("#referralDescription").val("N/A");
+            jq("#referralDescription").attr("readonly", true);
+            jq("#referralDescription").val("N/A");
 
-            jQuery("#referredNo").attr('checked', 'checked');
-            jQuery("#referredYes").attr('checked', false);
-            jQuery("#referraldiv").hide();
-            jQuery('#referralDescription').addClass("disabled");
+            jq("#referredNo").attr('checked', 'checked');
+            jq("#referredYes").attr('checked', false);
+            jq("#referraldiv").hide();
+            jq('#referralDescription').addClass("disabled");
         }
     }
 
     function LoadRoomsTypes() {
-        jQuery('#rooms2').empty();
-        if (jQuery("#rooms1").val() == 1) {
+        jq('#rooms2').empty();
+        if (jq("#rooms1").val() == 1) {
             PAGE.fillOptions("#rooms2", {
                 data: MODEL.TRIAGE,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
-            jQuery("#rooms3").attr("readonly", true);
-            jQuery("#rooms3").val("N/A");
-            jQuery('#froom2').html('Triage Rooms<span>*</span>');
+            jq("#rooms3").attr("readonly", true);
+            jq("#rooms3").val("N/A");
+            jq('#froom2').html('Triage Rooms<span>*</span>');
 
-            jQuery("#triageRoom").attr('checked', 'checked');
-            jQuery("#opdRoom").attr('checked', false);
-            jQuery("#specialClinicRoom").attr('checked', false);
-            jQuery('#referralDescription').removeClass("required");
+            jq("#triageRoom").attr('checked', 'checked');
+            jq("#opdRoom").attr('checked', false);
+            jq("#specialClinicRoom").attr('checked', false);
+            jq('#referralDescription').removeClass("required");
 
             jq('#rooms3').hide();
             jq('#froom3').hide();
         }
-        else if (jQuery("#rooms1").val() == 2) {
+        else if (jq("#rooms1").val() == 2) {
             PAGE.fillOptions("#rooms2", {
                 data: MODEL.OPDs,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 
-            jQuery("#rooms3").attr("readonly", true);
-            jQuery("#rooms3").val("N/A");
-            jQuery('#froom2').html('OPD Rooms<span>*</span>');
+            jq("#rooms3").attr("readonly", true);
+            jq("#rooms3").val("N/A");
+            jq('#froom2').html('OPD Rooms<span>*</span>');
 
-            jQuery("#triageRoom").attr('checked', false);
-            jQuery("#opdRoom").attr('checked', 'checked');
-            jQuery("#specialClinicRoom").attr('checked', false);
-            jQuery('#referralDescription').removeClass("required");
+            jq("#triageRoom").attr('checked', false);
+            jq("#opdRoom").attr('checked', 'checked');
+            jq("#specialClinicRoom").attr('checked', false);
+            jq('#referralDescription').removeClass("required");
 
             jq('#rooms3').hide();
             jq('#froom3').hide();
         }
-        else if (jQuery("#rooms1").val() == 3) {
+        else if (jq("#rooms1").val() == 3) {
             PAGE.fillOptions("#rooms2", {
                 data: MODEL.SPECIALCLINIC,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
 
-            jQuery("#rooms3").attr("readonly", false);
-            jQuery("#rooms3").val("");
-            jQuery('#froom2').html('Special Clinic<span>*</span>');
+            jq("#rooms3").attr("readonly", false);
+            jq("#rooms3").val("");
+            jq('#froom2').html('Special Clinic<span>*</span>');
 
-            jQuery("#triageRoom").attr('checked', false);
-            jQuery("#opdRoom").attr('checked', false);
-            jQuery("#specialClinicRoom").attr('checked', 'checked');
-            jQuery('#referralDescription').addClass("required");
+            jq("#triageRoom").attr('checked', false);
+            jq("#opdRoom").attr('checked', false);
+            jq("#specialClinicRoom").attr('checked', 'checked');
+            jq('#referralDescription').addClass("required");
 
             jq('#rooms3').show();
             jq('#froom3').show();
         }
         else {
             var myOptions = {0: 'N/A'};
-            var mySelect = jQuery('#rooms2');
-            jQuery.each(myOptions, function (val, text) {
+            var mySelect = jq('#rooms2');
+            jq.each(myOptions, function (val, text) {
                 mySelect.append(
-                        jQuery('<option></option>').val(val).html(text)
+                        jq('<option></option>').val(val).html(text)
                 );
             });
 
-            jQuery("#rooms3").attr("readonly", true);
-            jQuery("#rooms3").val("N/A");
+            jq("#rooms3").attr("readonly", true);
+            jq("#rooms3").val("N/A");
 
-            jQuery("#triageRoom").attr('checked', false);
-            jQuery("#opdRoom").attr('checked', false);
-            jQuery("#specialClinicRoom").attr('checked', false);
-            jQuery('#referralDescription').removeClass("required");
+            jq("#triageRoom").attr('checked', false);
+            jq("#opdRoom").attr('checked', false);
+            jq("#specialClinicRoom").attr('checked', false);
+            jq('#referralDescription').removeClass("required");
 
             jq('#rooms3').hide();
             jq('#froom3').hide();
@@ -1663,7 +1766,7 @@
     }
 
     function verification_close() {
-        jQuery('#form-verification-failed').hide();
+        jq('#form-verification-failed').hide();
     }
     ;
 
@@ -1671,25 +1774,25 @@
         if (current_tab == 1) {
             var currents = '';
 
-            while (jQuery(':focus') != jQuery('#patientPhoneNumber')) {
-                if (currents == jQuery(':focus').attr('id')) {
+            while (jq(':focus') != jq('#patientPhoneNumber')) {
+                if (currents == jq(':focus').attr('id')) {
                     NavigatorController.stepForward();
-                    jQuery("#ui-datepicker-div").hide();
+                    jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
-                    currents = jQuery(':focus').attr('id');
+                    currents = jq(':focus').attr('id');
                 }
 
-                if (jQuery(':focus').attr('id') == 'patientPhoneNumber') {
-                    jQuery("#ui-datepicker-div").hide();
+                if (jq(':focus').attr('id') == 'patientPhoneNumber') {
+                    jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
                     NavigatorController.stepForward();
                 }
             }
-            // jQuery(':focus')
+            // jq(':focus')
 
             //NavigatorController.getFieldById('passportNumber').select();
 
@@ -1697,16 +1800,16 @@
         else if (current_tab == 2) {
             var currents = '';
 
-            while (jQuery(':focus') != jQuery('#modesummary')) {
-                if (currents == jQuery(':focus').attr('id')) {
+            while (jq(':focus') != jq('#modesummary')) {
+                if (currents == jq(':focus').attr('id')) {
                     NavigatorController.stepForward();
                     break;
                 }
                 else {
-                    currents = jQuery(':focus').attr('id');
+                    currents = jq(':focus').attr('id');
                 }
 
-                if (jQuery(':focus').attr('id') == 'modesummary') {
+                if (jq(':focus').attr('id') == 'modesummary') {
                     break;
                 }
                 else {
@@ -1718,9 +1821,9 @@
 
     function goto_previous_tab(current_tab) {
         if (current_tab == 2) {
-            while (jQuery(':focus') != jQuery('#passportNumber')) {
-                if (jQuery(':focus').attr('id') == 'passportNumber' || jQuery(':focus').attr('id') == 'otherNationalityId') {
-                    jQuery("#ui-datepicker-div").hide();
+            while (jq(':focus') != jq('#passportNumber')) {
+                if (jq(':focus').attr('id') == 'passportNumber' || jq(':focus').attr('id') == 'otherNationalityId') {
+                    jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
@@ -1729,9 +1832,9 @@
             }
         }
         else if (current_tab == 3) {
-            while (jQuery(':focus') != jQuery('#relativePostalAddress')) {
-                if (jQuery(':focus').attr('id') == 'relativePostalAddress') {
-                    jQuery("#ui-datepicker-div").hide();
+            while (jq(':focus') != jq('#relativePostalAddress')) {
+                if (jq(':focus').attr('id') == 'relativePostalAddress') {
+                    jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
@@ -1740,13 +1843,13 @@
             }
         }
         else if (current_tab == 4) {
-            jQuery('#rooms3').focus();
+            jq('#rooms3').focus();
 
         }
         else if (current_tab == 5) {
-            while (jQuery(':focus') != jQuery('#maritalStatus')) {
-                if (jQuery(':focus').attr('id') == 'birthdate') {
-                    jQuery("#ui-datepicker-div").hide();
+            while (jq(':focus') != jq('#maritalStatus')) {
+                if (jq(':focus').attr('id') == 'birthdate') {
+                    jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
@@ -2433,7 +2536,7 @@
                                 <div class="tasks-list">
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="1"
-                                               onchange="LoadPayCatg();" class="tasks-list-cb" checked>
+                                               onchange="LoadPayCatg();" class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">PAYING</span>
                                     </label>
@@ -2460,25 +2563,8 @@
                                     <a class="tasks-lists"></a>
                                 </header>
 
-                                <div class="tasks-list">
-                                    <label class="tasks-list-item">
-                                        <input style="display:none!important" type="radio" name="paym_2" id="paym_201"
-                                               value="1" onchange="LoadPayCatgMode();" class="tasks-list-cb" checked>
-                                        <span class="tasks-list-mark"></span>
-                                        <span class="tasks-list-desc" id="ipaym_11">GENERAL</span>
-                                    </label>
-                                    <label class="tasks-list-item">
-                                        <input style="display:none!important" type="radio" name="paym_2" id="paym_202"
-                                               value="2" onchange="LoadPayCatgMode();" class="tasks-list-cb">
-                                        <span class="tasks-list-mark"></span>
-                                        <span class="tasks-list-desc" id="ipaym_12">CHILD UNDER 5YRS</span>
-                                    </label>
-                                    <label class="tasks-list-item">
-                                        <input style="display:none!important" type="radio" name="paym_2" id="paym_203"
-                                               value="3" onchange="LoadPayCatgMode();" class="tasks-list-cb">
-                                        <span class="tasks-list-mark"></span>
-                                        <span class="tasks-list-desc" id="ipaym_13">EXPECTANT MOTHER</span>
-                                    </label>
+                                <div class="tasks-list" id="paycatgs">
+                                    
                                 </div>
                             </div>
                         </div>
