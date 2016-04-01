@@ -91,28 +91,40 @@
 				if ((select1 == 2) && (select2 == 1)) {
 					jq("#modesummary").attr("readonly", false);
 					jq("#modesummary").val("");
+					
 					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
 					jq('#summtitle1').text('NHIF Summary');
 					jq('#modesummary').attr("placeholder", "NHIF Number");
 				}
 				else if ((select1 == 3) && (select2 == 1)) {
 					jq("#modesummary").attr("readonly", false);
 					jq("#modesummary").val("");
+					
 					jq('#universitydiv').show();
+					jq('#university option').eq(1).prop('selected', true);
+					
 					jq('#summtitle1').text('Student Summary');
 					jq('#modesummary').attr("placeholder", "Student Number");
 				}
 				else if ((select1 == 3) && (select2 == 2)) {
 					jq("#modesummary").attr("readonly", false);
 					jq("#modesummary").val("");
+					
 					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
 					jq('#summtitle1').text('Waiver Summary');
 					jq('#modesummary').attr("placeholder", "Waiver Number");
 				}
 				else {
 					jq("#modesummary").attr("readonly", false);
 					jq("#modesummary").val("N/A");
+					
 					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
 					jq('#summtitle1').text('Summary');
 					jq('#modesummary').attr("placeholder", "Enter Value");
 
