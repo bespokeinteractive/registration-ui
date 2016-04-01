@@ -238,12 +238,12 @@ public class NewPatientRegistrationPageController {
 		int paymt2 = Integer.parseInt(parameters.get("paym_2"));
 
         int legal1 = Integer.parseInt(parameters.get("legal1"));
-        String legal2 = parameters.get("mlc");
+        String legal2 = parameters.get("patient.mlc");
 
         int refer1 = Integer.parseInt(parameters.get("refer1"));
-        String refer2 = parameters.get("referredFrom");
-        String refer3 = parameters.get("referralDescription");
-        String refer4 = parameters.get("referralType");
+        String refer2 = parameters.get("patient.referred.from");
+        String refer3 = parameters.get("patient.referred.description");
+        String refer4 = parameters.get("patient.referred.reason");
 
         String paymt3 = null;
         String paymt4 = null;
