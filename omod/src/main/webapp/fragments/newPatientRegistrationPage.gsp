@@ -365,14 +365,14 @@
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.SPECIALCLINIC = ", |"
+        MODEL.SPECIALCLINIC = ",|"
                 + MODEL.SPECIALCLINIC;
         PAGE.fillOptions("#specialClinic", {
             data: MODEL.SPECIALCLINIC,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.TEMPORARYCAT = ", |"
+        MODEL.TEMPORARYCAT = ",Select Case|"
                 + MODEL.TEMPORARYCAT;
         PAGE.fillOptions("#mlc", {
             data: MODEL.TEMPORARYCAT,
@@ -414,8 +414,6 @@
 
         jq('#payingCategory option').eq(1).prop('selected', true);
         jq('#university option').eq(0).prop('selected', true);
-        jq('#refer1 option').eq(2).prop('selected', true);
-        jq('#legal1 option').eq(2).prop('selected', true);
 
         jq("#nhifNumberRow").hide();
         jq("#universityRow").hide();
@@ -632,7 +630,7 @@
 			
 			if (selectedDistrict === ""){
 				jq('#upazilas').empty().append(jq("<option></option>").attr("value",'').text('Select Sub-County'));
-				jq('#locations').empty().append(jq("<option></option>").attr("value",'').text('Select Location'));
+				jq('#locations').empty().append(jq("<option></option>").attr("value",'').text('Select Ward'));
 				
 				return false
 			}
@@ -1662,7 +1660,7 @@
             jq("#mlcCaseYes").attr('checked', 'checked');
             jq("#mlcCaseNo").attr('checked', false);
         }
-        else {
+        else if (jq("#legal1").val() == 2) {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#mlc');
             jq.each(myOptions, function (val, text) {
@@ -1673,6 +1671,18 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', 'checked');
+        }
+		else {
+            var myOptions = {" ": 'N/A'};
+            var mySelect = jq('#mlc');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            jq("#mlcCaseYes").attr('checked', false);
+            jq("#mlcCaseNo").attr('checked', false);
         }
     }
     function LoadReferralCases() {
@@ -1700,6 +1710,30 @@
             jq("#referraldiv").show();
             jq('#referralDescription').removeClass("disabled");
         }
+		else if (jq("#refer1").val() == 2) {
+			var myOptions = {" ": 'N/A'};
+            var mySelect = jq('#referredFrom');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            mySelect = jq('#referralType');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            jq("#referralDescription").attr("readonly", true);
+            jq("#referralDescription").val("N/A");
+
+            jq("#referredNo").attr('checked', 'checked');
+            jq("#referredYes").attr('checked', false);
+            jq("#referraldiv").hide();
+            jq('#referralDescription').addClass("disabled");
+		}
         else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#referredFrom');
@@ -1719,7 +1753,7 @@
             jq("#referralDescription").attr("readonly", true);
             jq("#referralDescription").val("N/A");
 
-            jq("#referredNo").attr('checked', 'checked');
+            jq("#referredNo").attr('checked', false);
             jq("#referredYes").attr('checked', false);
             jq("#referraldiv").hide();
             jq('#referralDescription').addClass("disabled");
@@ -2442,7 +2476,7 @@
 
                     <div class="col4"><label>Sub-County</label></div>
 
-                    <div class="col4 last"><label>Location</label></div>
+                    <div class="col4 last"><label>Ward</label></div>
                 </div>
 
                 <div class="onerow">
@@ -2622,7 +2656,7 @@
                         </div>
 
                         <div class="col4">
-                            <label for="mlc" style="margin:0px;">Description</label>
+                            <label for="mlc" style="margin:0px;">Case Description</label>
                         </div>
 
                         <div class="col4 last"></div>
@@ -2633,7 +2667,7 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="legal1" name="legal1" onchange="LoadLegalCases();">
-                                        <option value="0">&nbsp;</option>
+                                        <option value="0">Select Option</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
                                     </select>
@@ -2672,7 +2706,7 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="refer1" name="refer1" onchange="LoadReferralCases();">
-                                        <option value="0">&nbsp;</option>
+                                        <option value="0">Select Option</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
                                     </select>
@@ -2770,10 +2804,11 @@
                                    value="Special Schemes"/> Special Schemes
                         </div>
 
-                        <input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">
-                        <input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>
-                        <input id="referredYes" type="checkbox" name="referredYes"/>
-                        <input id="referredNo" type="checkbox" name="referredNo"/>
+                        <label><input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">MLC Yes</label>
+                        <label><input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>MLC No</label>
+						
+                        <label><input id="referredYes" type="checkbox" name="referredYes"/>Refer Yes</label>
+                        <label><input id="referredNo" type="checkbox" name="referredNo"/>Refer No</label>
 
                         <input id="triageRoom" type="checkbox" name="triageRoom"/>
                         <input id="opdRoom" type="checkbox" name="opdRoom"/>

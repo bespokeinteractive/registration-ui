@@ -124,8 +124,8 @@ public class NewPatientRegistrationPageController {
 			// create encounter for the visit here
 			Encounter encounter = createEncounter(patient, parameters);
 			encounter = Context.getEncounterService().saveEncounter(encounter);
-            logger.info(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
-					patient.getId()));
+			System.out.println((String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
+					patient.getId())));
 			redirectParams.put("status", "success");
 			redirectParams.put("patientId", patient.getPatientId());
 			redirectParams.put("encounterId", encounter.getId());
@@ -432,6 +432,8 @@ public class NewPatientRegistrationPageController {
                 .getConcept(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE);
 
         Obs mlcObs = new Obs();
+		System.out.println(legal2);
+
         if (!StringUtils.isBlank(legal2)) {
             Concept selectedMlcConcept = Context.getConceptService()
                     .getConcept(legal2);
