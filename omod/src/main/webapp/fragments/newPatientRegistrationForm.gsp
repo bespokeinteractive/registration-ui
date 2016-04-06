@@ -1570,26 +1570,29 @@
                 <h2>Patient Demographics</h2>
 
                 <div class="onerow">
-                    <div class="col4"><label>Surname *</label></div>
+                    <div class="col4"><label>First name *</label></div>
 
-                    <div class="col4"><label>First Name *</label></div>
+                    <div class="col4"><label>Middle Name </label></div>
 
-                    <div class="col4 last"><label>Other Name</label></div>
+                    <div class="col4 last"><label>Surname *</label></div>
                 </div>
 
                 <div class="onerow">
-                    <div class="col4">
-                        <input type="text" id="surName" name="patient.surName" class="form-textbox1"/>
-                        <input hidden name="patient.identifier" value="${patientIdentifier}"/>
-                    </div>
+
 
                     <div class="col4">
                         <input type="text" id="firstName" name="patient.firstName" class="form-textbox1"/>
                     </div>
 
+
                     <div class="col4 last">
                         <input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/>
                     </div>
+
+                <div class="col4">
+                        <input type="text" id="surName" name="patient.surName" class="form-textbox1"\/>
+                        <input hidden name="patient.identifier" value="${patientIdentifier}"\/>
+                    <\div>
                 </div>
 
 

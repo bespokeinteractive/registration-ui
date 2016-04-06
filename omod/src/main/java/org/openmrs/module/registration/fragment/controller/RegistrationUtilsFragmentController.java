@@ -3,7 +3,6 @@ package org.openmrs.module.registration.fragment.controller;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.simple.JSONValue;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.PatientQueueService;
@@ -19,19 +18,14 @@ import org.openmrs.module.registration.util.RegistrationUtils;
 import org.openmrs.module.registration.web.controller.util.RegistrationWebUtils;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
-import org.openmrs.ui.framework.annotation.FragmentParam;
 import org.openmrs.ui.framework.fragment.FragmentModel;
-import org.openmrs.ui.framework.page.PageModel;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -215,19 +209,19 @@ public class RegistrationUtilsFragmentController {
 
         // get person name
         if (!StringUtils.isBlank(parameters
-                .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))
+                .get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))
                 && !StringUtils
                 .isBlank(parameters
-                        .get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))) {
+                        .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))) {
             PersonName personName = RegistrationUtils
                     .getPersonName(
                             null,
                             parameters
-                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME),
-                            parameters
                                     .get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME),
                             parameters
-                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME));
+                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME),
+                            parameters
+                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME));
             patient.addName(personName);
         }
 

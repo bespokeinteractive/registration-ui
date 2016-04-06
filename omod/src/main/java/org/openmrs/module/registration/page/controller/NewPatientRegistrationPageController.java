@@ -1,27 +1,11 @@
 package org.openmrs.module.registration.page.controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
 import org.jaxen.JaxenException;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonName;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.PatientQueueService;
@@ -37,10 +21,13 @@ import org.openmrs.module.registration.util.RegistrationUtils;
 import org.openmrs.module.registration.web.controller.util.RegistrationWebUtils;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class NewPatientRegistrationPageController {
 	private static Log logger = LogFactory.getLog(NewPatientRegistrationPageController.class);
@@ -158,12 +145,12 @@ public class NewPatientRegistrationPageController {
 		Patient patient = new Patient();
 
 		// get person name
-		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))
-				&& !StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))) {
+		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))
+				&& !StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))) {
 			PersonName personName = RegistrationUtils.getPersonName(null,
-					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME),
 					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME),
-					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME));
+					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME),
+					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME));
 			patient.addName(personName);
 		}
 

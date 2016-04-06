@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -102,19 +101,19 @@ public class NewPatientRegistrationFormFragmentController {
 
 		// get person name
 		if (!StringUtils.isBlank(parameters
-				.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))
+				.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))
 				&& !StringUtils
 				.isBlank(parameters
-						.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))) {
+						.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))) {
 			PersonName personName = RegistrationUtils
 					.getPersonName(
 							null,
 							parameters
-									.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME),
-							parameters
 									.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME),
 							parameters
-									.get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME));
+									.get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME),
+							parameters
+									.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME));
 			patient.addName(personName);
 		}
 

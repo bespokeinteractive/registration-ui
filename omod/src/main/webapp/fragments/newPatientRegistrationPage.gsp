@@ -739,27 +739,6 @@
 
             var str1 = '';
 
-//            if (StringUtils.isBlank(jq("#surName").val())) {
-            if (!(jq("#surName").val().trim())) {
-                jq('#surName').addClass("red-border");
-                tab1++;
-                i++;
-            }
-            else {
-                value = jq("#surName").val();
-                value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                jq("#surName").val(value);
-                //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                if (/^[a-zA-Z- ]*\$/.test(value) == false) {
-                    jq('#surName').addClass("red-border");
-                    tab1++;
-                    i++;
-                }
-                else {
-                    jq('#surName').removeClass("red-border");
-                }
-
-            }
 
             //if (StringUtils.isBlank(jq("#firstName").val())) {
             if (!(jq("#firstName").val().trim())) {
@@ -797,6 +776,29 @@
                     jq('#otherName').removeClass("red-border");
                 }
             }
+
+//            if (StringUtils.isBlank(jq("#surName").val())) {
+            if (!(jq("#surName").val().trim())) {
+                jq('#surName').addClass("red-border");
+                tab1++;
+                i++;
+            }
+            else {
+                value = jq("#surName").val();
+                value = value.substr(0, 1).toUpperCase() + value.substr(1);
+                jq("#surName").val(value);
+                //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
+                if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                    jq('#surName').addClass("red-border");
+                    tab1++;
+                    i++;
+                }
+                else {
+                    jq('#surName').removeClass("red-border");
+                }
+
+            }
+
 
             if (!(jq("#birthdate").val().trim())) {
                 jq('#birthdate').addClass("red-border");
@@ -2161,30 +2163,28 @@
 
                 <div class="onerow">
                     <div class="col4">
-                        <label>Surname <span>*</span></label></div>
+                        <label>First Names<span>*</span></label></div>
 
-                    <div class="col4"><label>First Name <span>*</span></label></div>
+                    <div class="col4"><label>Middle name<span></span></label></div>
 
-                    <div class="col4 last"><label>Other Name</label></div>
+                    <div class="col4 last"><label>Surname<span>*</span></label></div>
                 </div>
 
                 <div class="onerow">
                     <div class="col4">
-                        <field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/>
-                        </field>
+                        <field><input type="text" id="firstName" name="patient.firstName"
+                                      class="required form-textbox1"/></field>
+                    </div>
+                    <div class="col4 last">
+                        <field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/></field>
+                    </div>
+                    <div class="col4">
+                        <field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/></field>
+
                         <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
                         <input type="hidden" id="patientIdnts" name="patient.identifier" value="${patientIdentifier}"/>
                     </div>
 
-                    <div class="col4">
-                        <field><input type="text" id="firstName" name="patient.firstName"
-                                      class="required form-textbox1"/></field>
-                    </div>
-
-                    <div class="col4 last">
-                        <field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/>
-                        </field>
-                    </div>
                 </div>
 
                 <div class="onerow">
