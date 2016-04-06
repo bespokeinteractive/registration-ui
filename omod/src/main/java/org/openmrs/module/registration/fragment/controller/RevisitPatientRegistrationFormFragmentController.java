@@ -42,8 +42,6 @@ public class RevisitPatientRegistrationFormFragmentController {
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             UiUtils uiUtils,
             HttpServletRequest request) {
-        String prefix = Context.getAdministrationService().getGlobalProperty(
-                HospitalCoreConstants.PROPERTY_IDENTIFIER_PREFIX);
         String gender = request.getParameter("gender");
         if (gender.equalsIgnoreCase("any")) {
             gender = null;
