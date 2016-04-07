@@ -44,12 +44,16 @@
 			
 			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
 			
-			if (!jq("input[name='paym_2']:checked").val()) {
-				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-			}
+			console.log(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+			
+			//if (!jq("input[name='paym_2']:checked").val()) {
+			//	jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+			//}
 		});
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+			console.log('Fired');
+			
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
@@ -90,7 +94,7 @@
 				jq('#universitydiv').hide();
 				jq('#university option').eq(0).prop('selected', true);
 				
-				jq('#summtitle1').text('Summary');
+				jq('#summtitle1').text('Details');
 				jq('#modesummary').attr("placeholder", "Enter Value");
 
 			}
@@ -200,7 +204,6 @@
             }
         });
 
-
         jq('input:text[id]').focus(function (event) {
             var checkboxID = jq(event.target).attr('id');
             jq('#' + checkboxID).removeClass("red-border");
@@ -295,6 +298,12 @@
             optionDelimiter: "|"
         });
 		
+		PAGE.fillOptions("#referredCounty", {
+            data: MODEL.districts,
+			delimiter: ",",
+            optionDelimiter: "|"
+        });
+		
         jq("#districts").change();
 
         selectedDistrict = jq("#districts option:checked").val();
@@ -380,7 +389,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.referredFrom = ",Referred From|"
+        MODEL.referredFrom = ",Select Facility|"
                 + MODEL.referredFrom;
         PAGE.fillOptions("#referredFrom", {
             data: MODEL.referredFrom,
@@ -388,7 +397,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.referralType = ",Referral Type|"
+        MODEL.referralType = ",Select Type|"
                 + MODEL.referralType;
         PAGE.fillOptions("#referralType	", {
             data: MODEL.referralType,
@@ -480,7 +489,9 @@
         });
 		
 		jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
-		jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+		jq('input[name=paym_1][value="1"]').attr('checked', false);
+		
+		jq('input[name=paym_2][value="1"]').attr('checked', false);
 		
 		jq('#university option').eq(0).prop('selected', true);
         //end of doc ready
@@ -550,14 +561,15 @@
                 }),
                 success: function (data) {
                     if (data.datemodel.error == undefined) {
-                        if (data.datemodel.estimated == "true") {
+                        if (data.datemodel.estimated) {
+							jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
                             jq("#birthdateEstimated").val("true")
                         } else {
+							jq("#estimatedAge").html(data.datemodel.age);
                             jq("#birthdateEstimated").val("false");
                         }
 
                         jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
-                        jq("#estimatedAge").html(data.datemodel.age);
                         jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                         jq("#birthdate").val(data.datemodel.birthdate);
                         jq("#calendar").val(data.datemodel.birthdate);
@@ -1707,7 +1719,9 @@
 
             jq("#referredYes").attr('checked', 'checked');
             jq("#referredNo").attr('checked', false);
-            jq("#referraldiv").show();
+			
+            jq(".referraldiv").show();
+			
             jq('#referralDescription').removeClass("disabled");
         }
 		else if (jq("#refer1").val() == 2) {
@@ -1729,9 +1743,10 @@
             jq("#referralDescription").attr("readonly", true);
             jq("#referralDescription").val("N/A");
 
+            jq(".referraldiv").hide();
+			
             jq("#referredNo").attr('checked', 'checked');
             jq("#referredYes").attr('checked', false);
-            jq("#referraldiv").hide();
             jq('#referralDescription').addClass("disabled");
 		}
         else {
@@ -1753,9 +1768,10 @@
             jq("#referralDescription").attr("readonly", true);
             jq("#referralDescription").val("N/A");
 
+            jq(".referraldiv").hide();
+			
             jq("#referredNo").attr('checked', false);
             jq("#referredYes").attr('checked', false);
-            jq("#referraldiv").hide();
             jq('#referralDescription').addClass("disabled");
         }
     }
@@ -2205,8 +2221,8 @@
             <span class="title">Patient Details</span>
             <fieldset class="no-confirmation">
                 <legend>Demographics</legend>
-
-                <p>
+				<h1 style="margin: 10px 0 0;">Patient Demographic Information</h1>
+                
 
                 <div class="onerow">
                     <div class="col4">
@@ -2279,8 +2295,6 @@
                             <div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
                             <input type="text" id="birthdate" name="patient.birthdate" class="required form-textbox1"/>
                         </field>
-                        <inputbirthdateEstimated id="" type="hidden"
-                                                 name="patient.birthdateEstimate" value="true"/>
                     </div>
                 </div>
 
@@ -2434,7 +2448,7 @@
                         <span>NEXT PAGE</span>
                     </a>
                 </div>
-            </p>
+           
 
                 <div class="selectdiv" id="selected-diagnoses"></div>
 
@@ -2442,9 +2456,7 @@
             <fieldset style="min-width: 500px; width: auto" class="no-confirmation">
                 <legend>Contact Info</legend>
 
-                <p>
-
-                <h2>Patient Contact Information</h2>
+                <h2 style="margin: 10px 0 0;">Patient Contact Information</h2>
 
                 <div class="onerow">
                     <div class="col4"><label>Contact Number</label></div>
@@ -2519,7 +2531,7 @@
 
                     <div class="col4"><label>Relationship <span>*</span></label></div>
 
-                    <div class="col4 last"><label>Physical Address</label></div>
+                    <div class="col4 last"><label>Telephone Number</label></div>
                 </div>
 
                 <div class="onerow">
@@ -2545,21 +2557,24 @@
                     </div>
 
                     <div class="col4 last">
-                        <field><input type="text" id="relativePostalAddress" name="person.attribute.28"
-                                      class="form-textbox1" placeholder="Village /Estate /Landmark"/></field>
+						<field>
+							<input type="text" id="patientTelephone" name="person.attribute.29"
+									  class="form-textbox1"/>
+						</field>
                     </div>
                 </div>
 
-                <div class="onerow" style="margin-top: 10px">
-                    <div class="col4"><label></label></div>
-
-                    <div class="col4"><label></label></div>
-
-                    <div class="col4 last">
-                        <field>
-                            <input id="sameAddress" type="checkbox"/> Same as Patient
-                        </field>
-                    </div>
+                <div class="onerow" style="margin-top: 50px">
+					<label style="margin-top: 0px">Physical Address :</label>
+					
+					<field>
+						<textarea type="text" id="relativePostalAddress" name="person.attribute.28"
+								  class="form-textbox1" style="height: 80px; width: 700px;" placeholder="Village /Estate /Landmark"></textarea>
+					</field>
+				
+					<field>
+						<label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
+					</field>
                 </div>
 
                 <div class="onerow" style="margin-top: 50px">
@@ -2571,7 +2586,6 @@
                         <span>NEXT PAGE</span>
                     </a>
                 </div>
-            </p>
             </fieldset>
 
             <fieldset class="no-confirmation">
@@ -2627,7 +2641,7 @@
                         <div class="col4 last">
                             <div class="tasks">
                                 <header class="tasks-header">
-                                    <span id="summtitle1" class="tasks-title">Summary</span>
+                                    <span id="summtitle1" class="tasks-title">Details</span>
                                     <input type="hidden" id="nhifNumber" name="person.attribute.34" />
                                     <input type="hidden" id="studentId" name="person.attribute.42" />
                                      <input type="hidden" id="waiverNumber" name="person.attribute.32" />
@@ -2647,8 +2661,7 @@
                     </div>
 
                     <h2>&nbsp;</h2>
-
-                    <h2>Visit Information</h2>
+                    <h2>Legal Information</h2>
 
                     <div class="onerow">
                         <div class="col4">
@@ -2686,18 +2699,21 @@
 
                         <div class="col4 last"></div>
                     </div>
+					
+					<h2>&nbsp;</h2>
+                    <h2>Referral Information</h2>
 
-                    <div class="onerow" style="margin-top:50px;">
+                    <div class="onerow">
                         <div class="col4">
-                            <label for="refer1" style="margin:0px;">Referral Information</label>
+                            <label for="refer1" style="margin:0px;">Patient Referred<span>*</span></label>
                         </div>
 
                         <div class="col4">
-                            <label for="referredFrom" style="margin:0px;">Referred From</label>
+                            <label for="referralType" style="margin:0px;">Referral Type</label>
                         </div>
 
                         <div class="col4 last">
-                            <label for="referralType" style="margin:0px;">Referral Type</label>
+                            &nbsp;
                         </div>
                     </div>
 
@@ -2717,6 +2733,46 @@
                         <div class="col4">
                             <span class="select-arrow" style="width: 100%">
                                 <field>
+                                    <select id="referralType" name="patient.referred.reason">
+                                    </select>
+                                </field>
+                            </span>
+                        </div>
+
+                        <div class="col4 last">
+                            &nbsp;
+                        </div>
+                    </div>
+					
+					 <div class="onerow referraldiv" style="margin-top:50px;">
+                        <div class="col4">
+                            <label for="refer1" style="margin:0px;">Referred From</label>
+                        </div>
+
+                        <div class="col4">
+                            <label for="referredFrom" style="margin:0px;">Facility Type</label>
+                        </div>
+
+                        <div class="col4 last">
+                            <label for="referralType" style="margin:0px;">Facility Name</label>
+                        </div>
+                    </div>
+					
+					<div class="onerow referraldiv">
+                        <div class="col4">
+                            <span class="select-arrow" style="width: 100%">
+                                <field>
+                                    <select id="referredCounty" name="patient.referred.county">
+                                        <option value="0">Select County</option>
+                                       
+                                    </select>
+                                </field>
+                            </span>
+                        </div>
+
+                        <div class="col4">
+                            <span class="select-arrow" style="width: 100%">
+                                <field>
                                     <select id="referredFrom" name="patient.referred.from">
                                     </select>
                                 </field>
@@ -2724,16 +2780,13 @@
                         </div>
 
                         <div class="col4 last">
-                            <span class="select-arrow" style="width: 100%">
-                                <field>
-                                    <select id="referralType" name="patient.referred.reason">
-                                    </select>
-                                </field>
-                            </span>
+							<field>
+								<input id="referredInstitute" name="patient.referred.facility" class="form-textbox1 focused" type="text" placeholder="Institution Name">
+							</field>
                         </div>
                     </div>
 
-                    <div class="onerow" id="referraldiv" style="padding-top:-5px; display:none;">
+                    <div class="onerow referraldiv" id="referraldiv" style="padding-top:-5px; display:none;">
                         <label for="referralDescription" style="margin-top:20px;">Comments</label>
                         <field><textarea type="text" id="referralDescription" name="patient.referred.description"
                                          value="N/A" placeholder="COMMENTS" readonly=""
@@ -2813,6 +2866,8 @@
                         <input id="triageRoom" type="checkbox" name="triageRoom"/>
                         <input id="opdRoom" type="checkbox" name="opdRoom"/>
                         <input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
+                        <input id="birthdateEstimated" type="text" name="patient.birthdateEstimate"/>
+						<input id="chiefdom" class="form-textbox1 focused" type="text" name="person.attribute.41">
                     </div>
 
                     <div class="onerow" style="display:none!important;">
@@ -2850,7 +2905,7 @@
                     </div>
 
 
-                    <div class="onerow" style="margin-top: 150px">
+                    <div class="onerow" style="margin-top: 100px">
                         <a class="button task ui-tabs-anchor" onclick="goto_previous_tab(3);">
                             <span style="padding: 15px;">PREVIOUS</span>
                         </a>

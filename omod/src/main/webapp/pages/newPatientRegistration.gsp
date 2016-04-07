@@ -57,7 +57,7 @@ input[type="textarea"] {
 }
 textarea{
 	border: 1px solid #aaa;
-	border-radius: 5px!important;
+	border-radius: 0px!important;
 	box-shadow: none!important;
 	box-sizing: border-box!important;
 	line-height: 18px!important;
@@ -66,7 +66,7 @@ textarea{
 
 form select {
 	width:100%;
-	border: 1px solid #e4e4e4;
+	border: 1px solid #aaa;
 	border-radius: 5px!important;
 	box-shadow: none!important;
 	box-sizing: border-box!important;
@@ -80,6 +80,7 @@ form select {
 	padding-left: 10px!important;
 	right: 10px!important;
 }
+#estimatedAge span,
 label span{
 	color: #ff0000;
 	padding-left: 5px;
@@ -92,6 +93,15 @@ label span{
 	.onerow {
 		margin: 0 0 100px;
 	}
+}
+.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, 
+.simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
+	outline: 1px none #007fff;
+	box-shadow: 0 0 2px 0px #888!important;
+}
+
+form textarea:focus, .form textarea:focus{
+	outline: 1px none #007fff;
 }
 </style>
 
