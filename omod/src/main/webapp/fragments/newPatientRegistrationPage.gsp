@@ -44,11 +44,16 @@
 			
 			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
 			
-			console.log(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
-			
-			//if (!jq("input[name='paym_2']:checked").val()) {
-			//	jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-			//}
+			if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined'){
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("N/A");
+				
+				jq('#universitydiv').hide();
+				jq('#university option').eq(0).prop('selected', true);
+				
+				jq('#summtitle1').text('Details');
+				jq('#modesummary').attr("placeholder", "Enter Value");
+			}
 		});
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
@@ -61,6 +66,8 @@
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
 				jq('#specialScheme option').eq(0).prop('selected', true);
 
+				select3 = jq('#payingCategory :selected').val().toUpperCase();
+				
 				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
 			}
 			else if (select1 == 2) {
@@ -68,15 +75,21 @@
 				jq('#payingCategory option').eq(0).prop('selected', true);
 				jq('#specialScheme option').eq(0).prop('selected', true);
 
+				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+				
 				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
 			}
 			else {
 				jq('#specialScheme option').eq(select2).prop('selected', true);
 				jq('#payingCategory option').eq(0).prop('selected', true);
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
-
+				
+				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+				
 				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
 			}
+			
+			console.log(select3);
 			
 			if (select1 == 2) {
 				if (jq('#nonPayingCategory :selected').val().toUpperCase().indexOf("NHIF") >= 0){
