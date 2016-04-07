@@ -168,6 +168,7 @@
          **/
         MODEL = {
             patientIdentifier: "${patientIdentifier}",
+            counties: _districts,
             districts: _districts,
             upazilas: _upazilas,
             ////ghanshyam,16-dec-2013,3438 Remove the interdependency
@@ -191,13 +192,10 @@
             var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
             var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
             if (select1 == 2 && select2 == 1) {
-//                alert("we setting the nhif number");
                 jq('input[name="person.attribute.34"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 1) {
-//                alert("we setting the student id number");
                 jq('input[name="person.attribute.42"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 2) {
-//                alert("we setting the waiver number");
                 jq('input[name="person.attribute.32"]').val(jq("#modesummary").val());
             }
         });
@@ -270,26 +268,34 @@
             changeYear: true,
             constrainInput: false
         }).on("change", function (dateText) {
-//            display("Got change event from field "+this.value);
             jq("#birthdate").val(this.value);
             PAGE.checkBirthDate();
         });
-
-
-        //jq('#birthdate').change(PAGE.checkBirthDate);
-        MODEL.religions = "Religion, |"
+		
+		var county_array = String(MODEL.districts).substring(0,String(MODEL.districts).length).split(',');
+		var county_strng = ",Select County|";
+			
+		for (var i=0; i < county_array.length; i++) {
+			county_strng += county_array[i]+','+county_array[i]+'|'
+		}
+		
+        MODEL.religions = ",|"
                 + MODEL.religions;
         PAGE.fillOptions("#patientReligion", {
             data: MODEL.religions,
             delimiter: ",",
             optionDelimiter: "|"
         });
+		
+		MODEL.districts = county_strng;
+		
         PAGE.fillOptions("#districts", {
-            data: MODEL.districts
+            data: MODEL.districts,
+			delimiter: ",",
+            optionDelimiter: "|"
         });
-        PAGE.fillOptions("#upazilas", {
-            data: typeof(MODEL.upazilas[0]) == "undefined" ? MODEL.upazilas : MODEL.upazilas[0].split(',')
-        });
+		
+        jq("#districts").change();
 
         selectedDistrict = jq("#districts option:checked").val();
         selectedUpazila = jq("#upazilas option:checked").val();
@@ -320,24 +326,24 @@
         ;
         
         PAGE.fillOptions("#payingCategory", {
-            data: ", |" + MODEL.payingCategory,
+            data: ",|" + MODEL.payingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
         PAGE.fillOptions("#nonPayingCategory", {
-            data: ", |" + MODEL.nonPayingCategory,
+            data: ",|" + MODEL.nonPayingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
         PAGE.fillOptions("#specialScheme", {
-            data: ", |" + MODEL.specialScheme,
+            data: ",|" + MODEL.specialScheme,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
-        MODEL.universities = ", |"
+        MODEL.universities = ",|"
                 + MODEL.universities;
         PAGE.fillOptions("#university", {
             data: MODEL.universities,
@@ -345,28 +351,28 @@
             optionDelimiter: "|"
         });
 
-        MODEL.TRIAGE = ", |"
+        MODEL.TRIAGE = ",|"
                 + MODEL.TRIAGE;
         PAGE.fillOptions("#triage", {
             data: MODEL.TRIAGE,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.OPDs = ", |"
+        MODEL.OPDs = ",|"
                 + MODEL.OPDs;
         PAGE.fillOptions("#opdWard", {
             data: MODEL.OPDs,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.SPECIALCLINIC = ", |"
+        MODEL.SPECIALCLINIC = ",|"
                 + MODEL.SPECIALCLINIC;
         PAGE.fillOptions("#specialClinic", {
             data: MODEL.SPECIALCLINIC,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.TEMPORARYCAT = ", |"
+        MODEL.TEMPORARYCAT = ",Select Case|"
                 + MODEL.TEMPORARYCAT;
         PAGE.fillOptions("#mlc", {
             data: MODEL.TEMPORARYCAT,
@@ -408,8 +414,6 @@
 
         jq('#payingCategory option').eq(1).prop('selected', true);
         jq('#university option').eq(0).prop('selected', true);
-        jq('#refer1 option').eq(2).prop('selected', true);
-        jq('#legal1 option').eq(2).prop('selected', true);
 
         jq("#nhifNumberRow").hide();
         jq("#universityRow").hide();
@@ -618,11 +622,20 @@
 
         /** CHANGE DISTRICT */
         changeDistrict: function () {
-
+			
+			
             // get the list of upazilas
             upazilaList = "";
             selectedDistrict = jq("#districts option:checked").val();
-            jq.each(MODEL.districts, function (index, value) {
+			
+			if (selectedDistrict === ""){
+				jq('#upazilas').empty().append(jq("<option></option>").attr("value",'').text('Select Sub-County'));
+				jq('#locations').empty().append(jq("<option></option>").attr("value",'').text('Select Ward'));
+				
+				return false
+			}
+			
+            jq.each(MODEL.counties, function (index, value) {
                 if (value == selectedDistrict) {
                     upazilaList = MODEL.upazilas[index];
                 }
@@ -1649,7 +1662,7 @@
             jq("#mlcCaseYes").attr('checked', 'checked');
             jq("#mlcCaseNo").attr('checked', false);
         }
-        else {
+        else if (jq("#legal1").val() == 2) {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#mlc');
             jq.each(myOptions, function (val, text) {
@@ -1660,6 +1673,18 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', 'checked');
+        }
+		else {
+            var myOptions = {" ": 'N/A'};
+            var mySelect = jq('#mlc');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            jq("#mlcCaseYes").attr('checked', false);
+            jq("#mlcCaseNo").attr('checked', false);
         }
     }
     function LoadReferralCases() {
@@ -1687,6 +1712,30 @@
             jq("#referraldiv").show();
             jq('#referralDescription').removeClass("disabled");
         }
+		else if (jq("#refer1").val() == 2) {
+			var myOptions = {" ": 'N/A'};
+            var mySelect = jq('#referredFrom');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            mySelect = jq('#referralType');
+            jq.each(myOptions, function (val, text) {
+                mySelect.append(
+                        jq('<option></option>').val(val).html(text)
+                );
+            });
+
+            jq("#referralDescription").attr("readonly", true);
+            jq("#referralDescription").val("N/A");
+
+            jq("#referredNo").attr('checked', 'checked');
+            jq("#referredYes").attr('checked', false);
+            jq("#referraldiv").hide();
+            jq('#referralDescription').addClass("disabled");
+		}
         else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#referredFrom');
@@ -1706,7 +1755,7 @@
             jq("#referralDescription").attr("readonly", true);
             jq("#referralDescription").val("N/A");
 
-            jq("#referredNo").attr('checked', 'checked');
+            jq("#referredNo").attr('checked', false);
             jq("#referredYes").attr('checked', false);
             jq("#referraldiv").hide();
             jq('#referralDescription').addClass("disabled");
@@ -2418,7 +2467,7 @@
 
                     <div class="col4 last">
                         <field><input type="text" id="patientPostalAddress" name="patient.address.postalAddress"
-                                      class="required form-textbox1"/></field>
+                                      class="required form-textbox1" placeholder="Village /Estate /Landmark"/></field>
                     </div>
                 </div>
 
@@ -2427,7 +2476,7 @@
 
                     <div class="col4"><label>Sub-County</label></div>
 
-                    <div class="col4 last"><label>Location</label></div>
+                    <div class="col4 last"><label>Ward</label></div>
                 </div>
 
                 <div class="onerow">
@@ -2460,33 +2509,13 @@
                     </div>
                 </div>
 
-                <div class="onerow">
-                    <div class="col4"><label>Village</label></div>
-
-                    <div class="col4"><label></label></div>
-
-                    <div class="col4 last"><label></label></div>
-                </div>
-
-                <div class="onerow">
-                    <div class="col4">
-                        <field>
-                            <input type="text" id="chiefdom" name="person.attribute.${personAttributeChiefdom.id}"
-                                   class="form-textbox1"/>
-                        </field>
-                    </div>
-
-                    <div class="col4">&nbsp;</div>
-
-                    <div class="col4 last">&nbsp;</div>
-                </div>
-
+                
                 <h2>&nbsp;</h2>
 
-                <h2>Next of Kin Details</h2>
+                <h2>Next of Kin / Informant Details</h2>
 
                 <div class="onerow">
-                    <div class="col4"><label>Relative Name <span>*</span></label></div>
+                    <div class="col4"><label>Full Names <span>*</span></label></div>
 
                     <div class="col4"><label>Relationship <span>*</span></label></div>
 
@@ -2517,7 +2546,7 @@
 
                     <div class="col4 last">
                         <field><input type="text" id="relativePostalAddress" name="person.attribute.28"
-                                      class="form-textbox1"/></field>
+                                      class="form-textbox1" placeholder="Village /Estate /Landmark"/></field>
                     </div>
                 </div>
 
@@ -2627,7 +2656,7 @@
                         </div>
 
                         <div class="col4">
-                            <label for="mlc" style="margin:0px;">Description</label>
+                            <label for="mlc" style="margin:0px;">Case Description</label>
                         </div>
 
                         <div class="col4 last"></div>
@@ -2638,7 +2667,7 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="legal1" name="legal1" onchange="LoadLegalCases();">
-                                        <option value="0">&nbsp;</option>
+                                        <option value="0">Select Option</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
                                     </select>
@@ -2677,7 +2706,7 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="refer1" name="refer1" onchange="LoadReferralCases();">
-                                        <option value="0">&nbsp;</option>
+                                        <option value="0">Select Option</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
                                     </select>
@@ -2775,10 +2804,11 @@
                                    value="Special Schemes"/> Special Schemes
                         </div>
 
-                        <input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">
-                        <input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>
-                        <input id="referredYes" type="checkbox" name="referredYes"/>
-                        <input id="referredNo" type="checkbox" name="referredNo"/>
+                        <label><input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">MLC Yes</label>
+                        <label><input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>MLC No</label>
+						
+                        <label><input id="referredYes" type="checkbox" name="referredYes"/>Refer Yes</label>
+                        <label><input id="referredNo" type="checkbox" name="referredNo"/>Refer No</label>
 
                         <input id="triageRoom" type="checkbox" name="triageRoom"/>
                         <input id="opdRoom" type="checkbox" name="opdRoom"/>
