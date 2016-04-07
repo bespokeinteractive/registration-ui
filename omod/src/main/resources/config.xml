@@ -171,6 +171,11 @@
 	</globalProperty>
 
 	<!-- Internationalization -->
+	<privilege>
+		<name>App: registrationapp</name>
+		<description>Able to access registration app</description>
+	</privilege>
+
 	<!-- All message codes should start with ${project.parent.artifactId}. -->
 	<messages>
 		<lang>en</lang>
