@@ -54,16 +54,51 @@
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+			
+			if (select1 == 1) {
+				jq('#payingCategory option').eq(select2).prop('selected', true);
+				
+				jq('#nonPayingCategory option').eq(0).prop('selected', true);
+				jq('#specialScheme option').eq(0).prop('selected', true);
 
-			if ((select1 == 2) && (select2 == 1)) {
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").val("");
-				
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
-				
-				jq('#summtitle1').text('NHIF Summary');
-				jq('#modesummary').attr("placeholder", "NHIF Number");
+				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+			}
+			else if (select1 == 2) {
+				jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+				jq('#payingCategory option').eq(0).prop('selected', true);
+				jq('#specialScheme option').eq(0).prop('selected', true);
+
+				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+			}
+			else {
+				jq('#specialScheme option').eq(select2).prop('selected', true);
+				jq('#payingCategory option').eq(0).prop('selected', true);
+				jq('#nonPayingCategory option').eq(0).prop('selected', true);
+
+				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+			}
+			
+			if (select1 == 2) {
+				if (jq('#nonPayingCategory :selected').val().toUpperCase().indexOf("NHIF") >= 0){
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("");
+					
+					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
+					jq('#summtitle1').text('NHIF Summary');
+					jq('#modesummary').attr("placeholder", "NHIF Number");
+				}
+				else {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").val("N/A");
+					
+					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
+					jq('#summtitle1').text('Details');
+					jq('#modesummary').attr("placeholder", "Enter Value");
+				}
 			}
 			else if ((select1 == 3) && (select2 == 1)) {
 				jq("#modesummary").attr("readonly", false);
@@ -97,28 +132,6 @@
 
 			}
 
-			if (select1 == 1) {
-				jq('#payingCategory option').eq(select2).prop('selected', true);
-				
-				jq('#nonPayingCategory option').eq(0).prop('selected', true);
-				jq('#specialScheme option').eq(0).prop('selected', true);
-
-				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
-			}
-			else if (select1 == 2) {
-				jq('#nonPayingCategory option').eq(select2).prop('selected', true);
-				jq('#payingCategory option').eq(0).prop('selected', true);
-				jq('#specialScheme option').eq(0).prop('selected', true);
-
-				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
-			}
-			else {
-				jq('#specialScheme option').eq(select2).prop('selected', true);
-				jq('#payingCategory option').eq(0).prop('selected', true);
-				jq('#nonPayingCategory option').eq(0).prop('selected', true);
-
-				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
-			}
 
 			payingCategorySelection();
 
@@ -1484,44 +1497,7 @@
         }
     }
     function LoadPayCatg() {
-        jq("#paym_201").attr('checked', 'checked');
-
-        var selectn = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-        if (selectn == 1) {
-            jq('#ipaym_11').text('GENERAL');
-            jq('#ipaym_12').text('CHILD UNDER 5YRS');
-            jq('#ipaym_13').text('EXPECTANT MOTHER');
-
-            jq('#tasktitle').text('Paying Category');
-
-            jq("#paying").attr('checked', 'checked');
-            jq("#nonPaying").attr('checked', false);
-            jq("#specialSchemes").attr('checked', false);
-        }
-        else if (selectn == 2) {
-            jq('#ipaym_11').text('NHIF/CIVIL SERVANT');
-            jq('#ipaym_12').text('CCC PATIENT');
-            jq('#ipaym_13').text('TB PATIENT');
-
-            jq('#tasktitle').text('Non-Paying Category');
-
-            jq("#nonPaying").attr('checked', 'checked');
-            jq("#paying").attr('checked', false);
-            jq("#specialSchemes").attr('checked', false);
-
-        }
-        else if (selectn == 3) {
-            jq('#ipaym_11').text('STUDENT SCHEME');
-            jq('#ipaym_12').text('WAIVER CASE');
-            jq('#ipaym_13').text('DELIVERY CASE');
-            jq('#tasktitle').text('Special Schemes');
-
-            jq("#specialSchemes").attr('checked', 'checked');
-            jq("#paying").attr('checked', false);
-            jq("#nonPaying").attr('checked', false);
-        }
-
-        LoadPayCatgMode();
+        
     }
 
     function LoadPayCatgMode() {
@@ -1565,7 +1541,7 @@
             jq('#universitydiv').hide();
 			jq('#university option').eq(0).prop('selected', true);
 			
-            jq('#summtitle1').text('Summary');
+            jq('#summtitle1').text('Details');
             jq('#modesummary').attr("placeholder", "Enter Value");
 
         }
@@ -2603,19 +2579,19 @@
                                 <div class="tasks-list">
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="1"
-                                               onchange="LoadPayCatg();" class="tasks-list-cb">
+                                               class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">PAYING</span>
                                     </label>
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="2"
-                                               onchange="LoadPayCatg();" class="tasks-list-cb">
+                                               class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">NON-PAYING</span>
                                     </label>
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="3"
-                                               onchange="LoadPayCatg();" class="tasks-list-cb">
+                                               class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">SPECIAL SCHEMES</span>
                                     </label>
