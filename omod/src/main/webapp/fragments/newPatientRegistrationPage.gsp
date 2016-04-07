@@ -52,8 +52,6 @@
 		});
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
-			console.log('Fired');
-			
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
@@ -282,7 +280,7 @@
 			county_strng += county_array[i]+','+county_array[i]+'|'
 		}
 		
-        MODEL.religions = ",|"
+        MODEL.religions = ", |"
                 + MODEL.religions;
         PAGE.fillOptions("#patientReligion", {
             data: MODEL.religions,
@@ -335,24 +333,24 @@
         ;
         
         PAGE.fillOptions("#payingCategory", {
-            data: ",|" + MODEL.payingCategory,
+            data: ", |" + MODEL.payingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
         PAGE.fillOptions("#nonPayingCategory", {
-            data: ",|" + MODEL.nonPayingCategory,
+            data: ", |" + MODEL.nonPayingCategory,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
         PAGE.fillOptions("#specialScheme", {
-            data: ",|" + MODEL.specialScheme,
+            data: ", |" + MODEL.specialScheme,
             delimiter: ",",
             optionDelimiter: "|"
         });
 
-        MODEL.universities = ",|"
+        MODEL.universities = ", |"
                 + MODEL.universities;
         PAGE.fillOptions("#university", {
             data: MODEL.universities,
@@ -360,21 +358,21 @@
             optionDelimiter: "|"
         });
 
-        MODEL.TRIAGE = ",|"
+        MODEL.TRIAGE = ", |"
                 + MODEL.TRIAGE;
         PAGE.fillOptions("#triage", {
             data: MODEL.TRIAGE,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.OPDs = ",|"
+        MODEL.OPDs = ", |"
                 + MODEL.OPDs;
         PAGE.fillOptions("#opdWard", {
             data: MODEL.OPDs,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.SPECIALCLINIC = ",|"
+        MODEL.SPECIALCLINIC = ", |"
                 + MODEL.SPECIALCLINIC;
         PAGE.fillOptions("#specialClinic", {
             data: MODEL.SPECIALCLINIC,
@@ -421,7 +419,7 @@
         jq("#nonPayingCategoryField").hide();
         jq("#specialSchemeCategoryField").hide();
 
-        jq('#payingCategory option').eq(1).prop('selected', true);
+        jq('#payingCategory option').eq(0).prop('selected', true);
         jq('#university option').eq(0).prop('selected', true);
 
         jq("#nhifNumberRow").hide();
