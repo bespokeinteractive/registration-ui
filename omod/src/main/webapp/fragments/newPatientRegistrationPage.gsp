@@ -254,7 +254,7 @@
         });
 
         jq('select').focusout(function (event) {
-            var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
+            var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "modetype1", "value4"];
             var idd = jq(event.target).attr('id');
 
             if (jq.inArray(idd, arr) != -1) {
@@ -947,6 +947,12 @@
             else {
                 jq('#relativePostalAddress').removeClass("red-border");
             }
+			
+			if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
+				str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
+                i++;
+                tab3++;
+			}
 
             //TAB3
             if (jq("#legal1").val() == 0) {

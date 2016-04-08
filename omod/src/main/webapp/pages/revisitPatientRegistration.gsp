@@ -53,7 +53,10 @@ form input{
 .toast-item{
     background-color: #222;
 }
-
+form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus{
+	outline: 1px none #007fff;
+	box-shadow: 0 0 2px 0px #888!important;
+}
 @media all and (max-width: 768px) {
     .onerow {
         margin: 0 0 100px;
