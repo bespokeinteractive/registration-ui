@@ -41,7 +41,7 @@ public class PatientWrapper extends Patient implements Serializable {
     }
     public String getFormartedVisitDate(){
 
-        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Format formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         try{
             formartedVisitDate = formatter.format(lastVisitTime);
         }catch(Exception e){

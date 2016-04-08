@@ -64,7 +64,7 @@ public class RevisitPatientRegistrationFormFragmentController {
         );
         List<PatientWrapper> wrapperList = patientsWithLastVisit(patients);
 
-        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate","voided","dead");
+        return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate","voided","dead", "lastVisitTime");
     }
 
     // Filter patient list using advance search criteria

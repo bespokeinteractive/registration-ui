@@ -1,5 +1,6 @@
 <%
-    def props = ["wrapperIdentifier", "names", "age", "gender", "formartedVisitDate", "action"]
+	ui.includeJavascript("billingui", "moment.js")
+	ui.includeJavascript("registration", "pretty.js")
 %>
 
 <script type="text/javascript">
@@ -75,8 +76,6 @@
         res=res.replace("]","");
         return res;
     }
-
-
 
     PATIENTSEARCHRESULT = {
 
@@ -175,27 +174,46 @@
         jq('#patient-search-results-table > tbody > tr').remove();
         var tbody = jq('#patient-search-results-table > tbody');
         for (index in data) {
+            var item 		= data[index];
+            var rows 		= '<tr>';
+			var rowsClass 	= '';
+			var gender 		= item.gender;
+			var lastVisit 	= moment(item.formartedVisitDate, 'DD/MM/YYYY HH:mm:ss').fromNow();
+			var names 		= stringReplace(item.names);
+			var m 			= moment(item.formartedVisitDate,'DD/MM/YYYY HH:mm:ss');
+			var today 		= moment();
 
-            var item = data[index];
-            var row = '<tr>';
-            <% props.each {
-               if(it == props.last()){
-                   %>
+			var days 	= Math.round(moment.duration(today - m).asDays());
+			var hours 	= Math.round(moment.duration(today - m).asHours());
+			
+			if (days == 0 && hours <= 24){
+				rowsClass	= 'recent-seen';
+				names	   += ' <span class="recent-lozenge">Within 24hrs</span>'
+			}
+			
+			if (gender === 'M'){
+				gender = 'Male';
+			}
+			else {
+				gender = 'Female'
+			}
+			
+			rows = '<tr class=' + rowsClass + '>';
+			
+			rows += '<td>'+item.wrapperIdentifier+'</td>';
+			rows += '<td>'+names+'</td>';
+			rows += '<td>'+item.age+'</td>';
+			rows += '<td>'+gender+'</td>';
+			rows += '<td>'+lastVisit+'</td>';
+			rows += '<td> ' +
 
-            row += '<td> ' +
-
-                    '<a title="Patient Revisit" onclick="PATIENTSEARCHRESULT.revisit('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" onclick="PATIENTSEARCHRESULT.editPatient('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-edit small" ></i></a>'<% } %> +
-                    <% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" onclick="PATIENTSEARCHRESULT.reprint('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-print small" ></i></a>'<% } %>  +
-                    '</td>';
-            <% } else {%>
-
-            row += '<td>' + item.${ it} + '</td>';
-            row=strReplace(row);
-            <% }
-               } %>
-            row += '</tr>';
-            tbody.append(row);
+				'<a title="Patient Revisit" onclick="PATIENTSEARCHRESULT.revisit('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-user-md small" ></i></a>' +
+				<% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" onclick="PATIENTSEARCHRESULT.editPatient('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-edit small" ></i></a>'<% } %> +
+				<% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" onclick="PATIENTSEARCHRESULT.reprint('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-print small" ></i></a>'<% } %>  +
+				'</td>';
+					
+            rows += '</tr>';
+            tbody.append(rows);
         }
 		
 		if (jq('#patient-search-results-table tr').length <= 1){
@@ -321,6 +339,25 @@
 	td a{
 		cursor: pointer;
 		text-decoration: none;
+	}
+	td:nth-child(4){
+		text-align: center;
+	}
+	td:nth-child(5){
+		text-transform: capitalize;
+	}
+	.recent-seen{
+		background: #fff799 none repeat scroll 0 0!important;
+		color: #000 !important;
+	}
+	.recent-lozenge {
+		border: 1px solid #f00;
+		border-radius: 4px;
+		color: #f00;
+		display: inline-block;
+		font-size: 0.7em;
+		padding: 1px 2px;
+		vertical-align: text-bottom;
 	}
 </style>
 

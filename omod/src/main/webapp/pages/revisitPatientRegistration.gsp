@@ -4,8 +4,6 @@
     ui.includeCss("registration", "onepcssgrid.css")
     ui.includeCss("registration", "main.css")
     ui.includeCss("registration", "jquery.steps.css")
-
-	ui.includeJavascript("uicommons", "moment.js")
 	
     ui.includeJavascript("registration", "custom.js")
     ui.includeJavascript("registration", "jquery.cookie-1.3.1.js")
