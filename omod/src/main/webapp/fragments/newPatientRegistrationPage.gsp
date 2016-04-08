@@ -2011,6 +2011,7 @@
 }
 
 .tasks-lists {
+	background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
     position: absolute;
     top: 50%;
     right: 10px;
@@ -2024,7 +2025,6 @@
 }
 
 .tasks-lists:before {
-    content: '';
     display: block;
     height: 3px;
     background: #8c959d;
