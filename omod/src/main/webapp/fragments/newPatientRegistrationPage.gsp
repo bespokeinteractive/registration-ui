@@ -46,6 +46,7 @@
 			
 			if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined'){
 				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").attr("name", 'modesummary');
 				jq("#modesummary").val("N/A");
 				
 				jq('#universitydiv').hide();
@@ -84,57 +85,47 @@
 				jq('#payingCategory option').eq(0).prop('selected', true);
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
 				
-				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+				select3 = jq('#specialScheme :selected').val().toUpperCase();
 				
 				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
 			}
 			
-			console.log(select3);
-			
-			if (select1 == 2) {
-				if (jq('#nonPayingCategory :selected').val().toUpperCase().indexOf("NHIF") >= 0){
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('NHIF Summary');
-					jq('#modesummary').attr("placeholder", "NHIF Number");
-				}
-				else {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("N/A");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('Details');
-					jq('#modesummary').attr("placeholder", "Enter Value");
-				}
-			}
-			else if ((select1 == 3) && (select2 == 1)) {
+			if (select3.toUpperCase().indexOf("NHIF") >= 0){
 				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").val("");
-				
-				jq('#universitydiv').show();
-				jq('#university option').eq(1).prop('selected', true);
-				
-				jq('#summtitle1').text('Student Summary');
-				jq('#modesummary').attr("placeholder", "Student Number");
-			}
-			else if ((select1 == 3) && (select2 == 2)) {
-				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").attr("name", 'person.attribute.34');
 				jq("#modesummary").val("");
 				
 				jq('#universitydiv').hide();
 				jq('#university option').eq(0).prop('selected', true);
 				
-				jq('#summtitle1').text('Waiver Summary');
+				jq('#summtitle1').text('NHIF Details');
+				jq('#modesummary').attr("placeholder", "NHIF Number");
+			}
+			else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0){
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").attr("name", 'person.attribute.42');
+				jq("#modesummary").val("");
+				
+				jq('#universitydiv').show();
+				jq('#university option').eq(1).prop('selected', true);
+				
+				jq('#summtitle1').text('Student Details');
+				jq('#modesummary').attr("placeholder", "Student Number");
+			}
+			else if (select3.toUpperCase().indexOf("WAIVER") >= 0){
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").attr("name", 'person.attribute.32');
+				jq("#modesummary").val("");
+				
+				jq('#universitydiv').hide();
+				jq('#university option').eq(0).prop('selected', true);
+				
+				jq('#summtitle1').text('Waiver Details');
 				jq('#modesummary').attr("placeholder", "Waiver Number");
 			}
 			else {
 				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").attr("name", 'modesummary');
 				jq("#modesummary").val("N/A");
 				
 				jq('#universitydiv').hide();
@@ -142,9 +133,7 @@
 				
 				jq('#summtitle1').text('Details');
 				jq('#modesummary').attr("placeholder", "Enter Value");
-
 			}
-
 
 			payingCategorySelection();
 
@@ -384,21 +373,21 @@
             optionDelimiter: "|"
         });
 
-        MODEL.TRIAGE = ", |"
+        MODEL.TRIAGE = ",Select Type|"
                 + MODEL.TRIAGE;
         PAGE.fillOptions("#triage", {
             data: MODEL.TRIAGE,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.OPDs = ", |"
+        MODEL.OPDs = ",Select Type|"
                 + MODEL.OPDs;
         PAGE.fillOptions("#opdWard", {
             data: MODEL.OPDs,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.SPECIALCLINIC = ", |"
+        MODEL.SPECIALCLINIC = ",Select Type|"
                 + MODEL.SPECIALCLINIC;
         PAGE.fillOptions("#specialClinic", {
             data: MODEL.SPECIALCLINIC,
@@ -2652,7 +2641,7 @@
 
                     <div class="onerow">
                         <div class="col4">
-                            <label for="legal1" style="margin:0px;">Medical Legal Case</label>
+                            <label for="legal1" style="margin:0px;">Medical Legal Case<span>*</span></label>
                         </div>
 
                         <div class="col4">
@@ -2804,7 +2793,7 @@
                                 <field>
                                     <select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();"
                                             class="required form-combo1">
-                                        <option value="">&nbsp;</option>
+                                        <option value="">Select Room</option>
                                         <option value="1">TRIAGE ROOM</option>
                                         <option value="2">OPD ROOM</option>
                                         <option value="3">SPECIAL CLINIC</option>
