@@ -1647,6 +1647,7 @@
 
             jq("#mlcCaseYes").attr('checked', 'checked');
             jq("#mlcCaseNo").attr('checked', false);
+			jq('#formlc span').text('*');
         }
         else if (jq("#legal1").val() == 2) {
             var myOptions = {" ": 'N/A'};
@@ -1659,6 +1660,7 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', 'checked');
+			jq('#formlc span').text('');
         }
 		else {
             var myOptions = {" ": 'N/A'};
@@ -1671,6 +1673,7 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', false);
+			jq('#formlc span').text('');
         }
     }
     function LoadReferralCases() {
@@ -1698,6 +1701,9 @@
 			
             jq(".referraldiv").show();
 			
+			jq('#forReferralType span').text('*');
+			jq('#forReferredFrom span').text('*');
+			
             jq('#referralDescription').removeClass("disabled");
         }
 		else if (jq("#refer1").val() == 2) {
@@ -1720,6 +1726,9 @@
             jq("#referralDescription").val("N/A");
 
             jq(".referraldiv").hide();
+			
+			jq('#forReferralType span').text('');
+			jq('#forReferredFrom span').text('');
 			
             jq("#referredNo").attr('checked', 'checked');
             jq("#referredYes").attr('checked', false);
@@ -2645,7 +2654,7 @@
                         </div>
 
                         <div class="col4">
-                            <label for="mlc" style="margin:0px;">Case Description</label>
+                            <label id="formlc" for="mlc" style="margin:0px;">Case Description<span>*</span></label>
                         </div>
 
                         <div class="col4 last"></div>
@@ -2685,7 +2694,7 @@
                         </div>
 
                         <div class="col4">
-                            <label for="referralType" style="margin:0px;">Referral Type</label>
+                            <label id="forReferralType" for="referralType" style="margin:0px;">Referral Type<span></span></label>
                         </div>
 
                         <div class="col4 last">
@@ -2726,7 +2735,7 @@
                         </div>
 
                         <div class="col4">
-                            <label for="referredFrom" style="margin:0px;">Facility Type</label>
+                            <label id="forReferredFrom" for="referredFrom" style="margin:0px;">Facility Type<span></span></label>
                         </div>
 
                         <div class="col4 last">
