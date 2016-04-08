@@ -1,5 +1,7 @@
 <openmrs:globalProperty var="userLocation" key="hospital.location_user" defaultValue="false"/>
 <%
+	ui.includeJavascript("billingui", "moment.js")
+	
     def pageLinkEdit = ui.pageLink("registration", "editPatient");
     def pageLinkPrnt = ui.pageLink("registration", "showPatientInfo");
 %>
@@ -322,6 +324,8 @@
             jQuery("#printSlip").hide();
             jQuery("#save").hide();
         }
+		
+		triageRoomSelection();
 
     });
 
@@ -934,6 +938,14 @@ form input, form select, form textarea, form ul.select, .form input, .form selec
 form input[type="radio"]:focus {
     outline: 2px none #007fff;
 }
+#patientrevisit{
+	color: #f00;
+	display: none;
+}
+form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus{
+	outline: 1px none #007fff;
+	box-shadow: 0 0 2px 0px #888!important;
+}
 </style>
 
 <header>
@@ -1109,6 +1121,7 @@ form input[type="radio"]:focus {
 							<div class="info-body">
 								<label>Registration Fee:</label>
 								<span id="printableRegistrationFee">0.00</span>
+								<span id="patientrevisit"> (Revisit Within 24hrs)</span>
 								<br/>
 
 								<label>Served By :</label>
