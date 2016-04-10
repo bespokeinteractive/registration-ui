@@ -1,6 +1,5 @@
-<% ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"]) %>
-
-<%
+<% 
+	ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"]) 
     ui.includeCss("registration", "onepcssgrid.css")
     ui.includeCss("registration", "main.css")
     ui.includeCss("registration", "jquery.steps.css")
@@ -446,30 +445,17 @@
                 jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
                 jq('#payingCategory').val(payingCategorySpecific).change();
 				jq('input[name=paym_2][value="' + jq('#payingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
-
-				console.log(jq('#payingCategory').val());
-				console.log(jq('#payingCategory option:selected').index());
             }
 			else if (paymentCategory == 'Non-Paying') {
                 jq('input[name=paym_1][value="2"]').attr('checked', 'checked').change();
 				jq('#nonPayingCategory').val(nonPayingCategorySpecific).change();
 				jq('input[name=paym_2][value="' + jq('#nonPayingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
-				
-				console.log(jq('#nonPayingCategory').val());
-				console.log(jq('#nonPayingCategory option:selected').index());
             }
 			else if (paymentCategory == 'Special Schemes') {
                 jq('input[name=paym_1][value="3"]').attr('checked', 'checked').change();
 				jq('#specialScheme').val(specialSchemeSpecific).change();
 				jq('input[name=paym_2][value="' + jq('#specialScheme option:selected').index() + '"]').attr('checked', 'checked').change();
-				
-				console.log(jq('#nonPayingCategory').val());
-				console.log(jq("select[name='specialScheme'] option:selected").index());
-				
-				
-               
             }
-
 
             jq('input:text[id]').focus(function (event) {
                 var checkboxID = jq(event.target).attr('id');
@@ -680,15 +666,16 @@
                         birthdate: submitted
                     }),
                     success: function (data) {
-                        if (data.datemodel.error == undefined) {
-                            if (data.datemodel.estimated == "true") {
+                        if (data.datemodel.error == undefined) {							
+                            if (String(data.datemodel.estimated) === "true") {
                                 jq("#birthdateEstimated").val("true")
+								jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
                             } else {
                                 jq("#birthdateEstimated").val("false");
+								jq("#estimatedAge").html(data.datemodel.age);
                             }
 
                             jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
-                            jq("#estimatedAge").html(data.datemodel.age);
                             jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                             jq("#birthdate").val(data.datemodel.birthdate);
                             jq("#calendar").val(data.datemodel.birthdate);
@@ -1912,7 +1899,6 @@
 
     input[type="text"],
     input[type="password"] {
-        width: 100% !important;
         border: 1px solid #aaa;
         border-radius: 5px !important;
         box-shadow: none !important;
@@ -1920,7 +1906,12 @@
         height: 38px !important;
         line-height: 18px !important;
         padding: 8px 10px !important;
+		text-transform: capitalize;
+        width: 100% !important;
     }
+	#patientEmail{
+		text-transform: lowercase;
+	}
 
     input[type="textarea"] {
         width: 100% !important;
@@ -1959,7 +1950,8 @@
         padding-left: 10px !important;
         right: 10px !important;
     }
-
+		
+	#estimatedAge span,
     label span {
         color: #ff0000;
         padding-left: 5px;
@@ -2112,20 +2104,20 @@
     }
 
     .tasks-lists {
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        margin-top: -11px;
-        padding: 10px 4px;
-        width: 19px;
-        height: 3px;
-        font: 0/0 serif;
-        text-shadow: none;
-        color: transparent;
-    }
+		background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
+		position: absolute;
+		top: 50%;
+		right: 10px;
+		margin-top: -11px;
+		padding: 10px 4px;
+		width: 19px;
+		height: 3px;
+		font: 0/0 serif;
+		text-shadow: none;
+		color: transparent;
+	}
 
     .tasks-lists:before {
-        content: '';
         display: block;
         height: 3px;
         background: #8c959d;
@@ -2240,7 +2232,6 @@
         padding-top: 5px;
         padding-bottom: 0px;
         margin-bottom: 5px;
-
     }
 
     .dashboard .info-section {
@@ -2274,6 +2265,15 @@
 	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus{
 		outline: 1px none #007fff;
 		box-shadow: 0 0 2px 0px #888!important;
+	}
+	.name {
+		color: #f26522;
+	}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
+	.no-confirmation{
+		margin-top: -25px;
 	}
     </style>
 
@@ -2331,6 +2331,7 @@
                         <span class="title">Patient Details</span>
                         <fieldset class="no-confirmation">
                             <legend>Demographics</legend>
+							<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
 
                             <p>
 

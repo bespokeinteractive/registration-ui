@@ -36,7 +36,6 @@ body {
 
 input[type="text"],
 input[type="password"] {
-	 width: 100%!important;
 	 border: 1px solid #aaa;
 	 border-radius: 5px!important;
 	 box-shadow: none!important;
@@ -44,7 +43,12 @@ input[type="password"] {
 	 height: 38px!important;
 	 line-height: 18px!important;
 	 padding: 8px 10px!important;
- }
+	 text-transform: capitalize;
+	 width: 100%!important;
+}
+#patientEmail{
+	text-transform: lowercase;
+}
 input[type="textarea"] {
 	width: 100%!important;
 	border: 1px solid #aaa;
@@ -99,7 +103,12 @@ label span{
 	outline: 1px none #007fff;
 	box-shadow: 0 0 2px 0px #888!important;
 }
-
+.no-confirmation{
+	margin-top: -25px;
+}
+.name {
+    color: #f26522;
+}
 form textarea:focus, .form textarea:focus{
 	outline: 1px none #007fff;
 }

@@ -2212,7 +2212,7 @@
             <span class="title">Patient Details</span>
             <fieldset class="no-confirmation">
                 <legend>Demographics</legend>
-				<h1 style="margin: 10px 0 0;">Patient Demographic Information</h1>
+				<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
                 
 
                 <div class="onerow">

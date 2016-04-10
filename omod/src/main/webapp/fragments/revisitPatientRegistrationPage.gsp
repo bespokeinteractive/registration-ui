@@ -186,7 +186,12 @@
 			var days 	= Math.round(moment.duration(today - m).asDays());
 			var hours 	= Math.round(moment.duration(today - m).asHours());
 			
-			if (days == 0 && hours <= 24){
+			console.log(item.formartedVisitDate);
+			console.log(String(today));
+			console.log(days + ' : ' + hours);
+			
+			
+			if (hours <= 24){
 				rowsClass	= 'recent-seen';
 				names	   += ' <span class="recent-lozenge">Within 24hrs</span>'
 			}
