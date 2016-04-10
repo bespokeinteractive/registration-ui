@@ -60,7 +60,7 @@ input[type="textarea"] {
 	padding: 8px 10px!important;
 }
 textarea{
-	border: 1px solid #aaa;
+	border: 1px solid #aaa!important;
 	border-radius: 0px!important;
 	box-shadow: none!important;
 	box-sizing: border-box!important;

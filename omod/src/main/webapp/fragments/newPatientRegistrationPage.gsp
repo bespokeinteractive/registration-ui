@@ -60,10 +60,10 @@
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+			var select3 = '';
 			
 			if (select1 == 1) {
-				jq('#payingCategory option').eq(select2).prop('selected', true);
-				
+				jq('#payingCategory option').eq(select2).prop('selected', true);				
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
 				jq('#specialScheme option').eq(0).prop('selected', true);
 
@@ -948,13 +948,13 @@
                 jq('#relativePostalAddress').removeClass("red-border");
             }
 			
+            //TAB3
 			if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
 				str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
                 i++;
                 tab3++;
 			}
 
-            //TAB3
             if (jq("#legal1").val() == 0) {
                 jq('#legal1').addClass("red-border");
                 i++;
@@ -2556,7 +2556,7 @@
                 </div>
 
                 <div class="onerow" style="margin-top: 50px">
-					<label style="margin-top: 0px">Physical Address :</label>
+					<label style="margin-top: 0px">Physical Address</label>
 					
 					<field>
 						<textarea type="text" id="relativePostalAddress" name="person.attribute.28"

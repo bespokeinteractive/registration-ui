@@ -86,54 +86,14 @@
 			jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
 				var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 				var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-
-				if ((select1 == 2) && (select2 == 1)) {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('NHIF Summary');
-					jq('#modesummary').attr("placeholder", "NHIF Number");
-				}
-				else if ((select1 == 3) && (select2 == 1)) {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').show();
-					jq('#university option').eq(1).prop('selected', true);
-					
-					jq('#summtitle1').text('Student Summary');
-					jq('#modesummary').attr("placeholder", "Student Number");
-				}
-				else if ((select1 == 3) && (select2 == 2)) {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('Waiver Summary');
-					jq('#modesummary').attr("placeholder", "Waiver Number");
-				}
-				else {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").val("N/A");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('Summary');
-					jq('#modesummary').attr("placeholder", "Enter Value");
-
-				}
-
+				var select3 = '';
+				
 				if (select1 == 1) {
-					jq('#payingCategory option').eq(select2).prop('selected', true);
-					
+					jq('#payingCategory option').eq(select2).prop('selected', true);					
 					jq('#nonPayingCategory option').eq(0).prop('selected', true);
 					jq('#specialScheme option').eq(0).prop('selected', true);
+					
+					select3 = jq('#payingCategory :selected').val().toUpperCase();
 
 					jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
 				}
@@ -141,6 +101,8 @@
 					jq('#nonPayingCategory option').eq(select2).prop('selected', true);
 					jq('#payingCategory option').eq(0).prop('selected', true);
 					jq('#specialScheme option').eq(0).prop('selected', true);
+					
+					select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
 
 					jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
 				}
@@ -148,13 +110,58 @@
 					jq('#specialScheme option').eq(select2).prop('selected', true);
 					jq('#payingCategory option').eq(0).prop('selected', true);
 					jq('#nonPayingCategory option').eq(0).prop('selected', true);
+					
+					select3 = jq('#specialScheme :selected').val().toUpperCase();
 
 					jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
 				}
 
-				payingCategorySelection();
+				if (select3.toUpperCase().indexOf("NHIF") >= 0){
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").attr("name", 'person.attribute.34');
+					jq("#modesummary").val("");
+					
+					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
+					jq('#summtitle1').text('NHIF Details');
+					jq('#modesummary').attr("placeholder", "NHIF Number");
+				}
+				else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0){
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").attr("name", 'person.attribute.42');
+					jq("#modesummary").val("");
+					
+					jq('#universitydiv').show();
+					jq('#university option').eq(1).prop('selected', true);
+					
+					jq('#summtitle1').text('Student Details');
+					jq('#modesummary').attr("placeholder", "Student Number");
+				}
+				else if (select3.toUpperCase().indexOf("WAIVER") >= 0){
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").attr("name", 'person.attribute.32');
+					jq("#modesummary").val("");
+					
+					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
+					jq('#summtitle1').text('Waiver Details');
+					jq('#modesummary').attr("placeholder", "Waiver Number");
+				}
+				else {
+					jq("#modesummary").attr("readonly", false);
+					jq("#modesummary").attr("name", 'modesummary');
+					jq("#modesummary").val("N/A");
+					
+					jq('#universitydiv').hide();
+					jq('#university option').eq(0).prop('selected', true);
+					
+					jq('#summtitle1').text('Details');
+					jq('#modesummary').attr("placeholder", "Enter Value");
+				}
 
-				jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+				payingCategorySelection();
 				
 			});
 			
@@ -358,6 +365,7 @@
 
             var g = "${patient.gender}";
             var genderValue = document.getElementById('patientGender');
+			
             if (g === "Male") {
                 genderValue.value = 'M';
             } else if (g === "Female") {
@@ -369,10 +377,8 @@
 
             //set the current religion
             document.getElementById('patientReligion').value = checkForNulls("${patient.attributes[40]}");
-
             document.getElementById('birthdate').value = "${patient.birthdate}";
-
-
+		
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
 
@@ -399,10 +405,7 @@
             PAGE.changeUpazila();
             //set the Patient Location
             document.getElementById('locations').value = "${patient.location}";
-            //set the Patient Village
-            document.getElementById('chiefdom').value = checkForNulls("${patient.attributes[41]}");
-
-
+            
             //set the Patient Relative Name
             document.getElementById('patientRelativeName').value = checkForNulls("${patient.attributes[8]}");
 
@@ -1038,6 +1041,11 @@
                 }
 
                 //TAB3
+				if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
+					str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
+					i++;
+					tab3++;
+				}
                 /*
                  if (jq("#legal1").val() == 0) {
                  jq('#legal1').addClass("red-border");
@@ -1924,14 +1932,14 @@
         padding: 8px 10px !important;
     }
 
-    textarea {
-        border: 1px solid #aaa;
-        border-radius: 5px !important;
-        box-shadow: none !important;
-        box-sizing: border-box !important;
-        line-height: 18px !important;
-        padding: 8px 10px !important;
-    }
+    textarea{
+		border: 1px solid #aaa!important;
+		border-radius: 0px!important;
+		box-shadow: none!important;
+		box-sizing: border-box!important;
+		line-height: 18px!important;
+		padding: 8px 10px!important;
+	}
 
     form select {
         width: 100%;
@@ -2333,7 +2341,7 @@
                             <legend>Demographics</legend>
 							<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
 
-                            <p>
+                            
 
                             <div class="onerow">
                                 <div class="col4">
@@ -2565,7 +2573,6 @@
                                     <span>NEXT PAGE</span>
                                 </a>
                             </div>
-                        </p>
 
                             <div class="selectdiv" id="selected-diagnoses"></div>
 
@@ -2573,10 +2580,10 @@
                         <fieldset style="min-width: 500px; width: auto" class="no-confirmation">
                             <legend>Contact Info</legend>
 
-                            <p>
+                           
 
 
-                            <h2>Patient Contact Information</h2>
+                            <h2 style="margin: 10px 0 0;">Patient Contact Information</h2>
 
                             <div class="onerow">
                                 <div class="col4"><label>Contact Number</label></div>
@@ -2599,7 +2606,7 @@
 
                                 <div class="col4 last">
                                     <field><input type="text" id="patientPostalAddress"
-                                                  name="patient.address.postalAddress" class="required form-textbox1"/>
+                                                  name="patient.address.postalAddress" class="required form-textbox1" placeholder="Village /Estate /Landmark"/>
                                     </field>
                                 </div>
                             </div>
@@ -2644,79 +2651,59 @@
                                 </div>
                             </div>
 
-                            <div class="onerow">
-                                <div class="col4"><label>Village</label></div>
-
-                                <div class="col4"><label></label></div>
-
-                                <div class="col4 last"><label></label></div>
-                            </div>
-
-                            <div class="onerow">
-                                <div class="col4">
-                                    <field>
-                                        <input type="text" id="chiefdom"
-                                               name="person.attribute.${personAttributeChiefdom.id}"
-                                               class="form-textbox1"/>
-                                    </field>
-                                </div>
-
-                                <div class="col4">&nbsp;</div>
-
-                                <div class="col4 last">&nbsp;</div>
-                            </div>
-
                             <h2>&nbsp;</h2>
-
-                            <h2>Next of Kin Details</h2>
-
-                            <div class="onerow">
-                                <div class="col4"><label>Relative Name <span>*</span></label></div>
-
-                                <div class="col4"><label>Relationship <span>*</span></label></div>
-
-                                <div class="col4 last"><label>Physical Address</label></div>
-                            </div>
+                            <h2>Next of Kin / Informant Details</h2>
 
                             <div class="onerow">
-                                <div class="col4">
-                                    <field><input type="text" id="patientRelativeName" name="person.attribute.8"
-                                                  class="required form-textbox1"/></field>
-                                </div>
+								<div class="col4"><label>Full Names <span>*</span></label></div>
 
-                                <div class="col4">
-                                    <span class="select-arrow" style="width: 100%">
-                                        <field>
-                                            <select id="relationshipType" name="person.attribute.15"
-                                                    class="required form-combo1">
-                                                <option value=""></option>
-                                                <option value="Parent">Parent</option>
-                                                <option value="Spouse">Spouse</option>
-                                                <option value="Guardian">Guardian</option>
-                                                <option value="Friend">Friend</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </field>
-                                    </span>
-                                </div>
+								<div class="col4"><label>Relationship <span>*</span></label></div>
 
-                                <div class="col4 last">
-                                    <field><input type="text" id="relativePostalAddress" name="person.attribute.28"
-                                                  class="form-textbox1"/></field>
-                                </div>
-                            </div>
+								<div class="col4 last"><label>Telephone Number</label></div>
+							</div>
 
-                            <div class="onerow" style="margin-top: 10px">
-                                <div class="col4"><label></label></div>
+							<div class="onerow">
+								<div class="col4">
+									<field><input type="text" id="patientRelativeName" name="person.attribute.8"
+												  class="required form-textbox1"/></field>
+								</div>
 
-                                <div class="col4"><label></label></div>
+								<div class="col4">
+									<span class="select-arrow" style="width: 100%">
+										<field>
+											<select id="relationshipType" name="person.attribute.15"
+													class="required form-combo1">
+												<option value=""></option>
+												<option value="Parent">Parent</option>
+												<option value="Spouse">Spouse</option>
+												<option value="Guardian">Guardian</option>
+												<option value="Friend">Friend</option>
+												<option value="Other">Other</option>
+											</select>
+										</field>
+									</span>
+								</div>
 
-                                <div class="col4 last">
-                                    <field>
-                                        <input id="sameAddress" type="checkbox"/> Same as Patient
-                                    </field>
-                                </div>
-                            </div>
+								<div class="col4 last">
+									<field>
+										<input type="text" id="patientTelephone" name="person.attribute.29"
+												  class="form-textbox1"/>
+									</field>
+								</div>
+							</div>
+
+							<div class="onerow" style="margin-top: 50px">
+								<label style="margin-top: 0px">Physical Address</label>
+								
+								<field>
+									<textarea type="text" id="relativePostalAddress" name="person.attribute.28"
+											  class="form-textbox1" style="height: 80px; width: 700px;" placeholder="Village /Estate /Landmark"></textarea>
+								</field>
+							
+								<field>
+									<label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
+								</field>
+							</div>
 
                             <div class="onerow" style="margin-top: 50px">
                                 <a class="button task" onclick="goto_previous_tab(2);">
@@ -2728,7 +2715,7 @@
                                     <span>NEXT PAGE</span>
                                 </a>
                             </div>
-                        </p>
+                        
                         </fieldset>
 
 
@@ -2921,8 +2908,6 @@
 
                                             <div>Pay Category:</div>    <small id="summ_pays">/</small></li>
                                         <li><span class="status active"></span>
-
-                                            <div>Registration Fee:</div>    <small id="summ_fees">/</small></li>
                                     </ul>
 
                                 </div>
