@@ -2179,6 +2179,7 @@
 }
 
 .addon {
+	color: #f26522;
     display: inline-block;
     float: right;
     margin: 10px 0 0 190px;
