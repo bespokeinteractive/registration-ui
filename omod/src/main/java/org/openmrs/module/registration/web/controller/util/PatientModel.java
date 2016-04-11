@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
@@ -50,8 +51,11 @@ public class PatientModel {
 	private String category;
 	
 	private String address;
-	
+
 	private String birthdate;
+
+	private Boolean birthdateEstimated;
+
 	private String physicalAddress,county,subCounty,location;
 	
 	private Map<Integer, String> attributes = new HashMap<Integer, String>();
@@ -90,7 +94,8 @@ public class PatientModel {
 		setLocation(patient.getPersonAddress().getAddress2());
 		
 		setBirthdate(RegistrationUtils.formatDate(patient.getBirthdate()));
-		
+		setBirthdateEstimated(patient.getBirthdateEstimated());
+
 		Map<String, PersonAttribute> attributes = patient.getAttributeMap();
 		for (String key : attributes.keySet()) {
 			getAttributes().put(attributes.get(key).getAttributeType().getId(), attributes.get(key).getValue());
@@ -192,6 +197,10 @@ public class PatientModel {
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 	}
+
+	public Boolean getBirthdateEstimated() { return birthdateEstimated; }
+
+	public void setBirthdateEstimated(Boolean birthdateEstimated) { this.birthdateEstimated = birthdateEstimated; }
 
 	public String getPhysicalAddress() {
 		return physicalAddress;

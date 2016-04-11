@@ -167,14 +167,14 @@ public class EditPatientPageController {
         }
 
         // get birthdate
-        if (!StringUtils.isBlank(parameters
-                .get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE))) {
-            patient.setBirthdate(RegistrationUtils.parseDate(parameters
-                    .get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE)));
-            if (parameters
-                    .get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE_ESTIMATED)
-                    .contains("true")) {
+        if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE))) {
+            patient.setBirthdate(
+                    RegistrationUtils.parseDate(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE)));
+            if (parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE_ESTIMATED).contains("true")) {
                 patient.setBirthdateEstimated(true);
+            }
+            else {
+                patient.setBirthdateEstimated(false);
             }
         }
 

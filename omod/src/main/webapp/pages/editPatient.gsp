@@ -403,6 +403,8 @@
 			console.log(jq('#patientPostalAddress').val().toLowerCase());
 			console.log(jq('#relativePostalAddress').val().toLowerCase());
 			
+			alert('${patient.birthdateEstimated()}');
+			
 			if (jq('#patientPostalAddress').val() == jq('#relativePostalAddress').val()){
 				jq('#sameAddress').prop('checked', true);
 			}
