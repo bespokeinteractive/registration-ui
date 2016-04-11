@@ -83,16 +83,18 @@ public class PatientModel {
 		} else if(patient.getGender().equalsIgnoreCase("O")){
 			setGender("Others");
 		}
-		
-		setAddress(patient.getPersonAddress().getAddress1() + ", " + 
-				   patient.getPersonAddress().getCityVillage() + ", " + 
-				   patient.getPersonAddress().getCountyDistrict() + ", " +
-				   patient.getPersonAddress().getAddress2());
-		setPhysicalAddress(patient.getPersonAddress().getAddress1());
-		setCounty(patient.getPersonAddress().getCityVillage());
-		setSubCounty(patient.getPersonAddress().getCountyDistrict());
-		setLocation(patient.getPersonAddress().getAddress2());
-		
+
+		if (patient.getPersonAddress() != null){
+			setAddress(patient.getPersonAddress().getAddress1() + ", " +
+					patient.getPersonAddress().getCityVillage() + ", " +
+					patient.getPersonAddress().getCountyDistrict() + ", " +
+					patient.getPersonAddress().getAddress2());
+			setPhysicalAddress(patient.getPersonAddress().getAddress1());
+			setCounty(patient.getPersonAddress().getCityVillage());
+			setSubCounty(patient.getPersonAddress().getCountyDistrict());
+			setLocation(patient.getPersonAddress().getAddress2());
+		}
+
 		setBirthdate(RegistrationUtils.formatDate(patient.getBirthdate()));
 		setBirthdateEstimated(patient.getBirthdateEstimated());
 

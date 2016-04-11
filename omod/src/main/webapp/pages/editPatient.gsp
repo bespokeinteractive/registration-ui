@@ -377,19 +377,42 @@
 
             //set the current religion
             document.getElementById('patientReligion').value = checkForNulls("${patient.attributes[40]}");
-            document.getElementById('birthdate').value = "${patient.birthdate}";
+			
+			jq('#birthdate').datepicker({
+                yearRange: 'c-100:c',
+                maxDate: '0',
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                constrainInput: false
+            }).on("change", function (dateText) {
+                jq("#birthdate").val(this.value);
+                PAGE.checkBirthDate();
+            });
+            
+			jq('#birthdate').val('${patient.birthdate}');
+			if ('${patient.birthdateEstimated}' === 'true'){
+				PAGE.checkBirthDate(true);
+			}
+			else{
+				PAGE.checkBirthDate();
+			}
+			
+			
+			
+			
+			
+			
 		
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
             currentNationality.value = "${patient.attributes[27]}";
 			
             document.getElementById('patientPostalAddress').value = "${patient.physicalAddress}";
-            document.getElementById('districts').value = "${patient.subCounty}";
-            document.getElementById('upazilas').value = "${patient.county}";
 			
-            PAGE.changeUpazila();
-			
-            document.getElementById('locations').value = "${patient.location}";
+            jq('#districts').val('${patient.subCounty}').change();			
+            jq('#upazilas' ).val('${patient.county}'   ).change();
+            jq('#locations').val('${patient.location}' );
 			
             document.getElementById('patientRelativeName').value = checkForNulls("${patient.attributes[8]}");
             document.getElementById('relationshipType').value = checkForNulls("${patient.attributes[15]}");
@@ -400,25 +423,13 @@
             document.getElementById('passportNumber').value = checkForNulls("${patient.attributes[38]}");
             document.getElementById('patientEmail').value = checkForNulls("${patient.attributes[37]}");
 			
-			console.log(jq('#patientPostalAddress').val().toLowerCase());
-			console.log(jq('#relativePostalAddress').val().toLowerCase());
-			
-			alert('${patient.birthdateEstimated()}');
-			
 			if (jq('#patientPostalAddress').val() == jq('#relativePostalAddress').val()){
 				jq('#sameAddress').prop('checked', true);
 			}
-			
-            //set the Patient Location
-            
-            //set the Patient Relative Name
-
-            //set the Patient Relative Relationship Type
-            //set the Patient Relative Physical Address
 
 
             //TODO  - binding the Patient Payment Category values post updates
-            PAGE.checkBirthDate();
+            //
             //set the Patient Payment Category
             var paymentCategory = checkForNulls("${patient.attributes[14]}");
 //            console.log(paymentCategory)
@@ -520,31 +531,6 @@
                 jq("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
                 jq("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
             });
-
-            jq('#birthdate').datepicker({
-                yearRange: 'c-100:c',
-                maxDate: '0',
-                dateFormat: 'dd/mm/yy',
-                changeMonth: true,
-                changeYear: true,
-                constrainInput: false
-            }).on("change", function (dateText) {
-                //            display("Got change event from field "+this.value);
-                jq("#birthdate").val(this.value);
-                PAGE.checkBirthDate();
-            });
-
-
-            /* jq("#searchbox").showPatientSearchBox(
-             {
-             searchBoxView: hospitalName + "/registration",
-             resultView: "/module/registration/patientsearch/"
-             + hospitalName + "/findCreate",
-             success: function (data) {
-             PAGE.searchPatientSuccess(data);
-             },
-             beforeNewSearch: PAGE.searchPatientBefore
-             });*/
 
             showOtherNationality();
 
@@ -661,7 +647,7 @@
             },
 
             /** VALIDATE BIRTHDATE */
-            checkBirthDate: function () {
+            checkBirthDate: function (isForceTest) {
                 var submitted = jq("#birthdate").val();
                 jq.ajax({
                     type: "GET",
@@ -672,7 +658,7 @@
                     }),
                     success: function (data) {
                         if (data.datemodel.error == undefined) {							
-                            if (String(data.datemodel.estimated) === "true") {
+                            if (String(data.datemodel.estimated) === "true" || isForceTest) {
                                 jq("#birthdateEstimated").val("true")
 								jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
                             } else {
@@ -2909,7 +2895,6 @@
                                         <li><span class="status active"></span>
 
                                             <div>Pay Category:</div>    <small id="summ_pays">/</small></li>
-                                        <li><span class="status active"></span>
                                     </ul>
 
                                 </div>
