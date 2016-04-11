@@ -381,38 +381,38 @@
 		
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
-
             currentNationality.value = "${patient.attributes[27]}";
-
-            //set the national ID
-            document.getElementById('patientNationalId').value = checkForNulls("${patient.attributes[20]}");
-
-            //set the Passport Number
-            document.getElementById('passportNumber').value = checkForNulls("${patient.attributes[38]}");
-
-            //set the Patient Phone Number
-            document.getElementById('patientPhoneNumber').value = checkForNulls("${patient.attributes[16]}");
-
-            //set the Patient Email Address
-            document.getElementById('patientEmail').value = checkForNulls("${patient.attributes[37]}");
-
-            //set the Patient Physical Address
+			
             document.getElementById('patientPostalAddress').value = "${patient.physicalAddress}";
-            //set the Patient County
             document.getElementById('districts').value = "${patient.subCounty}";
-            //set the Patient SubCounty
             document.getElementById('upazilas').value = "${patient.county}";
+			
             PAGE.changeUpazila();
-            //set the Patient Location
+			
             document.getElementById('locations').value = "${patient.location}";
+			
+            document.getElementById('patientRelativeName').value = checkForNulls("${patient.attributes[8]}");
+            document.getElementById('relationshipType').value = checkForNulls("${patient.attributes[15]}");
+            document.getElementById('patientPhoneNumber').value = checkForNulls("${patient.attributes[16]}");
+            document.getElementById('patientNationalId').value = checkForNulls("${patient.attributes[20]}");
+            document.getElementById('relativePostalAddress').value = checkForNulls("${patient.attributes[28]}");
+            document.getElementById('patientTelephone').value = checkForNulls("${patient.attributes[29]}");
+            document.getElementById('passportNumber').value = checkForNulls("${patient.attributes[38]}");
+            document.getElementById('patientEmail').value = checkForNulls("${patient.attributes[37]}");
+			
+			console.log(jq('#patientPostalAddress').val().toLowerCase());
+			console.log(jq('#relativePostalAddress').val().toLowerCase());
+			
+			if (jq('#patientPostalAddress').val() == jq('#relativePostalAddress').val()){
+				jq('#sameAddress').prop('checked', true);
+			}
+			
+            //set the Patient Location
             
             //set the Patient Relative Name
-            document.getElementById('patientRelativeName').value = checkForNulls("${patient.attributes[8]}");
 
             //set the Patient Relative Relationship Type
-            document.getElementById('relationshipType').value = checkForNulls("${patient.attributes[15]}");
             //set the Patient Relative Physical Address
-            document.getElementById('relativePostalAddress').value = checkForNulls("${patient.attributes[28]}");
 
 
             //TODO  - binding the Patient Payment Category values post updates
