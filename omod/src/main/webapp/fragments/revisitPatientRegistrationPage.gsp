@@ -184,12 +184,7 @@
 			var today 		= moment();
 
 			var days 	= Math.round(moment.duration(today - m).asDays());
-			var hours 	= Math.round(moment.duration(today - m).asHours());
-			
-			console.log(item.formartedVisitDate);
-			console.log(String(today));
-			console.log(days + ' : ' + hours);
-			
+			var hours 	= Math.round(moment.duration(today - m).asHours());			
 			
 			if (hours <= 24){
 				rowsClass	= 'recent-seen';
