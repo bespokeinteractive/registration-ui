@@ -96,6 +96,7 @@ public class NewPatientRegistrationPageController {
 		// list all parameter submitted
 		Map<String, String> parameters = RegistrationWebUtils.optimizeParameters(request);
 		Map<String, Object> redirectParams=new HashMap<String, Object>();
+		System.out.println(parameters);
 		logger.info("Submitted Parameters: " + parameters);
 
 		Patient patient = null;
@@ -110,6 +111,8 @@ public class NewPatientRegistrationPageController {
 			// create encounter for the visit here
 			Encounter encounter = createEncounter(patient, parameters);
 			encounter = Context.getEncounterService().saveEncounter(encounter);
+            logger.info(String.format("Saved encounter for the visit of patient [id=%s, patient=%s]", encounter.getId(),
+					patient.getId()));
 			redirectParams.put("status", "success");
 			redirectParams.put("patientId", patient.getPatientId());
 			redirectParams.put("encounterId", encounter.getId());
@@ -165,6 +168,7 @@ public class NewPatientRegistrationPageController {
 		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE))) {
 			patient.setBirthdate(
 					RegistrationUtils.parseDate(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE)));
+			parameters.put(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE_ESTIMATED, "false");
 			if (parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE_ESTIMATED).contains("true")) {
 				patient.setBirthdateEstimated(true);
 			}
@@ -177,7 +181,7 @@ public class NewPatientRegistrationPageController {
 
 
 		// get address
-		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_ADDRESS_POSTALADDRESS))) {
+		if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_ADDRESS_DISTRICT))) {
 			patient.addAddress(RegistrationUtils.getPersonAddress(null,
 					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_ADDRESS_POSTALADDRESS),
 					parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_ADDRESS_DISTRICT),
@@ -227,8 +231,6 @@ public class NewPatientRegistrationPageController {
         String refer2 = parameters.get("patient.referred.from");
         String refer3 = parameters.get("patient.referred.description");
         String refer4 = parameters.get("patient.referred.reason");
-        String refer5 = parameters.get("patient.referred.county");
-        String refer6 = parameters.get("patient.referred.facility");
 
         String paymt3 = null;
         String paymt4 = null;
@@ -417,7 +419,6 @@ public class NewPatientRegistrationPageController {
                 .getConcept(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE);
 
         Obs mlcObs = new Obs();
-
         if (!StringUtils.isBlank(legal2)) {
             Concept selectedMlcConcept = Context.getConceptService()
                     .getConcept(legal2);
@@ -461,24 +462,6 @@ public class NewPatientRegistrationPageController {
 			referredReasonObs
 					.setValueText(refer3);
 			encounter.addObs(referredReasonObs);
-
-			// REFERRED FROM COUNTY
-			Obs referredFromCountyObs = new Obs();
-			Concept referredFromCountyConcept = Context.getConceptService()
-					.getConcept(RegistrationConstants.CONCEPT_NAME_COUNTY_REFERRED_FROM);
-			referredFromCountyObs.setConcept(referredFromCountyConcept);
-			referredFromCountyObs
-					.setValueText(refer5);
-			encounter.addObs(referredFromCountyObs);
-
-            // REFERRED FROM FACILITY
-            Obs referredFacilityObs = new Obs();
-            Concept referredFacilityConcept = Context.getConceptService()
-                    .getConcept(RegistrationConstants.CONCEPT_NAME_FACILITY_REFERRED_FROM);
-            referredFacilityObs.setConcept(referredFacilityConcept);
-            referredFacilityObs
-                    .setValueText(refer5);
-            encounter.addObs(referredFacilityObs);
 		} else {
 			referralObs.setValueCoded(Context.getConceptService().getConcept("NO"));
 		}

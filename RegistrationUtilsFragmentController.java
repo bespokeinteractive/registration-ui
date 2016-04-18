@@ -57,7 +57,7 @@ public class RegistrationUtilsFragmentController {
                 // the user entered the correct birthdate
                 dateModel.setEstimated(false);
                 dateModel.setBirthdate(birthdate);
-                dateModel.setAge( RegistrationUtils.estimateAge(birthdate).replace("~", ""));
+                dateModel.setAge( RegistrationUtils.estimateAge(birthdate));
                 dateModel.setAgeInYear(RegistrationUtils.estimateAgeInYear(birthdate));
                 logger.info("User entered the correct birthdate.");
             }

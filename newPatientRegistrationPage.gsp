@@ -44,31 +44,63 @@
 			
 			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
 			
-			if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined'){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'modesummary');
-				jq("#modesummary").val("N/A");
-				
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
-				
-				jq('#summtitle1').text('Details');
-				jq('#modesummary').attr("placeholder", "Enter Value");
+			if (!jq("input[name='paym_2']:checked").val()) {
+				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
 			}
 		});
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
 			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-			var select3 = '';
-			
+
+			if ((select1 == 2) && (select2 == 1)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				
+				jq('#universitydiv').hide();
+				jq('#university option').eq(0).prop('selected', true);
+				
+				jq('#summtitle1').text('NHIF Summary');
+				jq('#modesummary').attr("placeholder", "NHIF Number");
+			}
+			else if ((select1 == 3) && (select2 == 1)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				
+				jq('#universitydiv').show();
+				jq('#university option').eq(1).prop('selected', true);
+				
+				jq('#summtitle1').text('Student Summary');
+				jq('#modesummary').attr("placeholder", "Student Number");
+			}
+			else if ((select1 == 3) && (select2 == 2)) {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("");
+				
+				jq('#universitydiv').hide();
+				jq('#university option').eq(0).prop('selected', true);
+				
+				jq('#summtitle1').text('Waiver Summary');
+				jq('#modesummary').attr("placeholder", "Waiver Number");
+			}
+			else {
+				jq("#modesummary").attr("readonly", false);
+				jq("#modesummary").val("N/A");
+				
+				jq('#universitydiv').hide();
+				jq('#university option').eq(0).prop('selected', true);
+				
+				jq('#summtitle1').text('Summary');
+				jq('#modesummary').attr("placeholder", "Enter Value");
+
+			}
+
 			if (select1 == 1) {
-				jq('#payingCategory option').eq(select2).prop('selected', true);				
+				jq('#payingCategory option').eq(select2).prop('selected', true);
+				
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
 				jq('#specialScheme option').eq(0).prop('selected', true);
 
-				select3 = jq('#payingCategory :selected').val().toUpperCase();
-				
 				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
 			}
 			else if (select1 == 2) {
@@ -76,63 +108,14 @@
 				jq('#payingCategory option').eq(0).prop('selected', true);
 				jq('#specialScheme option').eq(0).prop('selected', true);
 
-				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
-				
 				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
 			}
 			else {
 				jq('#specialScheme option').eq(select2).prop('selected', true);
 				jq('#payingCategory option').eq(0).prop('selected', true);
 				jq('#nonPayingCategory option').eq(0).prop('selected', true);
-				
-				select3 = jq('#specialScheme :selected').val().toUpperCase();
-				
+
 				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
-			}
-			
-			if (select3.toUpperCase().indexOf("NHIF") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.34');
-				jq("#modesummary").val("");
-				
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
-				
-				jq('#summtitle1').text('NHIF Details');
-				jq('#modesummary').attr("placeholder", "NHIF Number");
-			}
-			else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.42');
-				jq("#modesummary").val("");
-				
-				jq('#universitydiv').show();
-				jq('#university option').eq(1).prop('selected', true);
-				
-				jq('#summtitle1').text('Student Details');
-				jq('#modesummary').attr("placeholder", "Student Number");
-			}
-			else if (select3.toUpperCase().indexOf("WAIVER") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.32');
-				jq("#modesummary").val("");
-				
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
-				
-				jq('#summtitle1').text('Waiver Details');
-				jq('#modesummary').attr("placeholder", "Waiver Number");
-			}
-			else {
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'modesummary');
-				jq("#modesummary").val("N/A");
-				
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
-				
-				jq('#summtitle1').text('Details');
-				jq('#modesummary').attr("placeholder", "Enter Value");
 			}
 
 			payingCategorySelection();
@@ -185,7 +168,6 @@
          **/
         MODEL = {
             patientIdentifier: "${patientIdentifier}",
-            counties: _districts,
             districts: _districts,
             upazilas: _upazilas,
             ////ghanshyam,16-dec-2013,3438 Remove the interdependency
@@ -209,13 +191,17 @@
             var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
             var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
             if (select1 == 2 && select2 == 1) {
+//                alert("we setting the nhif number");
                 jq('input[name="person.attribute.34"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 1) {
+//                alert("we setting the student id number");
                 jq('input[name="person.attribute.42"]').val(jq("#modesummary").val());
             } else if (select1 == 3 && select2 == 2) {
+//                alert("we setting the waiver number");
                 jq('input[name="person.attribute.32"]').val(jq("#modesummary").val());
             }
         });
+
 
         jq('input:text[id]').focus(function (event) {
             var checkboxID = jq(event.target).attr('id');
@@ -254,7 +240,7 @@
         });
 
         jq('select').focusout(function (event) {
-            var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "modetype1", "value4"];
+            var arr = ["patientGender", "paymode1", "legal1", "refer1", "rooms1", "relationshipType", "upazilas", "modetype1", "value4"];
             var idd = jq(event.target).attr('id');
 
             if (jq.inArray(idd, arr) != -1) {
@@ -284,40 +270,26 @@
             changeYear: true,
             constrainInput: false
         }).on("change", function (dateText) {
+//            display("Got change event from field "+this.value);
             jq("#birthdate").val(this.value);
             PAGE.checkBirthDate();
         });
-		
-		var county_array = String(MODEL.districts).substring(0,String(MODEL.districts).length).split(',');
-		var county_strng = ",Select County|";
-			
-		for (var i=0; i < county_array.length; i++) {
-			county_strng += county_array[i]+','+county_array[i]+'|'
-		}
-		
-        MODEL.religions = ", |"
+
+
+        //jq('#birthdate').change(PAGE.checkBirthDate);
+        MODEL.religions = "Religion, |"
                 + MODEL.religions;
         PAGE.fillOptions("#patientReligion", {
             data: MODEL.religions,
             delimiter: ",",
             optionDelimiter: "|"
         });
-		
-		MODEL.districts = county_strng;
-		
         PAGE.fillOptions("#districts", {
-            data: MODEL.districts,
-			delimiter: ",",
-            optionDelimiter: "|"
+            data: MODEL.districts
         });
-		
-		PAGE.fillOptions("#referredCounty", {
-            data: MODEL.districts,
-			delimiter: ",",
-            optionDelimiter: "|"
+        PAGE.fillOptions("#upazilas", {
+            data: typeof(MODEL.upazilas[0]) == "undefined" ? MODEL.upazilas : MODEL.upazilas[0].split(',')
         });
-		
-        jq("#districts").change();
 
         selectedDistrict = jq("#districts option:checked").val();
         selectedUpazila = jq("#upazilas option:checked").val();
@@ -373,28 +345,28 @@
             optionDelimiter: "|"
         });
 
-        MODEL.TRIAGE = ",Select Type|"
+        MODEL.TRIAGE = ", |"
                 + MODEL.TRIAGE;
         PAGE.fillOptions("#triage", {
             data: MODEL.TRIAGE,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.OPDs = ",Select Type|"
+        MODEL.OPDs = ", |"
                 + MODEL.OPDs;
         PAGE.fillOptions("#opdWard", {
             data: MODEL.OPDs,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.SPECIALCLINIC = ",Select Type|"
+        MODEL.SPECIALCLINIC = ", |"
                 + MODEL.SPECIALCLINIC;
         PAGE.fillOptions("#specialClinic", {
             data: MODEL.SPECIALCLINIC,
             delimiter: ",",
             optionDelimiter: "|"
         });
-        MODEL.TEMPORARYCAT = ",Select Case|"
+        MODEL.TEMPORARYCAT = ", |"
                 + MODEL.TEMPORARYCAT;
         PAGE.fillOptions("#mlc", {
             data: MODEL.TEMPORARYCAT,
@@ -402,7 +374,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.referredFrom = ",Select Facility|"
+        MODEL.referredFrom = ",Referred From|"
                 + MODEL.referredFrom;
         PAGE.fillOptions("#referredFrom", {
             data: MODEL.referredFrom,
@@ -410,7 +382,7 @@
             optionDelimiter: "|"
         });
 
-        MODEL.referralType = ",Select Type|"
+        MODEL.referralType = ",Referral Type|"
                 + MODEL.referralType;
         PAGE.fillOptions("#referralType	", {
             data: MODEL.referralType,
@@ -434,8 +406,10 @@
         jq("#nonPayingCategoryField").hide();
         jq("#specialSchemeCategoryField").hide();
 
-        jq('#payingCategory option').eq(0).prop('selected', true);
+        jq('#payingCategory option').eq(1).prop('selected', true);
         jq('#university option').eq(0).prop('selected', true);
+        jq('#refer1 option').eq(2).prop('selected', true);
+        jq('#legal1 option').eq(2).prop('selected', true);
 
         jq("#nhifNumberRow").hide();
         jq("#universityRow").hide();
@@ -502,9 +476,7 @@
         });
 		
 		jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
-		jq('input[name=paym_1][value="1"]').attr('checked', false);
-		
-		jq('input[name=paym_2][value="1"]').attr('checked', false);
+		jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
 		
 		jq('#university option').eq(0).prop('selected', true);
         //end of doc ready
@@ -574,15 +546,14 @@
                 }),
                 success: function (data) {
                     if (data.datemodel.error == undefined) {
-                        if (data.datemodel.estimated) {
-							jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
+                        if (data.datemodel.estimated == "true") {
                             jq("#birthdateEstimated").val("true")
                         } else {
-							jq("#estimatedAge").html(data.datemodel.age);
                             jq("#birthdateEstimated").val("false");
                         }
 
                         jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
+                        jq("#estimatedAge").html(data.datemodel.age);
                         jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                         jq("#birthdate").val(data.datemodel.birthdate);
                         jq("#calendar").val(data.datemodel.birthdate);
@@ -647,20 +618,11 @@
 
         /** CHANGE DISTRICT */
         changeDistrict: function () {
-			
-			
+
             // get the list of upazilas
             upazilaList = "";
             selectedDistrict = jq("#districts option:checked").val();
-			
-			if (selectedDistrict === ""){
-				jq('#upazilas').empty().append(jq("<option></option>").attr("value",'').text('Select Sub-County'));
-				jq('#locations').empty().append(jq("<option></option>").attr("value",'').text('Select Ward'));
-				
-				return false
-			}
-			
-            jq.each(MODEL.counties, function (index, value) {
+            jq.each(MODEL.districts, function (index, value) {
                 if (value == selectedDistrict) {
                     upazilaList = MODEL.upazilas[index];
                 }
@@ -949,14 +911,8 @@
             else {
                 jq('#relativePostalAddress').removeClass("red-border");
             }
-			
-            //TAB3
-			if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
-				str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
-                i++;
-                tab3++;
-			}
 
+            //TAB3
             if (jq("#legal1").val() == 0) {
                 jq('#legal1').addClass("red-border");
                 i++;
@@ -1507,7 +1463,44 @@
         }
     }
     function LoadPayCatg() {
-        
+        jq("#paym_201").attr('checked', 'checked');
+
+        var selectn = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        if (selectn == 1) {
+            jq('#ipaym_11').text('GENERAL');
+            jq('#ipaym_12').text('CHILD UNDER 5YRS');
+            jq('#ipaym_13').text('EXPECTANT MOTHER');
+
+            jq('#tasktitle').text('Paying Category');
+
+            jq("#paying").attr('checked', 'checked');
+            jq("#nonPaying").attr('checked', false);
+            jq("#specialSchemes").attr('checked', false);
+        }
+        else if (selectn == 2) {
+            jq('#ipaym_11').text('NHIF/CIVIL SERVANT');
+            jq('#ipaym_12').text('CCC PATIENT');
+            jq('#ipaym_13').text('TB PATIENT');
+
+            jq('#tasktitle').text('Non-Paying Category');
+
+            jq("#nonPaying").attr('checked', 'checked');
+            jq("#paying").attr('checked', false);
+            jq("#specialSchemes").attr('checked', false);
+
+        }
+        else if (selectn == 3) {
+            jq('#ipaym_11').text('STUDENT SCHEME');
+            jq('#ipaym_12').text('WAIVER CASE');
+            jq('#ipaym_13').text('DELIVERY CASE');
+            jq('#tasktitle').text('Special Schemes');
+
+            jq("#specialSchemes").attr('checked', 'checked');
+            jq("#paying").attr('checked', false);
+            jq("#nonPaying").attr('checked', false);
+        }
+
+        LoadPayCatgMode();
     }
 
     function LoadPayCatgMode() {
@@ -1551,7 +1544,7 @@
             jq('#universitydiv').hide();
 			jq('#university option').eq(0).prop('selected', true);
 			
-            jq('#summtitle1').text('Details');
+            jq('#summtitle1').text('Summary');
             jq('#modesummary').attr("placeholder", "Enter Value");
 
         }
@@ -1655,9 +1648,8 @@
 
             jq("#mlcCaseYes").attr('checked', 'checked');
             jq("#mlcCaseNo").attr('checked', false);
-			jq('#formlc span').text('*');
         }
-        else if (jq("#legal1").val() == 2) {
+        else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#mlc');
             jq.each(myOptions, function (val, text) {
@@ -1668,20 +1660,6 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', 'checked');
-			jq('#formlc span').text('');
-        }
-		else {
-            var myOptions = {" ": 'N/A'};
-            var mySelect = jq('#mlc');
-            jq.each(myOptions, function (val, text) {
-                mySelect.append(
-                        jq('<option></option>').val(val).html(text)
-                );
-            });
-
-            jq("#mlcCaseYes").attr('checked', false);
-            jq("#mlcCaseNo").attr('checked', false);
-			jq('#formlc span').text('');
         }
     }
     function LoadReferralCases() {
@@ -1706,42 +1684,9 @@
 
             jq("#referredYes").attr('checked', 'checked');
             jq("#referredNo").attr('checked', false);
-			
-            jq(".referraldiv").show();
-			
-			jq('#forReferralType span').text('*');
-			jq('#forReferredFrom span').text('*');
-			
+            jq("#referraldiv").show();
             jq('#referralDescription').removeClass("disabled");
         }
-		else if (jq("#refer1").val() == 2) {
-			var myOptions = {" ": 'N/A'};
-            var mySelect = jq('#referredFrom');
-            jq.each(myOptions, function (val, text) {
-                mySelect.append(
-                        jq('<option></option>').val(val).html(text)
-                );
-            });
-
-            mySelect = jq('#referralType');
-            jq.each(myOptions, function (val, text) {
-                mySelect.append(
-                        jq('<option></option>').val(val).html(text)
-                );
-            });
-
-            jq("#referralDescription").attr("readonly", true);
-            jq("#referralDescription").val("N/A");
-
-            jq(".referraldiv").hide();
-			
-			jq('#forReferralType span').text('');
-			jq('#forReferredFrom span').text('');
-			
-            jq("#referredNo").attr('checked', 'checked');
-            jq("#referredYes").attr('checked', false);
-            jq('#referralDescription').addClass("disabled");
-		}
         else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#referredFrom');
@@ -1761,10 +1706,9 @@
             jq("#referralDescription").attr("readonly", true);
             jq("#referralDescription").val("N/A");
 
-            jq(".referraldiv").hide();
-			
-            jq("#referredNo").attr('checked', false);
+            jq("#referredNo").attr('checked', 'checked');
             jq("#referredYes").attr('checked', false);
+            jq("#referraldiv").hide();
             jq('#referralDescription').addClass("disabled");
         }
     }
@@ -2028,7 +1972,6 @@
 }
 
 .tasks-lists {
-	background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
     position: absolute;
     top: 50%;
     right: 10px;
@@ -2042,6 +1985,7 @@
 }
 
 .tasks-lists:before {
+    content: '';
     display: block;
     height: 3px;
     background: #8c959d;
@@ -2181,7 +2125,6 @@
 }
 
 .addon {
-	color: #f26522;
     display: inline-block;
     float: right;
     margin: 10px 0 0 190px;
@@ -2215,8 +2158,8 @@
             <span class="title">Patient Details</span>
             <fieldset class="no-confirmation">
                 <legend>Demographics</legend>
-				<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
-                
+
+                <p>
 
                 <div class="onerow">
                     <div class="col4">
@@ -2287,6 +2230,8 @@
                             <div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
                             <input type="text" id="birthdate" name="patient.birthdate" class="required form-textbox1"/>
                         </field>
+                        <inputbirthdateEstimated id="" type="hidden"
+                                                 name="patient.birthdateEstimate" value="true"/>
                     </div>
                 </div>
 
@@ -2440,7 +2385,7 @@
                         <span>NEXT PAGE</span>
                     </a>
                 </div>
-           
+            </p>
 
                 <div class="selectdiv" id="selected-diagnoses"></div>
 
@@ -2448,7 +2393,9 @@
             <fieldset style="min-width: 500px; width: auto" class="no-confirmation">
                 <legend>Contact Info</legend>
 
-                <h2 style="margin: 10px 0 0;">Patient Contact Information</h2>
+                <p>
+
+                <h2>Patient Contact Information</h2>
 
                 <div class="onerow">
                     <div class="col4"><label>Contact Number</label></div>
@@ -2471,7 +2418,7 @@
 
                     <div class="col4 last">
                         <field><input type="text" id="patientPostalAddress" name="patient.address.postalAddress"
-                                      class="required form-textbox1" placeholder="Village /Estate /Landmark"/></field>
+                                      class="required form-textbox1"/></field>
                     </div>
                 </div>
 
@@ -2480,7 +2427,7 @@
 
                     <div class="col4"><label>Sub-County</label></div>
 
-                    <div class="col4 last"><label>Ward</label></div>
+                    <div class="col4 last"><label>Location</label></div>
                 </div>
 
                 <div class="onerow">
@@ -2513,17 +2460,37 @@
                     </div>
                 </div>
 
-                
-                <h2>&nbsp;</h2>
+                <div class="onerow">
+                    <div class="col4"><label>Village</label></div>
 
-                <h2>Next of Kin / Informant Details</h2>
+                    <div class="col4"><label></label></div>
+
+                    <div class="col4 last"><label></label></div>
+                </div>
 
                 <div class="onerow">
-                    <div class="col4"><label>Full Names <span>*</span></label></div>
+                    <div class="col4">
+                        <field>
+                            <input type="text" id="chiefdom" name="person.attribute.${personAttributeChiefdom.id}"
+                                   class="form-textbox1"/>
+                        </field>
+                    </div>
+
+                    <div class="col4">&nbsp;</div>
+
+                    <div class="col4 last">&nbsp;</div>
+                </div>
+
+                <h2>&nbsp;</h2>
+
+                <h2>Next of Kin Details</h2>
+
+                <div class="onerow">
+                    <div class="col4"><label>Relative Name <span>*</span></label></div>
 
                     <div class="col4"><label>Relationship <span>*</span></label></div>
 
-                    <div class="col4 last"><label>Telephone Number</label></div>
+                    <div class="col4 last"><label>Physical Address</label></div>
                 </div>
 
                 <div class="onerow">
@@ -2549,24 +2516,21 @@
                     </div>
 
                     <div class="col4 last">
-						<field>
-							<input type="text" id="patientTelephone" name="person.attribute.29"
-									  class="form-textbox1"/>
-						</field>
+                        <field><input type="text" id="relativePostalAddress" name="person.attribute.28"
+                                      class="form-textbox1"/></field>
                     </div>
                 </div>
 
-                <div class="onerow" style="margin-top: 50px">
-					<label style="margin-top: 0px">Physical Address</label>
-					
-					<field>
-						<textarea type="text" id="relativePostalAddress" name="person.attribute.28"
-								  class="form-textbox1" style="height: 80px; width: 700px;" placeholder="Village /Estate /Landmark"></textarea>
-					</field>
-				
-					<field>
-						<label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
-					</field>
+                <div class="onerow" style="margin-top: 10px">
+                    <div class="col4"><label></label></div>
+
+                    <div class="col4"><label></label></div>
+
+                    <div class="col4 last">
+                        <field>
+                            <input id="sameAddress" type="checkbox"/> Same as Patient
+                        </field>
+                    </div>
                 </div>
 
                 <div class="onerow" style="margin-top: 50px">
@@ -2578,6 +2542,7 @@
                         <span>NEXT PAGE</span>
                     </a>
                 </div>
+            </p>
             </fieldset>
 
             <fieldset class="no-confirmation">
@@ -2597,19 +2562,19 @@
                                 <div class="tasks-list">
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="1"
-                                               class="tasks-list-cb">
+                                               onchange="LoadPayCatg();" class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">PAYING</span>
                                     </label>
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="2"
-                                               class="tasks-list-cb">
+                                               onchange="LoadPayCatg();" class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">NON-PAYING</span>
                                     </label>
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="3"
-                                               class="tasks-list-cb">
+                                               onchange="LoadPayCatg();" class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">SPECIAL SCHEMES</span>
                                     </label>
@@ -2633,7 +2598,7 @@
                         <div class="col4 last">
                             <div class="tasks">
                                 <header class="tasks-header">
-                                    <span id="summtitle1" class="tasks-title">Details</span>
+                                    <span id="summtitle1" class="tasks-title">Summary</span>
                                     <input type="hidden" id="nhifNumber" name="person.attribute.34" />
                                     <input type="hidden" id="studentId" name="person.attribute.42" />
                                      <input type="hidden" id="waiverNumber" name="person.attribute.32" />
@@ -2653,15 +2618,16 @@
                     </div>
 
                     <h2>&nbsp;</h2>
-                    <h2>Legal Information</h2>
+
+                    <h2>Visit Information</h2>
 
                     <div class="onerow">
                         <div class="col4">
-                            <label for="legal1" style="margin:0px;">Medical Legal Case<span>*</span></label>
+                            <label for="legal1" style="margin:0px;">Medical Legal Case</label>
                         </div>
 
                         <div class="col4">
-                            <label id="formlc" for="mlc" style="margin:0px;">Case Description<span>*</span></label>
+                            <label for="mlc" style="margin:0px;">Description</label>
                         </div>
 
                         <div class="col4 last"></div>
@@ -2672,7 +2638,7 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="legal1" name="legal1" onchange="LoadLegalCases();">
-                                        <option value="0">Select Option</option>
+                                        <option value="0">&nbsp;</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
                                     </select>
@@ -2691,21 +2657,18 @@
 
                         <div class="col4 last"></div>
                     </div>
-					
-					<h2>&nbsp;</h2>
-                    <h2>Referral Information</h2>
 
-                    <div class="onerow">
+                    <div class="onerow" style="margin-top:50px;">
                         <div class="col4">
-                            <label for="refer1" style="margin:0px;">Patient Referred<span>*</span></label>
+                            <label for="refer1" style="margin:0px;">Referral Information</label>
                         </div>
 
                         <div class="col4">
-                            <label id="forReferralType" for="referralType" style="margin:0px;">Referral Type<span></span></label>
+                            <label for="referredFrom" style="margin:0px;">Referred From</label>
                         </div>
 
                         <div class="col4 last">
-                            &nbsp;
+                            <label for="referralType" style="margin:0px;">Referral Type</label>
                         </div>
                     </div>
 
@@ -2714,49 +2677,9 @@
                             <span class="select-arrow" style="width: 100%">
                                 <field>
                                     <select id="refer1" name="refer1" onchange="LoadReferralCases();">
-                                        <option value="0">Select Option</option>
+                                        <option value="0">&nbsp;</option>
                                         <option value="1">YES</option>
                                         <option value="2">NO</option>
-                                    </select>
-                                </field>
-                            </span>
-                        </div>
-
-                        <div class="col4">
-                            <span class="select-arrow" style="width: 100%">
-                                <field>
-                                    <select id="referralType" name="patient.referred.reason">
-                                    </select>
-                                </field>
-                            </span>
-                        </div>
-
-                        <div class="col4 last">
-                            &nbsp;
-                        </div>
-                    </div>
-					
-					 <div class="onerow referraldiv" style="margin-top:50px;">
-                        <div class="col4">
-                            <label for="refer1" style="margin:0px;">Referred From</label>
-                        </div>
-
-                        <div class="col4">
-                            <label id="forReferredFrom" for="referredFrom" style="margin:0px;">Facility Type<span></span></label>
-                        </div>
-
-                        <div class="col4 last">
-                            <label for="referralType" style="margin:0px;">Facility Name</label>
-                        </div>
-                    </div>
-					
-					<div class="onerow referraldiv">
-                        <div class="col4">
-                            <span class="select-arrow" style="width: 100%">
-                                <field>
-                                    <select id="referredCounty" name="patient.referred.county">
-                                        <option value="0">Select County</option>
-                                       
                                     </select>
                                 </field>
                             </span>
@@ -2772,13 +2695,16 @@
                         </div>
 
                         <div class="col4 last">
-							<field>
-								<input id="referredInstitute" name="patient.referred.facility" class="form-textbox1 focused" type="text" placeholder="Institution Name">
-							</field>
+                            <span class="select-arrow" style="width: 100%">
+                                <field>
+                                    <select id="referralType" name="patient.referred.reason">
+                                    </select>
+                                </field>
+                            </span>
                         </div>
                     </div>
 
-                    <div class="onerow referraldiv" id="referraldiv" style="padding-top:-5px; display:none;">
+                    <div class="onerow" id="referraldiv" style="padding-top:-5px; display:none;">
                         <label for="referralDescription" style="margin-top:20px;">Comments</label>
                         <field><textarea type="text" id="referralDescription" name="patient.referred.description"
                                          value="N/A" placeholder="COMMENTS" readonly=""
@@ -2809,7 +2735,7 @@
                                 <field>
                                     <select id="rooms1" name="rooms1" onchange="LoadRoomsTypes();"
                                             class="required form-combo1">
-                                        <option value="">Select Room</option>
+                                        <option value="">&nbsp;</option>
                                         <option value="1">TRIAGE ROOM</option>
                                         <option value="2">OPD ROOM</option>
                                         <option value="3">SPECIAL CLINIC</option>
@@ -2849,17 +2775,14 @@
                                    value="Special Schemes"/> Special Schemes
                         </div>
 
-                        <label><input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">MLC Yes</label>
-                        <label><input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>MLC No</label>
-						
-                        <label><input id="referredYes" type="checkbox" name="referredYes"/>Refer Yes</label>
-                        <label><input id="referredNo" type="checkbox" name="referredNo"/>Refer No</label>
+                        <input type="checkbox" name="mlcCaseYes" id="mlcCaseYes">
+                        <input id="mlcCaseNo" type="checkbox" name="mlcCaseNo"/>
+                        <input id="referredYes" type="checkbox" name="referredYes"/>
+                        <input id="referredNo" type="checkbox" name="referredNo"/>
 
                         <input id="triageRoom" type="checkbox" name="triageRoom"/>
                         <input id="opdRoom" type="checkbox" name="opdRoom"/>
                         <input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
-                        <input id="birthdateEstimated" type="text" name="patient.birthdateEstimate"/>
-						<input id="chiefdom" class="form-textbox1 focused" type="text" name="person.attribute.41">
                     </div>
 
                     <div class="onerow" style="display:none!important;">
@@ -2897,7 +2820,7 @@
                     </div>
 
 
-                    <div class="onerow" style="margin-top: 100px">
+                    <div class="onerow" style="margin-top: 150px">
                         <a class="button task ui-tabs-anchor" onclick="goto_previous_tab(3);">
                             <span style="padding: 15px;">PREVIOUS</span>
                         </a>
