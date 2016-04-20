@@ -2220,11 +2220,16 @@
 
                 <div class="onerow">
                     <div class="col4">
-                        <label>First Names<span>*</span></label></div>
+                        <label>First Name<span>*</span></label>
+					</div>
 
-                    <div class="col4"><label>Middle name<span></span></label></div>
+                    <div class="col4">
+						<label>Middle name<span></span></label>
+					</div>
 
-                    <div class="col4 last"><label>Surname<span>*</span></label></div>
+                    <div class="col4 last">
+						<label>Surname<span>*</span></label>
+					</div>
                 </div>
 
                 <div class="onerow">
@@ -2232,10 +2237,10 @@
                         <field><input type="text" id="firstName" name="patient.firstName"
                                       class="required form-textbox1"/></field>
                     </div>
-                    <div class="col4 last">
+                    <div class="col4">
                         <field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/></field>
                     </div>
-                    <div class="col4">
+                    <div class="col4 last">
                         <field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/></field>
 
                         <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>

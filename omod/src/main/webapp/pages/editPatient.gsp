@@ -2333,30 +2333,36 @@
                             
 
                             <div class="onerow">
-                                <div class="col4">
-                                    <label>Surname <span>*</span></label></div>
+								<div class="col4">
+									<label>First Name<span>*</span></label>
+								</div>
 
-                                <div class="col4"><label>First Name <span>*</span></label></div>
+								<div class="col4">
+									<label>Middle name<span></span></label>
+								</div>
 
-                                <div class="col4 last"><label>Other Name</label></div>
-                            </div>
+								<div class="col4 last">
+									<label>Surname<span>*</span></label>
+								</div>
+							</div>
 
                             <div class="onerow">
-                                <div class="col4">
-                                    <field><input type="text" id="surName" name="patient.surName"
-                                                  class="required form-textbox1" value="${patient.surName}"/></field>
-                                    <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
-                                    <input type="hidden" id="patientIdnts" name="patient.identifier" value="0"/>
-                                </div>
 
                                 <div class="col4">
                                     <field><input type="text" id="firstName" name="patient.firstName"
                                                   class="required form-textbox1" value="${patient.firstName}"/></field>
                                 </div>
 
-                                <div class="col4 last">
+                                <div class="col4">
                                     <field><input type="text" id="otherName" name="patient.otherName"
                                                   class="form-textbox1" value="${patient.otherName}"/></field>
+                                </div>
+								
+                                <div class="col4 last">
+                                    <field><input type="text" id="surName" name="patient.surName"
+                                                  class="required form-textbox1" value="${patient.surName}"/></field>
+                                    <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
+                                    <input type="hidden" id="patientIdnts" name="patient.identifier" value="0"/>
                                 </div>
                             </div>
 
