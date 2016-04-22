@@ -134,6 +134,12 @@ public class ShowPatientInfoPageController {
             model.addAttribute("typeOfSlip", "Registration Receipt");
             model.addAttribute("revisit", revisit);
             model.addAttribute("reprint", reprint);
+
+            Date lastVisitTime = hcs.getLastVisitTime(patient);
+            Date currentVisitTime = new Date();
+            long visitTimeDifference = this.dateDiffInHours(lastVisitTime,currentVisitTime);
+            model.addAttribute("visitTimeDifference",visitTimeDifference);
+
             SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy");
             String sef = spf.format(hcs.getLastVisitTime(patient));
             System.out.println("patient created day visit" + hcs.getLastVisitTime(patient));
@@ -402,6 +408,11 @@ public class ShowPatientInfoPageController {
     private long dateDiff(Date d1, Date d2) {
         long diff = Math.abs(d1.getTime() - d2.getTime());
         return (diff / (1000 * 60 * 60 * 24));
+    }
+
+    private long dateDiffInHours(Date d1, Date d2) {
+        long diff = Math.abs(d1.getTime() - d2.getTime());
+        return (diff / (1000 * 60 * 60));
     }
 
 
