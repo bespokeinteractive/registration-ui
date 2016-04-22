@@ -42,8 +42,12 @@ public class NewPatientRegistrationPageController {
 		RegistrationWebUtils.getAddressDta(model);
 		model.addAttribute("TEMPORARYCAT",
 				RegistrationWebUtils.getSubConcepts(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE));
+
 		model.addAttribute("religionList", RegistrationWebUtils.getReligionConcept());
+
 		PersonAttributeType personAttributeReligion = hospitalCoreService.getPersonAttributeTypeByName("Religion");
+
+
 		model.addAttribute("personAttributeReligion", personAttributeReligion);
 		PersonAttributeType personAttributeChiefdom = hospitalCoreService.getPersonAttributeTypeByName("Chiefdom");
 		model.addAttribute("personAttributeChiefdom", personAttributeChiefdom);

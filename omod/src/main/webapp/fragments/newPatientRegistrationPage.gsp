@@ -2228,7 +2228,7 @@
 					</div>
 
                     <div class="col4 last">
-						<label>Surname<span>*</span></label>
+						<label>Third Name<span>*</span></label>
 					</div>
                 </div>
 

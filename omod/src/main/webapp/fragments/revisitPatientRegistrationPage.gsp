@@ -180,11 +180,10 @@
 			var gender 		= item.gender;
 			var lastVisit 	= moment(item.formartedVisitDate, 'DD/MM/YYYY HH:mm:ss').fromNow();
 			var names 		= stringReplace(item.names);
-			var m 			= moment(item.formartedVisitDate,'DD/MM/YYYY HH:mm:ss');
+			var visit 		= moment(item.formartedVisitDate,'DD/MM/YYYY HH:mm:ss');
 			var today 		= moment();
 
-			var days 	= Math.round(moment.duration(today - m).asDays());
-			var hours 	= Math.round(moment.duration(today - m).asHours());			
+			var hours 	= Math.round(moment.duration(today - visit).asHours());			
 			
 			if (hours <= 24){
 				rowsClass	= 'recent-seen';

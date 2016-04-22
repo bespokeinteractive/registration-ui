@@ -1152,20 +1152,10 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 										Reprint Receipt
 									</a>
 								</li>
+								
 								<br/>
-
-								<h3>&nbsp; Visitation Actions</h3>
-								<a href="javascript:visit.showRetrospectiveVisitCreationDialog()"
-								   id="org.openmrs.module.coreapps.createRetrospectiveVisit">
-									<li><i class="icon-plus"></i> Add Past Visit
-									</li>
-								</a>
-								<a href="/openmrs/coreapps/mergeVisits.page?patientId=33388&amp;returnUrl=%2Fopenmrs%2Fcoreapps%2Fclinicianfacing%2Fpatient.page%3FpatientId%3D33388%26"
-								   id="org.openmrs.module.coreapps.mergeVisits">
-									<li><i class="icon-link"></i>Merge Visits
-									</li>
-								</a>
-
+								<br/>
+								<br/>
 								<br/>
 								<br/>
 
