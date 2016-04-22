@@ -74,7 +74,10 @@ public class ShowPatientInfoPageController {
         model.addAttribute("MEDICOLEGALCASE", RegistrationWebUtils.getSubConcepts(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE));
         // Get current date
         SimpleDateFormat sdf = new SimpleDateFormat("EEE dd/MM/yyyy kk:mm");
-        model.addAttribute("currentDateTime", sdf.format(new Date()));
+
+        String previousVisitTime = sdf.format(hcs.getLastVisitTime(patient));
+
+        model.addAttribute("currentDateTime",previousVisitTime);
 
         // Get patient registration fee
         if (GlobalPropertyUtil.getInteger(RegistrationConstants.PROPERTY_NUMBER_OF_DATE_VALIDATION, 0) > 0) {
