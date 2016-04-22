@@ -117,16 +117,16 @@ public class NewPatientRegistrationPageController {
 			model.addAttribute("status", "success");
 			model.addAttribute("patientId", patient.getPatientId());
 			model.addAttribute("encounterId", encounter.getId());
-        } catch (Exception e) {
 
+			String s = "redirect:" + uiUtils.pageLink("registration", "showPatientInfo", redirectParams);
+        		return s;
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("status", "error");
 			model.addAttribute("message", e.getMessage());
+			return null;
 		}
-
-
-        String s = "redirect:" + uiUtils.pageLink("registration", "showPatientInfo", redirectParams);
-        return s;
 
 	}
 
