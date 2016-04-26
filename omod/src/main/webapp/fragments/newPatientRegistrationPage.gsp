@@ -56,6 +56,11 @@
 				jq('#modesummary').attr("placeholder", "Enter Value");
 			}
 		});
+
+
+        jq("#rooms1").on("change", function(){
+            nonPayingCategorySelection();
+        });
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
 			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
@@ -81,6 +86,7 @@
 				
 				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
                 nonPayingCategorySelection();
+
 			}
 			else {
 				jq('#specialScheme option').eq(select2).prop('selected', true);
@@ -1393,6 +1399,8 @@
     }
 
     function nonPayingCategorySelection() {
+        var selectedRoomToVisit = jq("#rooms1").val();
+        var nonPayingCategorySelected = jq("#nonPayingCategory").val();
         var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="NHIF CIVIL SERVANT"){
         if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
@@ -1402,21 +1410,19 @@
             jq("#nhifNumberRow").hide();
         }
 
-        var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
-        //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="TB PATIENT" || MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="CCC PATIENT"){
-        if (selectedNonPayingCategory == "TB PATIENT" || selectedNonPayingCategory == "CCC PATIENT") {
-            if (jq("#specialClinicRoom").val()) {
+        if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+            if(selectedRoomToVisit === "3"){
                 jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
-            else {
-                jq("#selectedRegFeeValue").val(0);
-            }
         }
+
         else {
             jq("#selectedRegFeeValue").val(0);
         }
 
     }
+
+
 
     function specialSchemeSelection() {
         var selectedSpecialScheme = jq("#specialScheme option:checked").val();
