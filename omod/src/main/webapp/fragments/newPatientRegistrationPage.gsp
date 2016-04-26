@@ -70,6 +70,7 @@
 				select3 = jq('#payingCategory :selected').val().toUpperCase();
 				
 				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+                payingCategorySelection();
 			}
 			else if (select1 == 2) {
 				jq('#nonPayingCategory option').eq(select2).prop('selected', true);
@@ -79,6 +80,7 @@
 				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
 				
 				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+                nonPayingCategorySelection();
 			}
 			else {
 				jq('#specialScheme option').eq(select2).prop('selected', true);
@@ -88,6 +90,7 @@
 				select3 = jq('#specialScheme :selected').val().toUpperCase();
 				
 				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+                payingCategorySelection();
 			}
 			
 			if (select3.toUpperCase().indexOf("NHIF") >= 0){
@@ -134,8 +137,6 @@
 				jq('#summtitle1').text('Details');
 				jq('#modesummary').attr("placeholder", "Enter Value");
 			}
-
-			payingCategorySelection();
 
 			jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
 			
@@ -1329,12 +1330,15 @@
 
 
     function payingCategorySelection() {
+
+
         var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
         var selectedPayingCategory = jq("#payingCategory option:checked").val();
         //if(MODEL.payingCategoryMap[selectedPayingCategory]=="CHILD LESS THAN 5 YEARS"){
         var estAge = jq("#estimatedAgeInYear").val();	//come back here
+
 
         if (select1 == 1 && select2 == 2) {
             if (estAge < 6) {
@@ -1401,7 +1405,7 @@
         var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="TB PATIENT" || MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="CCC PATIENT"){
         if (selectedNonPayingCategory == "TB PATIENT" || selectedNonPayingCategory == "CCC PATIENT") {
-            if (jq("#specialClinic").val()) {
+            if (jq("#specialClinicRoom").val()) {
                 jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
             else {
@@ -1463,6 +1467,7 @@
     }
 
     function opdRoomSelectionForReg() {
+
         if (jq("#payingCategory").val() != " ") {
             var selectedPayingCategory = jq("#payingCategory option:checked").val();
             if (selectedPayingCategory == "CHILD LESS THAN 5 YEARS") {
@@ -1511,6 +1516,8 @@
     }
 
     function LoadPayCatgMode() {
+
+
         var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 
@@ -2871,7 +2878,6 @@
                         <div class="col4">&nbsp;
                             <span id="payingCategoryField">
                                 <span class="select-arrow" style="width: 100%">
-                                    <select id="payingCategory" name="person.attribute.44"
                                     <select id="payingCategory" name="person.attribute.44"
                                             onchange="payingCategorySelection();"
                                             class="form-combo1" style="display:block!important"></select></span>
