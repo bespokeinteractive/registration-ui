@@ -57,7 +57,8 @@
             selectedPaymentCategory: "${selectedPaymentCategory}",
             specialSchemeName: "${specialSchemeName}",
             create: "${create}",
-            creates: "${creates}"
+            creates: "${creates}",
+            visitTimeDifference: "${visitTimeDifference}"
         };
 
 
@@ -702,8 +703,9 @@
     };
 
     function triageRoomSelection() {
+
         if (MODEL.patientAttributes[14] == "Paying") {
-            if ((MODEL.create == 0)) {  //alert("Patient Revisit within 24 hr");
+            if ((MODEL.visitTimeDifference <= 24)) {  //alert("Patient Revisit within 24 hr");
                 // alert("hello");
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
@@ -736,8 +738,7 @@
     function opdRoomSelection() {
         if ((MODEL.patientAttributes[14] == "Paying")) {
             //	alert("hii");
-            if ((MODEL.create == 0)) {
-                // alert("Patient Revisit within 24 hr");
+            if ((MODEL.visitTimeDifference <= 24)) {
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
 
@@ -782,7 +783,7 @@
         }
 
         if (MODEL.patientAttributes[14] == "Paying") {
-            if ((MODEL.create == 0)) {    //alert("Patient Revisit within 24 hr");
+            if ((MODEL.visitTimeDifference <= 24)) {    //alert("Patient Revisit within 24 hr");
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
                 if (MODEL.patientAttributes[44] == "CHILD LESS THAN 5 YEARS") {
@@ -953,6 +954,7 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 
 <body>
 <div class="clear"></div>
+
 <form id="patientInfoForm" method="POST">
 	<div class="container">
 		<div class="example">
