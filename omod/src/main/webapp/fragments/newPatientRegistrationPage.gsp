@@ -59,7 +59,10 @@
 
 
         jq("#rooms1").on("change", function(){
-            nonPayingCategorySelection();
+            var nonPayingCategorySelected = jq("#nonPayingCategory").val();
+            if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+                nonPayingCategorySelection();
+            }
         });
 		
 		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
@@ -1415,7 +1418,6 @@
                 jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
         }
-
         else {
             jq("#selectedRegFeeValue").val(0);
         }
