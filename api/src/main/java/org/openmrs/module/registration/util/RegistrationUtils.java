@@ -77,7 +77,7 @@ public class RegistrationUtils {
 	 * @param name
 	 * @return
 	 */
-	public static PersonName getPersonName(PersonName personName, String surName, String firstName, String otherName) {
+	public static PersonName getPersonName(PersonName personName, String firstName,String otherName,String surName) {
 		
 		if (personName == null)
 			personName = new PersonName();
