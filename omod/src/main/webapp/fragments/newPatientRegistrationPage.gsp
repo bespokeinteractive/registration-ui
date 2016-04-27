@@ -1413,12 +1413,13 @@
             jq("#nhifNumberRow").hide();
         }
 
-        if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
-            if(selectedRoomToVisit === "3"){
+        if(selectedRoomToVisit === "3"){
+            if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
                 jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
-        }
-        else {
+        } else if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+            jq("#selectedRegFeeValue").val(${initialRegFee});
+        } else {
             jq("#selectedRegFeeValue").val(0);
         }
 
