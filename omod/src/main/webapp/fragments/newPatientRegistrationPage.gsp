@@ -4,152 +4,152 @@
     emrMessages["requiredField"] = "Required";
 
     jq(document).ready(function () {
-		jq("input[name='paym_1']:radio").change(function () {
-			var index = jq(this, '#simple-form-ui').val();
-			var arrey = MODEL.payingCategory.split("|");
-			var alley = "";
+        jq("input[name='paym_1']:radio").change(function () {
+            var index = jq(this, '#simple-form-ui').val();
+            var arrey = MODEL.payingCategory.split("|");
+            var alley = "";
 
-			if (index == 1){
-				jq('#tasktitle').text('Paying Category');
+            if (index == 1) {
+                jq('#tasktitle').text('Paying Category');
 
-				jq('#paying').attr('checked', 'checked').change();
-				jq('#nonPaying').attr('checked', false).change();
-				jq('#specialSchemes').attr('checked', false).change();
+                jq('#paying').attr('checked', 'checked').change();
+                jq('#nonPaying').attr('checked', false).change();
+                jq('#specialSchemes').attr('checked', false).change();
 
-				arrey = MODEL.payingCategory.split("|");
+                arrey = MODEL.payingCategory.split("|");
 
-			}
-			else if (index == 2){
-				jq('#tasktitle').text('Nonpaying Category');
+            }
+            else if (index == 2) {
+                jq('#tasktitle').text('Nonpaying Category');
 
-				jq('#paying').attr('checked', false).change();
-				jq('#nonPaying').attr('checked', 'checked').change();
-				jq('#specialSchemes').attr('checked', false).change();
+                jq('#paying').attr('checked', false).change();
+                jq('#nonPaying').attr('checked', 'checked').change();
+                jq('#specialSchemes').attr('checked', false).change();
 
-				arrey = MODEL.nonPayingCategory.split("|");
-			}
-			else {
-				jq('#tasktitle').text('Special Schemes');
+                arrey = MODEL.nonPayingCategory.split("|");
+            }
+            else {
+                jq('#tasktitle').text('Special Schemes');
 
-				jq('#paying').attr('checked', false).change();
-				jq('#nonPaying').attr('checked', false).change();
-				jq('#specialSchemes').attr('checked', 'checked').change();
+                jq('#paying').attr('checked', false).change();
+                jq('#nonPaying').attr('checked', false).change();
+                jq('#specialSchemes').attr('checked', 'checked').change();
 
-				arrey = MODEL.specialScheme.split("|");
-			}
+                arrey = MODEL.specialScheme.split("|");
+            }
 
-			for (var i = 0; i < arrey.length-1; i++) {
-				alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20"+(i+1)+"' value='"+(i+1)+"' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i+1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
-			}
+            for (var i = 0; i < arrey.length - 1; i++) {
+                alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
+            }
 
-			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+            jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
 
-			if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined'){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'modesummary');
-				jq("#modesummary").val("N/A");
+            if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined') {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'modesummary');
+                jq("#modesummary").val("N/A");
 
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
+                jq('#universitydiv').hide();
+                jq('#university option').eq(0).prop('selected', true);
 
-				jq('#summtitle1').text('Details');
-				jq('#modesummary').attr("placeholder", "Enter Value");
-			}
-		});
+                jq('#summtitle1').text('Details');
+                jq('#modesummary').attr("placeholder", "Enter Value");
+            }
+        });
 
 
-        jq("#rooms1").on("change", function(){
+        jq("#rooms1").on("change", function () {
             var nonPayingCategorySelected = jq("#nonPayingCategory").val();
-            if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+            if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT") {
                 nonPayingCategorySelection();
             }
         });
 
-		jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
-			var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-			var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-			var select3 = '';
+        jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+            var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+            var select3 = '';
 
-			if (select1 == 1) {
-				jq('#payingCategory option').eq(select2).prop('selected', true);
-				jq('#nonPayingCategory option').eq(0).prop('selected', true);
-				jq('#specialScheme option').eq(0).prop('selected', true);
+            if (select1 == 1) {
+                jq('#payingCategory option').eq(select2).prop('selected', true);
+                jq('#nonPayingCategory option').eq(0).prop('selected', true);
+                jq('#specialScheme option').eq(0).prop('selected', true);
 
-				select3 = jq('#payingCategory :selected').val().toUpperCase();
+                select3 = jq('#payingCategory :selected').val().toUpperCase();
 
-				jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+                jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
                 payingCategorySelection();
-			}
-			else if (select1 == 2) {
-				jq('#nonPayingCategory option').eq(select2).prop('selected', true);
-				jq('#payingCategory option').eq(0).prop('selected', true);
-				jq('#specialScheme option').eq(0).prop('selected', true);
+            }
+            else if (select1 == 2) {
+                jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+                jq('#payingCategory option').eq(0).prop('selected', true);
+                jq('#specialScheme option').eq(0).prop('selected', true);
 
-				select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+                select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
 
-				jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+                jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
                 nonPayingCategorySelection();
 
-			}
-			else {
-				jq('#specialScheme option').eq(select2).prop('selected', true);
-				jq('#payingCategory option').eq(0).prop('selected', true);
-				jq('#nonPayingCategory option').eq(0).prop('selected', true);
+            }
+            else {
+                jq('#specialScheme option').eq(select2).prop('selected', true);
+                jq('#payingCategory option').eq(0).prop('selected', true);
+                jq('#nonPayingCategory option').eq(0).prop('selected', true);
 
-				select3 = jq('#specialScheme :selected').val().toUpperCase();
+                select3 = jq('#specialScheme :selected').val().toUpperCase();
 
-				jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+                jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
                 payingCategorySelection();
-			}
+            }
 
-			if (select3.toUpperCase().indexOf("NHIF") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.34');
-				jq("#modesummary").val("");
+            if (select3.toUpperCase().indexOf("NHIF") >= 0) {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'person.attribute.34');
+                jq("#modesummary").val("");
 
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
+                jq('#universitydiv').hide();
+                jq('#university option').eq(0).prop('selected', true);
 
-				jq('#summtitle1').text('NHIF Details');
-				jq('#modesummary').attr("placeholder", "NHIF Number");
-			}
-			else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.42');
-				jq("#modesummary").val("");
+                jq('#summtitle1').text('NHIF Details');
+                jq('#modesummary').attr("placeholder", "NHIF Number");
+            }
+            else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0) {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'person.attribute.42');
+                jq("#modesummary").val("");
 
-				jq('#universitydiv').show();
-				jq('#university option').eq(1).prop('selected', true);
+                jq('#universitydiv').show();
+                jq('#university option').eq(1).prop('selected', true);
 
-				jq('#summtitle1').text('Student Details');
-				jq('#modesummary').attr("placeholder", "Student Number");
-			}
-			else if (select3.toUpperCase().indexOf("WAIVER") >= 0){
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'person.attribute.32');
-				jq("#modesummary").val("");
+                jq('#summtitle1').text('Student Details');
+                jq('#modesummary').attr("placeholder", "Student Number");
+            }
+            else if (select3.toUpperCase().indexOf("WAIVER") >= 0) {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'person.attribute.32');
+                jq("#modesummary").val("");
 
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
+                jq('#universitydiv').hide();
+                jq('#university option').eq(0).prop('selected', true);
 
-				jq('#summtitle1').text('Waiver Details');
-				jq('#modesummary').attr("placeholder", "Waiver Number");
-			}
-			else {
-				jq("#modesummary").attr("readonly", false);
-				jq("#modesummary").attr("name", 'modesummary');
-				jq("#modesummary").val("N/A");
+                jq('#summtitle1').text('Waiver Details');
+                jq('#modesummary').attr("placeholder", "Waiver Number");
+            }
+            else {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'modesummary');
+                jq("#modesummary").val("N/A");
 
-				jq('#universitydiv').hide();
-				jq('#university option').eq(0).prop('selected', true);
+                jq('#universitydiv').hide();
+                jq('#university option').eq(0).prop('selected', true);
 
-				jq('#summtitle1').text('Details');
-				jq('#modesummary').attr("placeholder", "Enter Value");
-			}
+                jq('#summtitle1').text('Details');
+                jq('#modesummary').attr("placeholder", "Enter Value");
+            }
 
-			jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+            jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
 
-		});
+        });
 
         // Districts
         var _districts = new Array();
@@ -298,12 +298,12 @@
             PAGE.checkBirthDate();
         });
 
-		var county_array = String(MODEL.districts).substring(0,String(MODEL.districts).length).split(',');
-		var county_strng = ",Select County|";
+        var county_array = String(MODEL.districts).substring(0, String(MODEL.districts).length).split(',');
+        var county_strng = ",Select County|";
 
-		for (var i=0; i < county_array.length; i++) {
-			county_strng += county_array[i]+','+county_array[i]+'|'
-		}
+        for (var i = 0; i < county_array.length; i++) {
+            county_strng += county_array[i] + ',' + county_array[i] + '|'
+        }
 
         MODEL.religions = ", |"
                 + MODEL.religions;
@@ -313,17 +313,17 @@
             optionDelimiter: "|"
         });
 
-		MODEL.districts = county_strng;
+        MODEL.districts = county_strng;
 
         PAGE.fillOptions("#districts", {
             data: MODEL.districts,
-			delimiter: ",",
+            delimiter: ",",
             optionDelimiter: "|"
         });
 
-		PAGE.fillOptions("#referredCounty", {
+        PAGE.fillOptions("#referredCounty", {
             data: MODEL.districts,
-			delimiter: ",",
+            delimiter: ",",
             optionDelimiter: "|"
         });
 
@@ -511,35 +511,34 @@
             VALIDATORS.copyaddress();
         });
 
-		jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
-		jq('input[name=paym_1][value="1"]').attr('checked', false);
+        jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
+        jq('input[name=paym_1][value="1"]').attr('checked', false);
 
-		jq('input[name=paym_2][value="1"]').attr('checked', false);
+        jq('input[name=paym_2][value="1"]').attr('checked', false);
 
-		jq('#university option').eq(0).prop('selected', true);
+        jq('#university option').eq(0).prop('selected', true);
 
-        jq("#addNextOfKin").on("click",function(){
-           //add input for new
+        jq("#addNextOfKin").on("click", function () {
+            var c = Math.floor(1000 + Math.random() * 9000);
+            //add input for new
             var row = '<div class="onerow"><div class="col4"><field><input type="text" ' +
-                    ' name="person.attribute.8" class="required form-textbox1"/></field></div><div class="col4"> ' +
-                    '<span class="select-arrow" style="width: 100%"> <field> <select name="person.attribute.15" ' +
-                    'class="required form-combo1"> <option value=""></option> ' +
-                    '<option value="Parent">Parent</option> ' +
+                    ' name="person.attribute.8" class="required form-textbox1 focused" id="patientRelativeName_' + c + '"/></field></div><div class="col4"> ' +
+                    '<span class="select-arrow" style="width: 100%"> <field> <select name="person.attribute.15" id="relationshipType_' + c + '"' +
+                    'class="required form-combo1 focused"> <option value=""></option> ' +
+                    '<option value="Father">Father</option> ' +
+                    '<option value="Mother">Mother</option> ' +
                     '<option value="Spouse">Spouse</option> ' +
                     '<option value="Guardian">Guardian</option> ' +
                     '<option value="Friend">Friend</option> ' +
                     '<option value="Other">Other</option> ' +
                     '</select> </field> </span> </div> ' +
                     '<div class="col4 last"> <field> ' +
-                    '<input type="text" id="patientTelephone" name="person.attribute.29" ' +
+                    '<input type="text" id="patientTelephone" name="person.attribute.29" id="patientTelephone_' + c + '"' +
                     'class="form-textbox1"/> </field> ' +
                     '</div> </div>';
             jq("#nextOfKinDiv").append(row);
 
         });
-
-
-
 
 
     }); //end of doc ready
@@ -609,10 +608,10 @@
                 success: function (data) {
                     if (data.datemodel.error == undefined) {
                         if (data.datemodel.estimated) {
-							jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
+                            jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
                             jq("#birthdateEstimated").val("true")
                         } else {
-							jq("#estimatedAge").html(data.datemodel.age);
+                            jq("#estimatedAge").html(data.datemodel.age);
                             jq("#birthdateEstimated").val("false");
                         }
 
@@ -687,12 +686,12 @@
             upazilaList = "";
             selectedDistrict = jq("#districts option:checked").val();
 
-			if (selectedDistrict === ""){
-				jq('#upazilas').empty().append(jq("<option></option>").attr("value",'').text('Select Sub-County'));
-				jq('#locations').empty().append(jq("<option></option>").attr("value",'').text('Select Ward'));
+            if (selectedDistrict === "") {
+                jq('#upazilas').empty().append(jq("<option></option>").attr("value", '').text('Select Sub-County'));
+                jq('#locations').empty().append(jq("<option></option>").attr("value", '').text('Select Ward'));
 
-				return false
-			}
+                return false
+            }
 
             jq.each(MODEL.counties, function (index, value) {
                 if (value == selectedDistrict) {
@@ -985,11 +984,11 @@
             }
 
             //TAB3
-			if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
-				str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
+            if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()) {
+                str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
                 i++;
                 tab3++;
-			}
+            }
 
             if (jq("#legal1").val() == 0) {
                 jq('#legal1').addClass("red-border");
@@ -1379,7 +1378,7 @@
             } else {
                 jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
                 jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-				return false;
+                return false;
             }
         }
         else {
@@ -1387,7 +1386,7 @@
                 if (jq("#patientGender").val() == "M") {
                     jq().toastmessage('showErrorToast', 'This category is only valid for female');
                     jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-					return false;
+                    return false;
                 }
             }
 
@@ -1437,18 +1436,17 @@
             jq("#nhifNumberRow").hide();
         }
 
-        if(selectedRoomToVisit === "3"){
-            if(nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+        if (selectedRoomToVisit === "3") {
+            if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT") {
                 jq("#selectedRegFeeValue").val(${specialClinicRegFee});
             }
-        } else if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT"){
+        } else if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT") {
             jq("#selectedRegFeeValue").val(${initialRegFee});
         } else {
             jq("#selectedRegFeeValue").val(0);
         }
 
     }
-
 
 
     function specialSchemeSelection() {
@@ -1559,7 +1557,7 @@
             jq("#modesummary").val("");
 
             jq('#universitydiv').hide();
-			jq('#university option').eq(0).prop('selected', true);
+            jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('NHIF Summary');
             jq('#modesummary').attr("placeholder", "NHIF Number");
@@ -1569,7 +1567,7 @@
             jq("#modesummary").val("");
 
             jq('#universitydiv').show();
-			jq('#university option').eq(1).prop('selected', true);
+            jq('#university option').eq(1).prop('selected', true);
 
             jq('#summtitle1').text('Student Summary');
             jq('#modesummary').attr("placeholder", "Student Number");
@@ -1579,7 +1577,7 @@
             jq("#modesummary").val("");
 
             jq('#universitydiv').hide();
-			jq('#university option').eq(0).prop('selected', true);
+            jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('Waiver Summary');
             jq('#modesummary').attr("placeholder", "Waiver Number");
@@ -1589,7 +1587,7 @@
             jq("#modesummary").val("N/A");
 
             jq('#universitydiv').hide();
-			jq('#university option').eq(0).prop('selected', true);
+            jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('Details');
             jq('#modesummary').attr("placeholder", "Enter Value");
@@ -1695,7 +1693,7 @@
 
             jq("#mlcCaseYes").attr('checked', 'checked');
             jq("#mlcCaseNo").attr('checked', false);
-			jq('#formlc span').text('*');
+            jq('#formlc span').text('*');
         }
         else if (jq("#legal1").val() == 2) {
             var myOptions = {" ": 'N/A'};
@@ -1708,9 +1706,9 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', 'checked');
-			jq('#formlc span').text('');
+            jq('#formlc span').text('');
         }
-		else {
+        else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#mlc');
             jq.each(myOptions, function (val, text) {
@@ -1721,7 +1719,7 @@
 
             jq("#mlcCaseYes").attr('checked', false);
             jq("#mlcCaseNo").attr('checked', false);
-			jq('#formlc span').text('');
+            jq('#formlc span').text('');
         }
     }
     function LoadReferralCases() {
@@ -1749,13 +1747,13 @@
 
             jq(".referraldiv").show();
 
-			jq('#forReferralType span').text('*');
-			jq('#forReferredFrom span').text('*');
+            jq('#forReferralType span').text('*');
+            jq('#forReferredFrom span').text('*');
 
             jq('#referralDescription').removeClass("disabled");
         }
-		else if (jq("#refer1").val() == 2) {
-			var myOptions = {" ": 'N/A'};
+        else if (jq("#refer1").val() == 2) {
+            var myOptions = {" ": 'N/A'};
             var mySelect = jq('#referredFrom');
             jq.each(myOptions, function (val, text) {
                 mySelect.append(
@@ -1775,13 +1773,13 @@
 
             jq(".referraldiv").hide();
 
-			jq('#forReferralType span').text('');
-			jq('#forReferredFrom span').text('');
+            jq('#forReferralType span').text('');
+            jq('#forReferredFrom span').text('');
 
             jq("#referredNo").attr('checked', 'checked');
             jq("#referredYes").attr('checked', false);
             jq('#referralDescription').addClass("disabled");
-		}
+        }
         else {
             var myOptions = {" ": 'N/A'};
             var mySelect = jq('#referredFrom');
@@ -2068,7 +2066,7 @@
 }
 
 .tasks-lists {
-	background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
+    background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
     position: absolute;
     top: 50%;
     right: 10px;
@@ -2221,7 +2219,7 @@
 }
 
 .addon {
-	color: #f26522;
+    color: #f26522;
     display: inline-block;
     float: right;
     margin: 10px 0 0 190px;
@@ -2255,21 +2253,22 @@
             <span class="title">Patient Details</span>
             <fieldset class="no-confirmation">
                 <legend>Demographics</legend>
-				<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
+
+                <h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
 
 
                 <div class="onerow">
                     <div class="col4">
                         <label>First Name<span>*</span></label>
-					</div>
+                    </div>
 
                     <div class="col4">
-						<label>Middle name<span></span></label>
-					</div>
+                        <label>Middle name<span></span></label>
+                    </div>
 
                     <div class="col4 last">
-						<label>Third Name<span>*</span></label>
-					</div>
+                        <label>Third Name<span>*</span></label>
+                    </div>
                 </div>
 
                 <div class="onerow">
@@ -2277,11 +2276,15 @@
                         <field><input type="text" id="firstName" name="patient.firstName"
                                       class="required form-textbox1"/></field>
                     </div>
+
                     <div class="col4">
-                        <field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/></field>
+                        <field><input type="text" id="otherName" name="patient.otherName" class="form-textbox1"/>
+                        </field>
                     </div>
+
                     <div class="col4 last">
-                        <field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/></field>
+                        <field><input type="text" id="surName" name="patient.surName" class="required form-textbox1"/>
+                        </field>
 
                         <input type="hidden" id="selectedRegFeeValue" name="patient.registration.fee"/>
                         <input type="hidden" id="patientIdnts" name="patient.identifier" value="${patientIdentifier}"/>
@@ -2561,7 +2564,8 @@
 
                 <h2>&nbsp;</h2>
 
-                <h2>Next of Kin / Informant Details <i class="icon-plus small" title="Add Next of Kin" id="addNextOfKin"></i></h2>
+                <h2>Next of Kin / Informant Details <i class="icon-plus small" title="Add Next of Kin"
+                                                       id="addNextOfKin"></i></h2>
 
                 <div class="onerow">
                     <div class="col4"><label>Full Names <span>*</span></label></div>
@@ -2584,7 +2588,8 @@
                                     <select id="relationshipType" name="person.attribute.15"
                                             class="required form-combo1">
                                         <option value=""></option>
-                                        <option value="Parent">Parent</option>
+                                        <option value="Father">Father</option>
+                                        <option value="Mother">Mother</option>
                                         <option value="Spouse">Spouse</option>
                                         <option value="Guardian">Guardian</option>
                                         <option value="Friend">Friend</option>
@@ -2604,16 +2609,17 @@
                 </div>
 
                 <div class="onerow" style="margin-top: 50px">
-					<label style="margin-top: 0px">Physical Address</label>
+                    <label style="margin-top: 0px">Physical Address</label>
 
-					<field>
-						<textarea type="text" id="relativePostalAddress" name="person.attribute.28"
-								  class="form-textbox1" style="height: 80px; width: 700px;" placeholder="Village /Estate /Landmark"></textarea>
-					</field>
+                    <field>
+                        <textarea type="text" id="relativePostalAddress" name="person.attribute.28"
+                                  class="form-textbox1" style="height: 80px; width: 700px;"
+                                  placeholder="Village /Estate /Landmark"></textarea>
+                    </field>
 
-					<field>
-						<label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
-					</field>
+                    <field>
+                        <label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
+                    </field>
                 </div>
 
                 <div class="onerow" style="margin-top: 50px">
@@ -2681,9 +2687,9 @@
                             <div class="tasks">
                                 <header class="tasks-header">
                                     <span id="summtitle1" class="tasks-title">Details</span>
-                                    <input type="hidden" id="nhifNumber" name="person.attribute.34" />
-                                    <input type="hidden" id="studentId" name="person.attribute.42" />
-                                     <input type="hidden" id="waiverNumber" name="person.attribute.32" />
+                                    <input type="hidden" id="nhifNumber" name="person.attribute.34"/>
+                                    <input type="hidden" id="studentId" name="person.attribute.42"/>
+                                    <input type="hidden" id="waiverNumber" name="person.attribute.32"/>
                                     <a class="tasks-lists"></a>
                                 </header>
                             </div>
@@ -2700,6 +2706,7 @@
                     </div>
 
                     <h2>&nbsp;</h2>
+
                     <h2>Legal Information</h2>
 
                     <div class="onerow">
@@ -2739,7 +2746,8 @@
                         <div class="col4 last"></div>
                     </div>
 
-					<h2>&nbsp;</h2>
+                    <h2>&nbsp;</h2>
+
                     <h2>Referral Information</h2>
 
                     <div class="onerow">
@@ -2748,7 +2756,8 @@
                         </div>
 
                         <div class="col4">
-                            <label id="forReferralType" for="referralType" style="margin:0px;">Referral Type<span></span></label>
+                            <label id="forReferralType" for="referralType"
+                                   style="margin:0px;">Referral Type<span></span></label>
                         </div>
 
                         <div class="col4 last">
@@ -2783,13 +2792,14 @@
                         </div>
                     </div>
 
-					 <div class="onerow referraldiv" style="margin-top:50px;">
+                    <div class="onerow referraldiv" style="margin-top:50px;">
                         <div class="col4">
                             <label for="refer1" style="margin:0px;">Referred From</label>
                         </div>
 
                         <div class="col4">
-                            <label id="forReferredFrom" for="referredFrom" style="margin:0px;">Facility Type<span></span></label>
+                            <label id="forReferredFrom" for="referredFrom"
+                                   style="margin:0px;">Facility Type<span></span></label>
                         </div>
 
                         <div class="col4 last">
@@ -2797,7 +2807,7 @@
                         </div>
                     </div>
 
-					<div class="onerow referraldiv">
+                    <div class="onerow referraldiv">
                         <div class="col4">
                             <span class="select-arrow" style="width: 100%">
                                 <field>
@@ -2819,9 +2829,10 @@
                         </div>
 
                         <div class="col4 last">
-							<field>
-								<input id="referredInstitute" name="patient.referred.facility" class="form-textbox1 focused" type="text" placeholder="Institution Name">
-							</field>
+                            <field>
+                                <input id="referredInstitute" name="patient.referred.facility"
+                                       class="form-textbox1 focused" type="text" placeholder="Institution Name">
+                            </field>
                         </div>
                     </div>
 
@@ -2906,7 +2917,7 @@
                         <input id="opdRoom" type="checkbox" name="opdRoom"/>
                         <input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
                         <input id="birthdateEstimated" type="text" name="patient.birthdateEstimate"/>
-						<input id="chiefdom" class="form-textbox1 focused" type="text" name="person.attribute.41">
+                        <input id="chiefdom" class="form-textbox1 focused" type="text" name="person.attribute.41">
                     </div>
 
                     <div class="onerow" style="display:none!important;">
