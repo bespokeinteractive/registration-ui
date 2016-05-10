@@ -1870,7 +1870,7 @@
                 // jq(':focus')
 
                 //NavigatorController.getFieldById('passportNumber').select();
-
+				window.location.href = emr.pageLink ("pharmacyapp", "container", { "rel" : "dispense-drugs"});
             }
             else if (current_tab == 2) {
                 var currents = '';
@@ -1939,11 +1939,9 @@
     body {
         margin-top: 20px;
     }
-
     .toast-item {
         background-color: #222;
     }
-
     .col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
         color: #555;
         text-align: left;
@@ -2332,6 +2330,40 @@
     .no-confirmation {
         margin-top: -25px;
     }
+	a.tooltip {outline:none; }
+	a.tooltip strong {line-height:20px;}
+	a.tooltip:hover {text-decoration:none;} 
+	a.tooltip span {
+		z-index:10;
+		display:none; 
+		padding:14px 20px;
+		margin-left:-205px;
+		width:205px; 
+		line-height:16px;
+		position:absolute; 
+		color:#111;
+		border:1px solid #DCA; background:#fffAF0;
+	}
+	a.tooltip span em{
+		width: 20px;
+		float: left;
+		font-family: Times New Roman;
+		font-style: italic;
+	}
+	a.tooltip:hover span{
+		display:inline; 
+	}
+	.callout {
+		z-index:20;
+		position:absolute;
+		top:-12px;
+		border:0;
+		left:203px;
+	}
+	a.tooltip span {
+		border-radius:4px;
+		box-shadow: 5px 5px 8px #CCC;
+	}
     </style>
 
 </head>
@@ -2469,7 +2501,7 @@
                                     <field>
                                         <div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
                                         <input type="text" id="birthdate" name="patient.birthdate"
-                                               class="required form-textbox1"/>
+                                               class="required form-textbox1" placeholder="DD/MM/YYYY"/>
                                     </field>
                                     <input id="birthdateEstimated" type="hidden" name="patient.birthdateEstimate"
                                            value="true"/>
@@ -2484,7 +2516,18 @@
                                 </div>
 
                                 <div class="col4 last">&nbsp;
-                                    <span id="estimatedAge"/>
+                                    <span id="estimatedAge"></span>
+									<a class="tooltip" style="float: right;">
+										<img src="../ms/uiframework/resource/registration/images/tooltip.png" style="margin: 3px 2px 0px 0px; width: 18px; cursor: pointer;"></img>
+										<span style="margin-top:11px; font-family: Times New Roman; color: #222;">
+											<img class="callout" src="../ms/uiframework/resource/registration/images/callout.png" style="width:auto;" />
+											<strong>D.O.B Estimates</strong><br />
+											<em>y</em> - for years (e.g 23y)<br/>
+											<em>m</em> - for months (e.g 28m)<br/>
+											<em>w</em> - for weeks (e.g 14w)<br/>
+											<em>d</em> - for days (e.g 76d)<br/>
+										</span>									
+									</a>
                                 </div>
                             </div>
 
