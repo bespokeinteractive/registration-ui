@@ -2750,8 +2750,12 @@
 
                             <h2>&nbsp;</h2>
 
-                            <h2>Next of Kin / Informant Details <i class="icon-plus small" title="Add Next of Kin"
-                                                                   id="addNextOfKin"></i></h2>
+                            <h2>
+								Next of Kin / Informant Details
+								<div id="addNextOfKin" style="display: inline-block; cursor: pointer; border-left: 1px solid rgb(170, 170, 170); margin-left: 10px; padding: 0px 11px;">					
+									<img src="../ms/uiframework/resource/registration/images/add.png" style="width: auto; cursor: pointer;"></img>
+								</div>
+							</h2>
 
                             <div class="onerow">
                                 <div class="col4"><label>Full Names <span>*</span></label></div>
