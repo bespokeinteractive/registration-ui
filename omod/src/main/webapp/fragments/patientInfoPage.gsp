@@ -522,7 +522,7 @@
                 var verified = 0;
 
                 if (jQuery("#mlcCaseYes").is(':checked') && StringUtils.isBlank(jQuery("#mlc").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the medico legal case");
+                    jq().toastmessage('showErrorToast', "Please select the medico legal case");
                     jQuery('#mlc').addClass("red-border");
                     verified++;
                 }
@@ -531,12 +531,12 @@
                 }
 
                 if (!jq('[name="visitRoom"]').is(':checked')) {
-                    jq().toastmessage('showNoticeToast', "You did not choose any room for visit");
+                    jq().toastmessage('showErrorToast', "You did not choose any room for visit");
                     verified++;
                 }
 
                 if (jQuery("#triageRoom").attr('checked') && StringUtils.isBlank(jQuery("#triage").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the triage room to visit");
+                    jq().toastmessage('showErrorToast', "Please select the triage room to visit");
                     jQuery('#triage').addClass("red-border");
                     verified++;
                 }
@@ -545,7 +545,7 @@
                 }
 
                 if (jQuery("#opdRoom").attr('checked') && StringUtils.isBlank(jQuery("#opdWard").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the OPD room to visit");
+                    jq().toastmessage('showErrorToast', "Please select the OPD room to visit");
                     jQuery('#opdWard').addClass("red-border");
                     verified++;
                 }
@@ -555,7 +555,7 @@
 
                 if (jQuery("#specialClinicRoom").attr('checked')) {
                     if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                        jq().toastmessage('showNoticeToast', "Please select the Special Clinic to visit");
+                        jq().toastmessage('showErrorToast', "Please select the Special Clinic to visit");
                         jQuery('#specialClinic').addClass("red-border");
                         verified++;
                     }
@@ -564,7 +564,7 @@
                     }
 
                     if (StringUtils.isBlank(jQuery("#fileNumber").val())) {
-                        jq().toastmessage('showNoticeToast', "Please specify the File Number");
+                        jq().toastmessage('showErrorToast', "Please specify the File Number");
                         jQuery('#fileNumber').addClass("red-border");
                         verified++;
                     }
@@ -576,6 +576,19 @@
                     jQuery('#specialClinic').removeClass("red-border");
                     jQuery('#fileNumber').removeClass("red-border");
                 }
+				
+				var age = ${patientAge};
+				var gender = '${patientGender}';
+				var rooms = jq('#triage').val();
+				
+				if (age > 5 && gender == 'M' & rooms=='5123'){
+					jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
+                    jQuery('#triage').addClass("red-border");
+                    verified++;
+				}
+				else{
+					jQuery('#triage').removeClass("red-border");
+				}
 
             }
 
