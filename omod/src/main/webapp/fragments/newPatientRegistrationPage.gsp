@@ -614,7 +614,7 @@
                             jq("#birthdateEstimated").val("false");
                         }
 
-                        jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
+                        jq("#summ_ages").html(data.datemodel.age);
                         jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                         jq("#birthdate").val(data.datemodel.birthdate);
                         jq("#calendar").val(data.datemodel.birthdate);

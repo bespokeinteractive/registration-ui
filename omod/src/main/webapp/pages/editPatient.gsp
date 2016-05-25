@@ -39,7 +39,7 @@
 
         jq(document).ready(function () {
             if ('${status}' === 'error') {
-                jq().toastmessage('showNoticeToast', '${message}');
+                jq().toastmessage('showErrorToast', '${message}');
             }
 
             jq("input[name='paym_1']:radio").change(function () {
@@ -723,7 +723,7 @@
                                 jq("#estimatedAge").html(data.datemodel.age);
                             }
 
-                            jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
+                            jq("#summ_ages").html(data.datemodel.age);
                             jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                             jq("#birthdate").val(data.datemodel.birthdate);
                             jq("#calendar").val(data.datemodel.birthdate);
