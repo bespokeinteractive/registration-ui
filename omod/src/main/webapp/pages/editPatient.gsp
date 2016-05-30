@@ -666,7 +666,6 @@
 
                 // Validate and submit
                 if (this.validateRegisterForm()) {
-
                     jq("#patientRegistrationForm").submit();
                 }
             },
@@ -1867,10 +1866,6 @@
                         NavigatorController.stepForward();
                     }
                 }
-                // jq(':focus')
-
-                //NavigatorController.getFieldById('passportNumber').select();
-				window.location.href = emr.pageLink ("pharmacyapp", "container", { "rel" : "dispense-drugs"});
             }
             else if (current_tab == 2) {
                 var currents = '';
