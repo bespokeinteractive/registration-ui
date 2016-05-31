@@ -415,12 +415,15 @@
         print: function () {
             var myStyle = '<link rel="stylesheet" href="http://localhost:8080/openmrs/ms/uiframework/resource/registration/styles/onepcssgrid.css" />';
             var printDiv = jQuery("#patientInfoPrintArea").html();
-            var printWindow = window.open('', '', 'height=400,width=800');
-            printWindow.document.write('<html><head><title>Patient Information</title>');
+            var printWindow = window.open('', '', 'height=500,width=400');
+            
+			printWindow.document.write('<html><head><title>Patient Information</title>');
+            printWindow.document.write('<body style="font-family: Dot Matrix Normal,Arial,Helvetica,sans-serif; font-size: 12px; font-style: normal;">');
             printWindow.document.write(printDiv);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
+            printWindow.document.write('</body>');
+            printWindow.document.write('</html>');
             printWindow.print();
+            printWindow.close();
 
 //            jQuery("#patientInfoPrintArea").printArea({
 //                mode: "popup",
@@ -837,51 +840,48 @@
         <center>
             <center>
                 <img width="60" height="60" align="center" title="OpenMRS" alt="OpenMRS"
-                     src="${ui.resourceLink("registration", "images/kenya_logo.bmp")}">
+                     src="${ui.resourceLink('registration', 'images/kenya_logo.bmp')}">
             </center>
 
         </center>
 
         <form id="patientInfoForm" method="POST" class="spacer">
             <h3><center><u><b>${userLocation}</b></u></center></h3>
-            <h4><center><b>${typeOfSlip}</b></center></h4>
+            <h4 style="font-size: 1.4em;"><center><b>${typeOfSlip}</b></center></h4>
 			<div style="display: block;	margin-left: auto; margin-right: auto; width: 350px">
             <div class="onerow" align="left">
-                <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Previous Day of Visit:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><span id="datetime"></span></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px">
+					<b>Previous Day of Visit:</b>
+				</div>
 				
-				
+                <div class="col2" align="left" style="display: inline-block; width: 150px;">
+					<span id="datetime"></span>
+				</div>				
             </div>
 
             <div class="onerow" align="left">
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Name:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><span id="patientName"></span></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"><span id="patientName"></span></div>
             </div>
 
             <div class="onerow" align="left">
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Patient ID:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><span id="identifier"></span></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px""><span id="identifier"></span></div>
             </div>
 
             <div class="onerow" align="left">
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Age:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><span id="age"></span></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px""><span id="age"></span></div>
             </div>
 
             <div class="onerow" align="left">
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Gender:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><span id="gender"></span></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px""><span id="gender"></span></div>
             </div>
 
             <div class="onerow" align="left" id="printablePaymentCategoryRow">             
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Payment Category:</b></div>
-                <div class="col2" align="left" style="display:inline-block"><div id="printablePaymentCategory"></div></div>
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px""><div id="printablePaymentCategory"></div></div>
             </div>
 
             <div class="onerow" align="left" id="medicoLegalCaseRowField">
@@ -959,33 +959,27 @@
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
 
                 <div class="col2" align="left" style="display:inline-block;">
-                    ${registrationFee}
+                    ${registrationFee}.00
                 </div>
-
-                <div class="col4 last">&nbsp;</div>
             </div>
 
             <div class="onerow" align="left" id="printableRegistrationFeeForFirstVisitAndReprintRow">
-
                 <div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
 
-                <div class="col2" align="left">
-                    <div id="printableRegistrationFee"></div>
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
+                <div class="col2" align="left" id="printableRegistrationFee"></div>
             </div>
 
             <div class="onerow" align="left" id="patientrevisit" style="display:none">
-                <div class="col4">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px">&nbsp;</div>
 
-                <div class="col2" align="left"><font color="#ff0000 ">(Patient Revisit with in 24 hr)</font></div>
+                <div class="col2" align="left" style="display:inline-block; width: 175px"><font color="#ff0000 ">(Patient Revisit with in 24 hr)</font></div>
 
-                <div class="col2" align="left">
-
-                </div>
-
-                <div class="col4 last">&nbsp;</div>
+                
+            </div>
+			
+			 <div class="onerow" align="left" id="printableSpacing">
+                <div class="col2" align="left" style="display:inline-block; width: 150px">&nbsp;</div>
+                <div class="col2" align="left" style="display:inline-block; width: 150px"></div>
             </div>
 
             <div class="onerow" align="left" id="printableUserRow">
@@ -1019,13 +1013,17 @@
                 <div class="col4">&nbsp;</div>
 
                 <div class="col2">
-                    <input id="printSlip" type="button" value="Print"
-                           onClick="PAGE.submit(false);"/>
+                    <span class="button task" id="printSlip" onClick="PAGE.submit(false);" style="width: 45px;">
+						<i class="icon-print small"></i>
+						Print
+					</span>
                 </div>
 
                 <div class="col2">
-                    <input id="reprint" type="button" value="Reprint"
-                           onClick="PAGE.submit(true);"/>
+                    <span class="button task" id="reprint" onClick="PAGE.submit(true);" style="width: 60px;">
+						<i class="icon-print small"></i>
+						Reprint
+					</span>
                 </div>
 
                 <div class="col4 last">

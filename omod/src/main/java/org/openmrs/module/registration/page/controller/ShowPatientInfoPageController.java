@@ -67,10 +67,16 @@ public class ShowPatientInfoPageController {
         model.addAttribute("firstTimeVisit", true);
 
 
+
+
+
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         PatientModel patientModel = new PatientModel(patient);
         model.addAttribute("patient", patientModel);
+        model.addAttribute("patientAge", patient.getAge());
+        model.addAttribute("patientGender", patient.getGender());
+
         model.addAttribute("MEDICOLEGALCASE", RegistrationWebUtils.getSubConcepts(RegistrationConstants.CONCEPT_NAME_MEDICO_LEGAL_CASE));
         // Get current date
         SimpleDateFormat sdf = new SimpleDateFormat("EEE dd/MM/yyyy kk:mm");

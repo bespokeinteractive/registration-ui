@@ -186,6 +186,7 @@
             var b = MODEL.patientAttributes[44];
             var c = a + "/" + b;
             jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + c + "</span>");
+            jQuery("#printPaymentCategory").append("<span style='border:0px'>" + c + "</span>");
         }
 
         if (MODEL.patientAttributes[14] == "Non-Paying") {
@@ -195,10 +196,12 @@
                 var c = MODEL.patientAttributes[34];
                 var d = a + "/" + b + "/" + c;
                 jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + d + "</span>");
+                jQuery("#printPaymentCategory").append("<span style='border:0px'>" + d + "</span>");
             }
             else {
                 var c = a + "/" + b;
                 jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + c + "</span>");
+                jQuery("#printPaymentCategory").append("<span style='border:0px'>" + c + "</span>");
             }
         }
 
@@ -210,15 +213,18 @@
                 var d = MODEL.patientAttributes[42];
                 var e = a + "/" + b + "/" + c + "/" + d;
                 jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + e + "</span>");
+                jQuery("#printPaymentCategory").append("<span style='border:0px'>" + e + "</span>");
             }
             else if (MODEL.patientAttributes[46] == "WAIVER CASE") {
                 var c = MODEL.patientAttributes[32];
                 var d = a + "/" + b + "/" + c;
                 jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + d + "</span>");
+                jQuery("#printPaymentCategory").append("<span style='border:0px'>" + d + "</span>");
             }
             else {
                 var c = a + "/" + b;
                 jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + c + "</span>");
+                jQuery("#printPaymentCategory").append("<span style='border:0px'>" + c + "</span>");
             }
         }
         jQuery("#printablePaymentCategoryRow").show();
@@ -317,9 +323,11 @@
             //alert("hmmm");
             if ((MODEL.create != 0) && (MODEL.creates != 0)) { //alert("hiii");
                 jQuery("#patientrevisit").hide();
+                jQuery("#patRevisit").hide();
             }
             else { //alert("hello");
                 jQuery("#patientrevisit").show();
+                jQuery("#patRevisit").show();
             }
 
             jQuery("#printSlip").hide();
@@ -355,13 +363,16 @@
 
                     if (jQuery("#paying").is(':checked')) {
                         jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + jQuery("#paying").val() + "</span>");
+                        jQuery("#printPaymentCategory").append("<span style='border:0px'>" + jQuery("#paying").val() + "</span>");
                     }
                     if (jQuery("#nonPaying").is(':checked')) {
                         jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + jQuery("#nonPaying").val() + "</span>");
+                        jQuery("#printPaymentCategory").append("<span style='border:0px'>" + jQuery("#nonPaying").val() + "</span>");
                     }
 
                     if (jQuery("#specialSchemes").is(':checked')) {
                         jQuery("#printablePaymentCategory").append("<span style='border:0px'>" + jQuery("#specialSchemes").val() + "</span>");
+                        jQuery("#printPaymentCategory").append("<span style='border:0px'>" + jQuery("#specialSchemes").val() + "</span>");
                     }
 
                     jQuery("#printablePaymentCategoryRow").show();
@@ -417,13 +428,16 @@
         // Print the slip
         print: function () {
             var myStyle = '<link rel="stylesheet" href="http://localhost:8080/openmrs/ms/uiframework/resource/registration/styles/onepcssgrid.css" />';
-            var printDiv = jQuery("#patientInfoPrintArea").html();
-            var printWindow = window.open('', '', 'height=400,width=800');
-            printWindow.document.write('<html><head><title>Patient Information</title>');
+            var printDiv = jQuery("#printDiv").html();
+            var printWindow = window.open('', '', 'height=500,width=400');
+           			
+			printWindow.document.write('<html><head><title>Patient Information</title>');
+            printWindow.document.write('<body style="font-family: Dot Matrix Normal,Arial,Helvetica,sans-serif; font-size: 12px; font-style: normal;">');
             printWindow.document.write(printDiv);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
+            printWindow.document.write('</body>');
+            printWindow.document.write('</html>');
             printWindow.print();
+            printWindow.close();
 
         },
 
@@ -508,7 +522,7 @@
                 var verified = 0;
 
                 if (jQuery("#mlcCaseYes").is(':checked') && StringUtils.isBlank(jQuery("#mlc").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the medico legal case");
+                    jq().toastmessage('showErrorToast', "Please select the medico legal case");
                     jQuery('#mlc').addClass("red-border");
                     verified++;
                 }
@@ -517,12 +531,12 @@
                 }
 
                 if (!jq('[name="visitRoom"]').is(':checked')) {
-                    jq().toastmessage('showNoticeToast', "You did not choose any room for visit");
+                    jq().toastmessage('showErrorToast', "You did not choose any room for visit");
                     verified++;
                 }
 
                 if (jQuery("#triageRoom").attr('checked') && StringUtils.isBlank(jQuery("#triage").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the triage room to visit");
+                    jq().toastmessage('showErrorToast', "Please select the triage room to visit");
                     jQuery('#triage').addClass("red-border");
                     verified++;
                 }
@@ -531,7 +545,7 @@
                 }
 
                 if (jQuery("#opdRoom").attr('checked') && StringUtils.isBlank(jQuery("#opdWard").val())) {
-                    jq().toastmessage('showNoticeToast', "Please select the OPD room to visit");
+                    jq().toastmessage('showErrorToast', "Please select the OPD room to visit");
                     jQuery('#opdWard').addClass("red-border");
                     verified++;
                 }
@@ -541,7 +555,7 @@
 
                 if (jQuery("#specialClinicRoom").attr('checked')) {
                     if (StringUtils.isBlank(jQuery("#specialClinic").val())) {
-                        jq().toastmessage('showNoticeToast', "Please select the Special Clinic to visit");
+                        jq().toastmessage('showErrorToast', "Please select the Special Clinic to visit");
                         jQuery('#specialClinic').addClass("red-border");
                         verified++;
                     }
@@ -550,7 +564,7 @@
                     }
 
                     if (StringUtils.isBlank(jQuery("#fileNumber").val())) {
-                        jq().toastmessage('showNoticeToast', "Please specify the File Number");
+                        jq().toastmessage('showErrorToast', "Please specify the File Number");
                         jQuery('#fileNumber').addClass("red-border");
                         verified++;
                     }
@@ -562,6 +576,19 @@
                     jQuery('#specialClinic').removeClass("red-border");
                     jQuery('#fileNumber').removeClass("red-border");
                 }
+				
+				var age = ${patientAge};
+				var gender = '${patientGender}';
+				var rooms = jq('#triage').val();
+				
+				if (age > 5 && gender == 'M' & rooms=='5123'){
+					jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
+                    jQuery('#triage').addClass("red-border");
+                    verified++;
+				}
+				else{
+					jQuery('#triage').removeClass("red-border");
+				}
 
             }
 
@@ -709,6 +736,7 @@
                 // alert("hello");
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
+                jQuery("#patRevisit").show();
                 if (MODEL.patientAttributes[44] == "CHILD LESS THAN 5 YEARS") {
                     jQuery("#selectedRegFeeValue").val(0);
                 }
@@ -731,7 +759,8 @@
 
         var selectedRegFeeValue = jQuery("#selectedRegFeeValue").val();
         jQuery("#printableRegistrationFee").empty();
-        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + "</span>");
+        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + ".00</span>");
+        jQuery("#printRegistrationFee").text( selectedRegFeeValue + '.00');
 
     }
 
@@ -741,6 +770,7 @@
             if ((MODEL.visitTimeDifference <= 24)) {
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
+                jQuery("#patRevisit").show();
 
                 if (MODEL.patientAttributes[44] == "CHILD LESS THAN 5 YEARS") {
                     jQuery("#selectedRegFeeValue").val(0);
@@ -765,7 +795,8 @@
 
         var selectedRegFeeValue = jQuery("#selectedRegFeeValue").val();
         jQuery("#printableRegistrationFee").empty();
-        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + "</span>");
+        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + ".00</span>");
+        jQuery("#printRegistrationFee").text(selectedRegFeeValue + '.00');
 
     }
 
@@ -786,6 +817,7 @@
             if ((MODEL.visitTimeDifference <= 24)) {    //alert("Patient Revisit within 24 hr");
                 jQuery("#selectedRegFeeValue").val(0);
                 jQuery("#patientrevisit").show();
+                jQuery("#patRevisit").show();
                 if (MODEL.patientAttributes[44] == "CHILD LESS THAN 5 YEARS") {
                     jQuery("#selectedRegFeeValue").val(0);
                 }
@@ -817,7 +849,8 @@
 
         var selectedRegFeeValue = jQuery("#selectedRegFeeValue").val();
         jQuery("#printableRegistrationFee").empty();
-        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + "</span>");
+        jQuery("#printableRegistrationFee").append("<span style='margin:5px;'>" + selectedRegFeeValue + ".00</span>");
+        jQuery("#printRegistrationFee").text(selectedRegFeeValue + ".00");
 
     }
 </script>
@@ -939,7 +972,8 @@ form input, form select, form textarea, form ul.select, .form input, .form selec
 form input[type="radio"]:focus {
     outline: 2px none #007fff;
 }
-#patientrevisit{
+#patientrevisit,
+#patRevisit {
 	color: #f00;
 	display: none;
 }
@@ -948,9 +982,6 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 	box-shadow: 0 0 2px 0px #888!important;
 }
 </style>
-
-<header>
-</header>
 
 <body>
 <div class="clear"></div>
@@ -1197,5 +1228,78 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 		</div>
 	</div>
 </form>
+
+<div id="printDiv" style="display: none;">
+	<center>
+		<center>
+			<img width="60" height="60" align="center" title="OpenMRS" alt="OpenMRS"
+				 src="${ui.resourceLink('registration', 'images/kenya_logo.bmp')}">
+		</center>
+	</center>
+	
+	<h3><center><u><b>${userLocation}</b></u></center></h3>
+	<h4 style="font-size: 1.4em;"><center><b>Registration Receipt</b></center></h4>
+	<div style="display: block;	margin-left: auto; margin-right: auto; width: 350px">
+	<div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px">
+			<b>Previous Day of Visit:</b>
+		</div>
+		
+		<div class="col2" align="left" style="display: inline-block; width: 150px;">
+			<span id="datetime"></span>
+		</div>				
+	</div>
+	
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Name:</b></div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><span id="patientName"></span></div>
+	</div>
+
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Patient ID:</b></div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px""><span id="identifier"></span></div>
+	</div>
+
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Age:</b></div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px""><span id="age"></span></div>
+	</div>
+
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Gender:</b></div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px""><span id="gender"></span></div>
+	</div>
+
+	<div class="onerow" align="left" id="printablePaymentCategoryRow">             
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Payment Category:</b></div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px""><div id="printPaymentCategory"></div></div>
+	</div>
+	
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Registration Fee:</b></div>
+		<div class="col2" align="left" style="display:inline-block;" id="printRegistrationFee">
+			${registrationFee?:"0"}.00
+		</div>
+	</div>
+	
+	<div class="onerow" align="left" id="patRevisit" style="display:none">
+		<div class="col2" align="left" style="display:inline-block; width: 150px">&nbsp;</div>
+		<div class="col2" align="left" style="display:inline-block; width: 175px"><font color="#ff0000 ">(Patient Revisit with in 24 hr)</font></div>		
+	</div>
+	
+	 <div class="onerow" align="left" id="printableSpacing">
+		<div class="col2" align="left" style="display:inline-block; width: 150px">&nbsp;</div>
+		<div class="col2" align="left" style="display:inline-block; width: 150px"></div>
+	</div>
+
+	<div class="onerow" align="left" id="printableUserRow">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>You were served by:</b></div>
+		<div class="col2" align="left" style="display:inline-block;">
+			${user}
+		</div>
+
+		<div class="col4 last">&nbsp;</div>
+	</div>	
+</div>
 
 </body>
