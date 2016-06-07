@@ -63,6 +63,7 @@
             if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT") {
                 nonPayingCategorySelection();
             }
+            nonPayingCategorySelection();
         });
 
         jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
@@ -100,6 +101,7 @@
 
                 jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
                 payingCategorySelection();
+                nonPayingCategorySelection();
             }
 
             if (select3.toUpperCase().indexOf("NHIF") >= 0) {
@@ -1807,6 +1809,7 @@
     }
 
     function LoadRoomsTypes() {
+        nonPayingCategorySelection();
         jq('#rooms2').empty();
         if (jq("#rooms1").val() == 1) {
             PAGE.fillOptions("#rooms2", {
