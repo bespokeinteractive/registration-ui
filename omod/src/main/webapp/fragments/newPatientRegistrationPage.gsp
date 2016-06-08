@@ -1971,13 +1971,22 @@
 
         }
         else if (current_tab == 5) {
+			var loops = 0;
+			
             while (jq(':focus') != jq('#maritalStatus')) {
                 if (jq(':focus').attr('id') == 'birthdate') {
                     jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
+					if (loops == 10){
+						//Detect the Loop and Prevent it from Happening
+						jq('#birthdate').focus();
+						break;
+					}
+					
                     NavigatorController.stepBackward();
+					loops++;
                 }
             }
         }
