@@ -579,9 +579,10 @@
 				
 				var age = ${patientAge};
 				var gender = '${patientGender}';
-				var rooms = jq('#triage').val();
-				
-				if (age > 5 && gender == 'M' & rooms=='5123'){
+				var opd_room = jq('#triage').val();
+				var tri_room = jq('#specialClinic').val();
+
+				if (age > 5 && gender == 'M' && (opd_room == '5123' || tri_room == '5704')){
 					jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
                     jQuery('#triage').addClass("red-border");
                     verified++;

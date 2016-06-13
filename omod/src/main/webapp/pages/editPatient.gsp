@@ -1924,8 +1924,8 @@
                         break;
                     }
                     else {
-                        if (loops == 10){
 						//Detect the Loop and Prevent it from Happening
+                        if (loops == 10){
 							jq('#birthdate').focus();
 							break;
 						}
