@@ -47,8 +47,7 @@ public class ShowPatientInfoPageController {
             throws IOException, ParseException {
 
         //set place holder values
-
-        model.addAttribute("userLocation", "Afya EHMS");
+        model.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         model.addAttribute("selectedOPD", "");
         model.addAttribute("selectedTRIAGE", "");
         model.addAttribute("selectedSPECIALCLINIC", "");
