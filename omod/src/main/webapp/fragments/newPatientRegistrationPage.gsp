@@ -1,13 +1,16 @@
 <script type="text/javascript">
     var MODEL;
+	var arrey;
     var emrMessages = {};
     emrMessages["requiredField"] = "Required";
 
     jq(document).ready(function () {
         jq("input[name='paym_1']:radio").change(function () {
             var index = jq(this, '#simple-form-ui').val();
-            var arrey = MODEL.payingCategory.split("|");
             var alley = "";
+			
+            arrey = MODEL.payingCategory.split("|");
+			console.log(arrey);
 
             if (index == 1) {
                 jq('#tasktitle').text('Paying Category');
@@ -37,7 +40,24 @@
 
                 arrey = MODEL.specialScheme.split("|");
             }
-
+			
+			if (MODEL.payingCategory.split('|').length == 1 && index == 1){
+				jq('.parent-items label').eq(0).hide();
+				arrey = MODEL.nonPayingCategory.split("|");				
+			}
+			
+			if (MODEL.nonPayingCategory.split('|').length == 1){
+				jq('.parent-items label').eq(1).hide();
+			}
+			
+			if (MODEL.specialScheme.split('|').length == 1){
+				jq('.parent-items label').eq(2).hide();
+			}
+			
+			if (MODEL.specialScheme.split('|').length == 1){
+				jq('.parent-items label').eq(2).hide();
+			}
+			
             for (var i = 0; i < arrey.length - 1; i++) {
                 alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
             }
@@ -513,9 +533,9 @@
             VALIDATORS.copyaddress();
         });
 
-        jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
+        jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();		
+		
         jq('input[name=paym_1][value="1"]').attr('checked', false);
-
         jq('input[name=paym_2][value="1"]').attr('checked', false);
 
         jq('#university option').eq(0).prop('selected', true);
@@ -2708,19 +2728,21 @@ a.tooltip span {
                                     <a class="tasks-lists"></a>
                                 </header>
 
-                                <div class="tasks-list">
+                                <div class="tasks-list parent-items">
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="1"
                                                class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">PAYING</span>
                                     </label>
+									
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="2"
                                                class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">NON-PAYING</span>
                                     </label>
+									
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="3"
                                                class="tasks-list-cb">

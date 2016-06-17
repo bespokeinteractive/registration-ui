@@ -28,25 +28,27 @@
 
 <head>
     <script type="text/javascript">
-        var MODEL;
-        var emrMessages = {};
+        var MODEL,
+			arrey,
+			emrMessages = {};
+			
         emrMessages["requiredField"] = "Required";
 
-        var NavigatorController
+        var NavigatorController;
+		
         jq(function () {
             NavigatorController = new KeyboardController();
-        });
-
-        jq(document).ready(function () {
+			
             if ('${status}' === 'error') {
                 jq().toastmessage('showErrorToast', '${message}');
             }
 
             jq("input[name='paym_1']:radio").change(function () {
                 var index = jq(this, '#simple-form-ui').val();
-                var arrey = MODEL.payingCategory.split("|");
                 var alley = "";
 
+                arrey = MODEL.payingCategory.split("|");
+				
                 if (index == 1) {
                     jq('#tasktitle').text('Paying Category');
 
@@ -75,6 +77,19 @@
 
                     arrey = MODEL.specialScheme.split("|");
                 }
+				
+				if (MODEL.payingCategory.split('|').length == 1 && index == 1){
+					jq('.parent-items label').eq(0).hide();
+					arrey = MODEL.nonPayingCategory.split("|");				
+				}
+				
+				if (MODEL.nonPayingCategory.split('|').length == 1){
+					jq('.parent-items label').eq(1).hide();
+				}
+				
+				if (MODEL.specialScheme.split('|').length == 1){
+					jq('.parent-items label').eq(2).hide();
+				}
 
                 for (var i = 0; i < arrey.length - 1; i++) {
                     alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
@@ -2817,7 +2832,7 @@
                                                 <a class="tasks-lists"></a>
                                             </header>
 
-                                            <div class="tasks-list">
+                                            <div class="tasks-list parent-items">
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
                                                            value="1" class="tasks-list-cb"
