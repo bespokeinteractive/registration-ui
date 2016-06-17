@@ -1468,8 +1468,7 @@
             var selectedPayingCategory = jq("#payingCategory option:checked").val();
             var estAge = jq("#estimatedAgeInYear").val();
 
-
-            if (select1 == 1 && select3 == 'CHILD UNDER 5YRS') {
+            if (select3 == 'CHILD UNDER 5YRS') {
                 if (estAge < 6) {
                     jq("#selectedRegFeeValue").val(0);
                 } else {
@@ -1479,8 +1478,7 @@
                 }
             }
             else {
-
-                if (select1 == 1 && select3 == 'EXPECTANT MOTHER') {
+                if (select3 == 'EXPECTANT MOTHER') {
                     if (jq("#patientGender").val() == "M") {
                         jq().toastmessage('showErrorToast', 'This category is only valid for Females');
                         jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();

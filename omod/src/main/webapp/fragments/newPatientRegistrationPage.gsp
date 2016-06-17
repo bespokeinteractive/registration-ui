@@ -1388,39 +1388,37 @@
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
 		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
 
-		var selectedPayingCategory = jq("#payingCategory option:checked").val();
-		var estAge = jq("#estimatedAgeInYear").val();
+        var selectedPayingCategory = jq("#payingCategory option:checked").val();
+        var estAge = jq("#estimatedAgeInYear").val();
 
+        if (select1 == 1 && select3 == 'CHILD UNDER 5YRS') {
+            if (estAge < 6) {
+                jq("#selectedRegFeeValue").val(${childLessThanFiveYearRegistrationFee});
+            } else {
+                jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+                jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                return false;
+            }
+        }
+        else {
+            if (select1 == 1 && select3 == 'EXPECTANT MOTHER') {
+                if (jq("#patientGender").val() == "M") {
+                    jq().toastmessage('showErrorToast', 'This category is only valid for female');
+                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                    return false;
+                }
+            }
 
-		if (select1 == 1 && select3 == 'CHILD UNDER 5YRS') {
-			if (estAge < 6) {
-				jq("#selectedRegFeeValue").val(0);
-			} else {
-				jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
-				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-				return false;
-			}
-		}
-		else {
-
-			if (select1 == 1 && select3 == 'EXPECTANT MOTHER') {
-				if (jq("#patientGender").val() == "M") {
-					jq().toastmessage('showErrorToast', 'This category is only valid for Females');
-					jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-					return false;
-				}
-			}
-
-			if (select1 == 3) {
-				var initialRegFee = 0;
-				var specialClinicRegFee = 0;
-				var totalRegFee = initialRegFee + specialClinicRegFee;
-				jq("#selectedRegFeeValue").val(totalRegFee);
-			}
-			else {
-				jq("#selectedRegFeeValue").val(0);
-			}
-		}
+            if (select1 == 3) {
+                var initialRegFee = parseInt('${initialRegFee}');
+                var specialClinicRegFee = parseInt('${specialClinicRegFee}');
+                var totalRegFee = initialRegFee + specialClinicRegFee;
+                jq("#selectedRegFeeValue").val(totalRegFee);
+            }
+            else {
+                jq("#selectedRegFeeValue").val(${initialRegFee});
+            }
+        }
 
         if (select1 == 1) {
             jq('#payingCategory option').eq(select2).prop('selected', true);
@@ -1446,9 +1444,35 @@
     }
 
     function nonPayingCategorySelection() {
+		var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+		
+		var estAge = jq("#estimatedAgeInYear").val();
+		
+		if (select3 == 'CHILD UNDER 5YRS') {
+			if (estAge < 6) {
+				jq("#selectedRegFeeValue").val(0);
+			} else {
+				jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+				return false;
+			}
+		}
+		else {			
+			if (select3 == 'EXPECTANT MOTHER') {
+				if (jq("#patientGender").val() == "M") {
+					jq().toastmessage('showErrorToast', 'This category is only valid for Females');
+					jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+					return false;
+				}
+			}
+		}		
+		
         var selectedRoomToVisit = jq("#rooms1").val();
         var nonPayingCategorySelected = jq("#nonPayingCategory").val();
         var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
+		
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="NHIF CIVIL SERVANT"){
         if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
             jq("#nhifNumberRow").show();
@@ -1472,6 +1496,31 @@
 
     function specialSchemeSelection() {
         var selectedSpecialScheme = jq("#specialScheme option:checked").val();
+		
+		var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+		
+		var estAge = jq("#estimatedAgeInYear").val();
+		
+		if (select3 == 'CHILD UNDER 5YRS') {
+			if (estAge < 6) {
+				jq("#selectedRegFeeValue").val(0);
+			} else {
+				jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+				return false;
+			}
+		}
+		else {			
+			if (select3 == 'EXPECTANT MOTHER') {
+				if (jq("#patientGender").val() == "M") {
+					jq().toastmessage('showErrorToast', 'This category is only valid for Females');
+					jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+					return false;
+				}
+			}
+		}
 
         if (selectedSpecialScheme == "DELIVERY CASE") {
             if (jq("#patientGender").val() == "M") {
