@@ -13,7 +13,6 @@
         var date = new Date('${currentDateTime}');
 
         jq('#agerow').text('${patient.age}'.substring(1, 100));
-        jq('#vistdate').html(date.getDate() + ' ' + mnth[date.getMonth()] + ' ' + date.getFullYear() + '<br/> &nbsp; &nbsp; (Active since 04:10 PM)');
 
         var _attributes = new Array();
         <% patient.attributes.each { k, v -> %>
@@ -1039,11 +1038,14 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 					<li visitid="54" class="menu-item selected">
 						<span class="menu-date">
 							<i class="icon-time"></i>
-							<span id="vistdate">20 May 2013 (active since 04:10 PM)</span>
+							<span>
+								${ui.formatDatePretty(lastVisit)}<br/>
+								(Active Since ${lastVisit.toString().substring(10,16)} Hrs)							
+							</span>
 						</span>
 						<span class="menu-title">
 							<i class="icon-stethoscope"></i>
-							No diagnosis yet.
+							${outcomes?outcomes:'No diagnosis yet'}
 						</span>
 						<span class="arrow-border"></span>
 						<span class="arrow"></span>

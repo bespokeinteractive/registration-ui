@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
+import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.util.GlobalPropertyUtil;
 import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.util.ObsUtils;
@@ -64,14 +65,30 @@ public class ShowPatientInfoPageController {
         model.addAttribute("reprint", false);
         model.addAttribute("selectedPaymentCategory", "");
         model.addAttribute("firstTimeVisit", true);
-
-
-
-
+        model.addAttribute("outcomes", "");
 
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         PatientModel patientModel = new PatientModel(patient);
+
+        List<Obs> obst = Context.getObsService().getObservationsByPerson(patient);
+        for (Obs obs : obst) {
+            if (obs.getConcept().getDisplayString().equalsIgnoreCase("VISIT OUTCOME")) {
+                String outcome = obs.getValueText();
+                model.addAttribute("outcomes", outcome);
+                break;
+            }
+        }
+
+        PatientQueueService pqs = Context.getService(PatientQueueService.class);
+        Encounter lastEncounter = pqs.getLastOPDEncounter(patient);
+
+        Date lastVisitDate = new Date();
+        if(lastEncounter!=null) {
+            lastVisitDate = lastEncounter.getEncounterDatetime();
+        }
+
+        model.addAttribute("lastVisit", lastVisitDate);
         model.addAttribute("patient", patientModel);
         model.addAttribute("patientAge", patient.getAge());
         model.addAttribute("patientGender", patient.getGender());
@@ -129,6 +146,11 @@ public class ShowPatientInfoPageController {
                     double regFee = obs.getValueNumeric();
                     int regFeeToInt = (int) regFee;
                     model.addAttribute("registrationFee", regFeeToInt);
+                }
+
+                if (obs.getConcept().getDisplayString().equalsIgnoreCase("VISIT OUTCOME")) {
+                    String outcome = obs.getValueText();
+                    model.addAttribute("outcomes", outcome);
                 }
 
             }
