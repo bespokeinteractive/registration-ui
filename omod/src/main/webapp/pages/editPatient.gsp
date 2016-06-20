@@ -179,7 +179,6 @@
                 }
 
                 payingCategorySelection();
-
             });
 
 
@@ -462,30 +461,13 @@
             //
             //set the Patient Payment Category
             var paymentCategory = checkForNulls("${patient.attributes[14]}");
-//            console.log(paymentCategory)
-            //set the Payment Category - Paying Specific
             var payingCategorySpecific = checkForNulls("${patient.attributes[44]}");
-//            console.log(payingCategorySpecific)
-            //set the Payment Category - Non-Paying Specific
             var nonPayingSpecific = checkForNulls("${patient.attributes[45]}");
-//            console.log(nonPayingSpecific)
-            //set the Payment Category - Special scheme Specific
             var specialSchemeSpecific = checkForNulls("${patient.attributes[46]}");
-//            console.log(specialSchemeSpecific)
-            //set NHIF number if available
             var nhifNumber = checkForNulls("${patient.attributes[34]}");
-//            console.log(nhifNumber)
-
-            //set student college if present
             var studentUniversity = checkForNulls("${patient.attributes[47]}");
-//            console.log(studentUniversity)
-            //set student id if present
             var studentUniversityId = checkForNulls("${patient.attributes[42]}");
-//            console.log(studentUniversityId)
-            //set waiver number if waiver case
             var waiverNumber = checkForNulls("${patient.attributes[32]}");
-//            console.log(waiverNumber)
-
 
             if (paymentCategory == 'Paying') {
                 jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
@@ -494,7 +476,7 @@
             }
             else if (paymentCategory == 'Non-Paying') {
                 jq('input[name=paym_1][value="2"]').attr('checked', 'checked').change();
-                jq('#nonPayingCategory').val(nonPayingCategorySpecific).change();
+                jq('#nonPayingCategory').val(nonPayingSpecific).change();
                 jq('input[name=paym_2][value="' + jq('#nonPayingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
             }
             else if (paymentCategory == 'Special Schemes') {
