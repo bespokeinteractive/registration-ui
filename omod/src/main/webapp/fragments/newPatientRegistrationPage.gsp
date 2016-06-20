@@ -77,6 +77,8 @@
                 jq('#summtitle1').text('Details');
                 jq('#modesummary').attr("placeholder", "Enter Value");
             }
+			
+			LoadPayCatgMode();
         });
 
         jq("#rooms1").on("change", function () {
@@ -171,6 +173,7 @@
             }
 
             jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
+			LoadPayCatgMode();
 
         });
 
@@ -461,11 +464,6 @@
          },
          beforeNewSearch: PAGE.searchPatientBefore
          });*/
-
-
-        jq("#payingCategoryField").hide();
-        jq("#nonPayingCategoryField").hide();
-        jq("#specialSchemeCategoryField").hide();
 
         jq('#payingCategory option').eq(0).prop('selected', true);
         jq('#university option').eq(0).prop('selected', true);
@@ -1124,11 +1122,8 @@
         payingCheck: function () {
             if (jq("#paying").is(':checked')) {
                 jq("#nonPaying").removeAttr("checked");
-                jq("#payingCategoryField").show();
                 jq("#nonPayingCategory").val("");
-                jq("#nonPayingCategoryField").hide();
                 jq("#specialScheme").val("");
-                jq("#specialSchemeCategoryField").hide();
                 jq("#specialSchemes").removeAttr("checked");
                 //jq("#selectedRegFeeValue").val(${initialRegFee});
 
@@ -1138,7 +1133,6 @@
                 jq("#waiverNumberRow").hide();
             }
             else {
-                jq("#payingCategoryField").hide();
             }
         },
 
@@ -1146,12 +1140,9 @@
         nonPayingCheck: function () {
             if (jq("#nonPaying").is(':checked')) {
                 jq("#paying").removeAttr("checked");
-                jq("#nonPayingCategoryField").show();
                 jq("#specialSchemes").removeAttr("checked");
                 jq("#payingCategory").val("");
-                jq("#payingCategoryField").hide();
                 jq("#specialScheme").val("");
-                jq("#specialSchemeCategoryField").hide();
                 //jq("#selectedRegFeeValue").val(0);
 
                 var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
@@ -1168,7 +1159,6 @@
                 jq("#waiverNumberRow").hide();
             }
             else {
-                jq("#nonPayingCategoryField").hide();
                 jq("#nhifNumberRow").hide();
             }
         },
@@ -1178,11 +1168,8 @@
             if (jq("#specialSchemes").is(':checked')) {
                 jq("#paying").removeAttr("checked");
                 jq("#payingCategory").val("");
-                jq("#payingCategoryField").hide();
                 jq("#nonPayingCategory").val("");
-                jq("#nonPayingCategoryField").hide();
                 jq("#nonPaying").removeAttr("checked");
-                jq("#specialSchemeCategoryField").show();
                 //jq("#selectedRegFeeValue").val(0);
 
                 jq("#nhifNumberRow").hide();
@@ -1207,7 +1194,6 @@
                 }
             }
             else {
-                jq("#specialSchemeCategoryField").hide();
                 jq("#universityRow").hide();
                 jq("#studentIdRow").hide();
                 jq("#waiverNumberRow").hide();
@@ -1617,12 +1603,15 @@
     }
 
     function LoadPayCatgMode() {
-
-
         var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+        var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+		
+		if (typeof select2 == 'undefined' || typeof select3 == 'undefined'){
+			return false;		
+		}		
 
-        if ((select1 == 2) && (select2 == 1)) {
+        if (select3.includes("NHIF") ||  select3.includes("CIVIL SERVANT")) {
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
@@ -1632,7 +1621,7 @@
             jq('#summtitle1').text('NHIF Summary');
             jq('#modesummary').attr("placeholder", "NHIF Number");
         }
-        else if ((select1 == 3) && (select2 == 1)) {
+        else if (select3.includes("STUDENT SCHEME")) {
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
@@ -1642,7 +1631,7 @@
             jq('#summtitle1').text('Student Summary');
             jq('#modesummary').attr("placeholder", "Student Number");
         }
-        else if ((select1 == 3) && (select2 == 2)) {
+        else if (select3.includes("WAIVER CASE")) {
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
