@@ -1093,6 +1093,16 @@
 //                return false;
 //            }
 
+			if ((jq('#rooms2').val() == '5123' || jq('#rooms2').val() == 5704) && jq('#patientGender').val() == 'M'){
+				jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
+				jq('#rooms2').addClass("red-border");
+				i++;
+                tab3++;
+			}
+			else{
+				jq('#rooms2').removeClass("red-border");
+			}
+
 
             if (i == 0) {
                 return true;
