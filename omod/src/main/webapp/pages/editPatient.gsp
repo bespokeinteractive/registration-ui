@@ -516,7 +516,7 @@
                 if (jq.inArray(idd, arr) != -1) {
                     if (idd == 'firstName') {
                         jq('#summ_idnt').text("${patient.identifier}");
-                        jq('#summ_name').text(jq('#surName').val() + ', ' + jq('#firstName').val());
+                        jq('#summ_name').text(jq('#firstName').val() + ' ' + jq('#surName').val());
                     }
                 }
             });
@@ -617,6 +617,13 @@
                         '</div> </div>';
                 jq("#nextOfKinDiv").append(row);
             });
+			
+			//Do Page Summary
+			jq('#summ_idnt').text("${patient.identifier}");
+            jq('#summ_name').text(jq('#firstName').val() + ' ' + jq('#surName').val());
+			jq('#summ_gend').text(jq('#patientGender option:selected').text());
+			
+			payingCategorySelection();
 
 
             //end of doc ready
