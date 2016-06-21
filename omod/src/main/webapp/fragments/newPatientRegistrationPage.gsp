@@ -1,7 +1,8 @@
 <script type="text/javascript">
     var MODEL,
 		arrey,
-		alley,		
+		alley,
+		age,
 		emrMessages = {};
 		
     emrMessages["requiredField"] = "Required";
@@ -1093,7 +1094,7 @@
 //                return false;
 //            }
 
-			if ((jq('#rooms2').val() == '5123' || jq('#rooms2').val() == 5704) && jq('#patientGender').val() == 'M'){
+			if ((jq('#rooms2').val() == '5123' || jq('#rooms2').val() == 5704) && jq('#patientGender').val() == 'M' && jq("#estimatedAgeInYear").val() > 5){
 				jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
 				jq('#rooms2').addClass("red-border");
 				i++;
