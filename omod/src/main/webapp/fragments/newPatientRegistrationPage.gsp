@@ -1,17 +1,17 @@
 <script type="text/javascript">
     var MODEL,
-		arrey,
-		alley,
-		age,
-		emrMessages = {};
-		
+            arrey,
+            alley,
+            age,
+            emrMessages = {};
+
     emrMessages["requiredField"] = "Required";
 
     jq(document).ready(function () {
         jq("input[name='paym_1']:radio").change(function () {
             var index = jq(this, '#simple-form-ui').val();
-            
-			alley = "";			
+
+            alley = "";
             arrey = MODEL.payingCategory.split("|");
 
             if (index == 1) {
@@ -42,30 +42,30 @@
 
                 arrey = MODEL.specialScheme.split("|");
             }
-			
-			if (MODEL.payingCategory.split('|').length == 1 && index == 1){
-				jq('.parent-items label').eq(0).hide();
-				jq('.parent-items label').eq(1).css("border-top", "1px none #f0f2f3");
-				arrey = MODEL.nonPayingCategory.split("|");				
-			}
-			
-			if (MODEL.nonPayingCategory.split('|').length == 1){
-				jq('.parent-items label').eq(1).hide();
-			}
-			
-			if (MODEL.specialScheme.split('|').length == 1){
-				jq('.parent-items label').eq(2).hide();
-			}
-			
-			if (MODEL.specialScheme.split('|').length == 1){
-				jq('.parent-items label').eq(2).hide();
-			}
-			
+
+            if (MODEL.payingCategory.split('|').length == 1 && index == 1){
+                jq('.parent-items label').eq(0).hide();
+                jq('.parent-items label').eq(1).css("border-top", "1px none #f0f2f3");
+                arrey = MODEL.nonPayingCategory.split("|");
+            }
+
+            if (MODEL.nonPayingCategory.split('|').length == 1){
+                jq('.parent-items label').eq(1).hide();
+            }
+
+            if (MODEL.specialScheme.split('|').length == 1){
+                jq('.parent-items label').eq(2).hide();
+            }
+
+            if (MODEL.specialScheme.split('|').length == 1){
+                jq('.parent-items label').eq(2).hide();
+            }
+
             for (var i = 0; i < arrey.length - 1; i++) {
-				alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' data-name='" + arrey[i].substr(0, arrey[i].indexOf(',')) + "' class='tasks-list-cb' /> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
-			}
-			
-			jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS").replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+                alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' data-name='" + arrey[i].substr(0, arrey[i].indexOf(',')) + "' class='tasks-list-cb' /> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
+            }
+
+            jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS").replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
 
             if (typeof jq('input[name=paym_2]:checked', '#patientRegistrationForm').val() == 'undefined') {
                 jq("#modesummary").attr("readonly", false);
@@ -78,19 +78,25 @@
                 jq('#summtitle1').text('Details');
                 jq('#modesummary').attr("placeholder", "Enter Value");
             }
-			
-			LoadPayCatgMode();
+
+            LoadPayCatgMode();
         });
 
         jq("#rooms1").on("change", function () {
+            selectedFeeCategory();
             var nonPayingCategorySelected = jq("#nonPayingCategory").val();
             if (nonPayingCategorySelected === "CCC PATIENT" || nonPayingCategorySelected === "TB PATIENT") {
                 nonPayingCategorySelection();
             }
-            nonPayingCategorySelection();
         });
 
         jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+            selectedFeeCategory();
+            LoadPayCatgMode();
+        });
+
+        function selectedFeeCategory()
+        {
             var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
             var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
             var select3 = '';
@@ -174,9 +180,7 @@
             }
 
             jq('#summ_fees').text(jq('#selectedRegFeeValue').val() + '.00');
-			LoadPayCatgMode();
-
-        });
+        }
 
         // Districts
         var _districts = new Array();
@@ -533,8 +537,8 @@
             VALIDATORS.copyaddress();
         });
 
-        jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();		
-		
+        jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
+
         jq('input[name=paym_1][value="1"]').attr('checked', false);
         jq('input[name=paym_2][value="1"]').attr('checked', false);
 
@@ -800,16 +804,16 @@
         searchPatientSuccess: function (data) {
             jq("#numberOfFoundPatients")
                     .html(
-                    "Similar Patients: "
-                    + data.totalRow
-                    + "(<a href='javascript:PAGE.togglePatientResult();'>Show/Hide</a>)");
+                            "Similar Patients: "
+                            + data.totalRow
+                            + "(<a href='javascript:PAGE.togglePatientResult();'>Show/Hide</a>)");
         },
 
         /** CALLBACK WHEN BEFORE SEARCHING PATIENT */
         searchPatientBefore: function (data) {
             jq("#numberOfFoundPatients")
                     .html(
-                    "<center><img src='" + openmrsContextPath + "/moduleResources/hospitalcore/ajax-loader.gif" + "'/></center>");
+                            "<center><img src='" + openmrsContextPath + "/moduleResources/hospitalcore/ajax-loader.gif" + "'/></center>");
             jq("#patientSearchResult").hide();
         },
 
@@ -1094,15 +1098,15 @@
 //                return false;
 //            }
 
-			if ((jq('#rooms2').val() == '5123' || jq('#rooms2').val() == 5704) && jq('#patientGender').val() == 'M' && parseFloat(jq("#estimatedAgeInYear").val()) > 5){
-				jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
-				jq('#rooms2').addClass("red-border");
-				i++;
+            if ((jq('#rooms2').val() == '5123' || jq('#rooms2').val() == 5704) && jq('#patientGender').val() == 'M' && parseFloat(jq("#estimatedAgeInYear").val()) > 5){
+                jq().toastmessage('showErrorToast', "MCH is only valid for Women and Children under 5yrs");
+                jq('#rooms2').addClass("red-border");
+                i++;
                 tab3++;
-			}
-			else{
-				jq('#rooms2').removeClass("red-border");
-			}
+            }
+            else{
+                jq('#rooms2').removeClass("red-border");
+            }
 
 
             if (i == 0) {
@@ -1319,11 +1323,11 @@
             if (jq("#patientGender").val() == "M") {
                 jq("#patientRelativeNameSection")
                         .html(
-                        '<input type="radio" name="person.attribute.15" value="Son of" checked="checked"/> Son of');
+                                '<input type="radio" name="person.attribute.15" value="Son of" checked="checked"/> Son of');
             } else if (jq("#patientGender").val() == "F") {
                 jq("#patientRelativeNameSection")
                         .html(
-                        '<input type="radio" name="person.attribute.15" value="Daughter of"/> Daughter of <input type="radio" name="person.attribute.15" value="Wife of"/> Wife of');
+                                '<input type="radio" name="person.attribute.15" value="Daughter of"/> Daughter of <input type="radio" name="person.attribute.15" value="Wife of"/> Wife of');
             }
         }
 
@@ -1383,7 +1387,7 @@
     function payingCategorySelection() {
         var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+        var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
 
         var selectedPayingCategory = jq("#payingCategory option:checked").val();
         var estAge = jq("#estimatedAgeInYear").val();
@@ -1441,35 +1445,35 @@
     }
 
     function nonPayingCategorySelection() {
-		var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+        var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
-		
-		var estAge = jq("#estimatedAgeInYear").val();
-		
-		if (select3 == 'CHILD UNDER 5YRS') {
-			if (estAge < 6) {
-				jq("#selectedRegFeeValue").val(0);
-			} else {
-				jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
-				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-				return false;
-			}
-		}
-		else {			
-			if (select3 == 'EXPECTANT MOTHER') {
-				if (jq("#patientGender").val() == "M") {
-					jq().toastmessage('showErrorToast', 'This category is only valid for Females');
-					jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-					return false;
-				}
-			}
-		}		
-		
+        var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+
+        var estAge = jq("#estimatedAgeInYear").val();
+
+        if (select3 == 'CHILD UNDER 5YRS') {
+            if (estAge < 6) {
+                jq("#selectedRegFeeValue").val(0);
+            } else {
+                jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+                jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                return false;
+            }
+        }
+        else {
+            if (select3 == 'EXPECTANT MOTHER') {
+                if (jq("#patientGender").val() == "M") {
+                    jq().toastmessage('showErrorToast', 'This category is only valid for Females');
+                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                    return false;
+                }
+            }
+        }
+
         var selectedRoomToVisit = jq("#rooms1").val();
         var nonPayingCategorySelected = jq("#nonPayingCategory").val();
         var selectedNonPayingCategory = jq("#nonPayingCategory option:checked").val();
-		
+
         //if(MODEL.nonPayingCategoryMap[selectedNonPayingCategory]=="NHIF CIVIL SERVANT"){
         if (selectedNonPayingCategory == "NHIF CIVIL SERVANT") {
             jq("#nhifNumberRow").show();
@@ -1493,31 +1497,31 @@
 
     function specialSchemeSelection() {
         var selectedSpecialScheme = jq("#specialScheme option:checked").val();
-		
-		var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+
+        var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-		var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
-		
-		var estAge = jq("#estimatedAgeInYear").val();
-		
-		if (select3 == 'CHILD UNDER 5YRS') {
-			if (estAge < 6) {
-				jq("#selectedRegFeeValue").val(0);
-			} else {
-				jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
-				jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-				return false;
-			}
-		}
-		else {			
-			if (select3 == 'EXPECTANT MOTHER') {
-				if (jq("#patientGender").val() == "M") {
-					jq().toastmessage('showErrorToast', 'This category is only valid for Females');
-					jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-					return false;
-				}
-			}
-		}
+        var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
+
+        var estAge = jq("#estimatedAgeInYear").val();
+
+        if (select3 == 'CHILD UNDER 5YRS') {
+            if (estAge < 6) {
+                jq("#selectedRegFeeValue").val(0);
+            } else {
+                jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
+                jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                return false;
+            }
+        }
+        else {
+            if (select3 == 'EXPECTANT MOTHER') {
+                if (jq("#patientGender").val() == "M") {
+                    jq().toastmessage('showErrorToast', 'This category is only valid for Females');
+                    jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
+                    return false;
+                }
+            }
+        }
 
         if (selectedSpecialScheme == "DELIVERY CASE") {
             if (jq("#patientGender").val() == "M") {
@@ -1617,10 +1621,10 @@
         var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
         var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
         var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
-		
-		if (typeof select2 == 'undefined' || typeof select3 == 'undefined'){
-			return false;		
-		}		
+
+        if (typeof select2 == 'undefined' || typeof select3 == 'undefined'){
+            return false;
+        }
 
         if (select3.includes("NHIF") ||  select3.includes("CIVIL SERVANT")) {
             jq("#modesummary").attr("readonly", false);
@@ -2040,22 +2044,22 @@
 
         }
         else if (current_tab == 5) {
-			var loops = 0;
-			
+            var loops = 0;
+
             while (jq(':focus') != jq('#maritalStatus')) {
                 if (jq(':focus').attr('id') == 'birthdate') {
                     jq("#ui-datepicker-div").hide();
                     break;
                 }
                 else {
-					if (loops == 10){
-						//Detect the Loop and Prevent it from Happening
-						jq('#birthdate').focus();
-						break;
-					}
-					
+                    if (loops == 10){
+                        //Detect the Loop and Prevent it from Happening
+                        jq('#birthdate').focus();
+                        break;
+                    }
+
                     NavigatorController.stepBackward();
-					loops++;
+                    loops++;
                 }
             }
         }
@@ -2307,37 +2311,37 @@
 }
 a.tooltip {outline:none; }
 a.tooltip strong {line-height:20px;}
-a.tooltip:hover {text-decoration:none;} 
+a.tooltip:hover {text-decoration:none;}
 a.tooltip span {
-	z-index:10;
-	display:none; 
-	padding:14px 20px!important;
-	margin-left:-205px;
-	width:205px; 
-	line-height:16px;
-	position:absolute; 
-	color:#111;
-	border:1px solid #DCA; background:#fffAF0;
+    z-index:10;
+    display:none;
+    padding:14px 20px!important;
+    margin-left:-205px;
+    width:205px;
+    line-height:16px;
+    position:absolute;
+    color:#111;
+    border:1px solid #DCA; background:#fffAF0;
 }
 a.tooltip span em{
-	width: 20px;
-	float: left;
-	font-family: Times New Roman;
-	font-style: italic;
+    width: 20px;
+    float: left;
+    font-family: Times New Roman;
+    font-style: italic;
 }
 a.tooltip:hover span{
-	display:inline; 
+    display:inline;
 }
 .callout {
-	z-index:20;
-	position:absolute;
-	top:-12px;
-	border:0;
-	left:203px;
+    z-index:20;
+    position:absolute;
+    top:-12px;
+    border:0;
+    left:203px;
 }
 a.tooltip span {
-	border-radius:4px;
-	box-shadow: 5px 5px 8px #CCC;
+    border-radius:4px;
+    box-shadow: 5px 5px 8px #CCC;
 }
 </style>
 
@@ -2461,17 +2465,17 @@ a.tooltip span {
 
                     <div class="col4 last">&nbsp;
                         <span id="estimatedAge"></span>
-						<a class="tooltip" style="float: right;">
-							<img src="../ms/uiframework/resource/registration/images/tooltip.png" style="margin: 3px 2px 0px 0px; width: 18px; cursor: pointer;"></img>
-							<span style="margin-top:11px; font-family: Times New Roman; color: #222;">
-								<img class="callout" src="../ms/uiframework/resource/registration/images/callout.png" style="width:auto;" />
-								<strong>D.O.B Estimates</strong><br />
-								<em>y</em> - for years (e.g 23y)<br/>
-								<em>m</em> - for months (e.g 28m)<br/>
-								<em>w</em> - for weeks (e.g 14w)<br/>
-								<em>d</em> - for days (e.g 76d)<br/>
-							</span>									
-						</a>
+                        <a class="tooltip" style="float: right;">
+                            <img src="../ms/uiframework/resource/registration/images/tooltip.png" style="margin: 3px 2px 0px 0px; width: 18px; cursor: pointer;"></img>
+                            <span style="margin-top:11px; font-family: Times New Roman; color: #222;">
+                                <img class="callout" src="../ms/uiframework/resource/registration/images/callout.png" style="width:auto;" />
+                                <strong>D.O.B Estimates</strong><br />
+                                <em>y</em> - for years (e.g 23y)<br/>
+                                <em>m</em> - for months (e.g 28m)<br/>
+                                <em>w</em> - for weeks (e.g 14w)<br/>
+                                <em>d</em> - for days (e.g 76d)<br/>
+                            </span>
+                        </a>
                     </div>
                 </div>
 
@@ -2690,12 +2694,12 @@ a.tooltip span {
                 <h2>&nbsp;</h2>
 
                 <h2>
-					Next of Kin / Informant Details 
-					<div id="addNextOfKin" style="display: inline-block; cursor: pointer; border-left: 1px solid rgb(170, 170, 170); margin-left: 10px; padding: 0px 11px;">					
-						<img src="../ms/uiframework/resource/registration/images/add.png" style="width: auto; cursor: pointer;"></img>
-					</div>
-				</h2>
-				
+                    Next of Kin / Informant Details
+                    <div id="addNextOfKin" style="display: inline-block; cursor: pointer; border-left: 1px solid rgb(170, 170, 170); margin-left: 10px; padding: 0px 11px;">
+                        <img src="../ms/uiframework/resource/registration/images/add.png" style="width: auto; cursor: pointer;"></img>
+                    </div>
+                </h2>
+
 
                 <div class="onerow">
                     <div class="col4"><label>Full Names <span>*</span></label></div>
@@ -2784,14 +2788,14 @@ a.tooltip span {
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">PAYING</span>
                                     </label>
-									
+
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="2"
                                                class="tasks-list-cb">
                                         <span class="tasks-list-mark"></span>
                                         <span class="tasks-list-desc">NON-PAYING</span>
                                     </label>
-									
+
                                     <label class="tasks-list-item">
                                         <input style="display:none!important" type="radio" name="paym_1" value="3"
                                                class="tasks-list-cb">
