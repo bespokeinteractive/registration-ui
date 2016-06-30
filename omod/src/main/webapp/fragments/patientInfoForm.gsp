@@ -943,8 +943,8 @@
                     <div id="fileNumberRowField">
                         <div>
                             <div id="fileNumberField">
-                                <input id="fileNumber" name="person.attribute.43" placeholder="File Number"
-                                       style='width: 152px;'/>
+                                <input id="fileNumber" name="person.attribute.43" placeholder="File Numer"
+                                       style='width: 152px;'/><span>*</span>
                             </div>
                         </div>
                     </div>
