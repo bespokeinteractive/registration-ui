@@ -4,7 +4,8 @@
             alley,
             age,
             emrMessages = {};
-
+			
+	var oRegX = /^[a-zA-Z-` ]*\$/;
     emrMessages["requiredField"] = "Required";
 
     jq(document).ready(function () {			
@@ -846,11 +847,11 @@
                 value = jq("#firstName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
                 jq("#firstName").val(value);
-                //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                if (oRegX.test(value) == false) {
                     jq('#firstName').addClass("red-border");
                     tab1++;
                     i++;
+					alert('Jinga');
                 }
                 else {
                     jq('#firstName').removeClass("red-border");
@@ -862,8 +863,7 @@
                 value = jq("#otherName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
                 jq("#otherName").val(value);
-                //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                if (oRegX.test(value) == false) {
                     jq('#otherName').addClass("red-border");
                     tab1++;
                     i++;
@@ -883,8 +883,7 @@
                 value = jq("#surName").val();
                 value = value.substr(0, 1).toUpperCase() + value.substr(1);
                 jq("#surName").val(value);
-                //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                if (oRegX.test(value) == false) {
                     jq('#surName').addClass("red-border");
                     tab1++;
                     i++;
@@ -975,10 +974,7 @@
                 value = jq("#patientRelativeName").val();
                 //value = value.substr(0, 1).toUpperCase() + value.substr(1);
                 //jq("#patientRelativeName").val(value);
-                if (<%= "/^[a-zA-Z- ]*\$/" %>.
-                test(value) == false
-            )
-                {
+                if (oRegX.test(value) == false){
                     jq('#patientRelativeName').addClass("red-border");
                     i++;
                     tab2++;

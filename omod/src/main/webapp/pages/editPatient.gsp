@@ -33,9 +33,10 @@
 			alley,
 			emrMessages = {};
 			
-        emrMessages["requiredField"] = "Required";
-
+		var oRegX = /^[a-zA-Z-` ]*\$/;
         var NavigatorController;
+		
+        emrMessages["requiredField"] = "Required";
 		
         jq(function () {
             NavigatorController = new KeyboardController();
@@ -929,8 +930,8 @@
                     value = jq("#surName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#surName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+					
+                    if (oRegX.test(value) == false) {
                         jq('#surName').addClass("red-border");
                         tab1++;
                         i++;
@@ -951,8 +952,7 @@
                     value = jq("#firstName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#firstName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                    if (oRegX.test(value) == false) {
                         jq('#firstName').addClass("red-border");
                         tab1++;
                         i++;
@@ -967,8 +967,8 @@
                     value = jq("#otherName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#otherName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+					
+                    if (oRegX.test(value) == false) {
                         jq('#otherName').addClass("red-border");
                         tab1++;
                         i++;
@@ -1057,8 +1057,7 @@
                  value = jq("#patientRelativeName").val();
                  //value = value.substr(0, 1).toUpperCase() + value.substr(1);
                  //jq("#patientRelativeName").val(value);
-                 if (
-                <%= "/^[a-zA-Z- ]*\$/" %>.test(value) == false)
+                 if (oRegX.test(value) == false)
                  {
                  jq('#patientRelativeName').addClass("red-border");
                  i++;
