@@ -851,7 +851,6 @@
                     jq('#firstName').addClass("red-border");
                     tab1++;
                     i++;
-					alert('Jinga');
                 }
                 else {
                     jq('#firstName').removeClass("red-border");
