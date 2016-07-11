@@ -43,13 +43,6 @@
             if ('${status}' === 'error') {
                 jq().toastmessage('showErrorToast', '${message}');
             }
-			
-			jq('input[type="text"], textarea').keydown(function (e) {			
-				if (e.keyCode == 222) {
-					e.preventDefault();			
-					jq(this).val(jq(this).val() + '`');
-				}
-			});
 
             jq("input[name='paym_1']:radio").change(function () {
                 var index = jq(this, '#simple-form-ui').val();
