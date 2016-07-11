@@ -87,7 +87,6 @@
         jQuery("#phoneNumber").html(MODEL.patientAttributes[16]);
         jQuery("#maritalStatus").html(MODEL.patientAttributes[26]);
         jQuery("#gender").html(MODEL.patientGender);
-        jQuery("#datetime").html(MODEL.currentDateTime);
         jQuery("#patientName").html(MODEL.patientName);
 
         MODEL.TRIAGE = " ,Please Select Triage to Visit|" + MODEL.TRIAGE;
@@ -1245,11 +1244,11 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 	<div style="display: block;	margin-left: auto; margin-right: auto; width: 350px">
 	<div>
 		<div class="col2" align="left" style="display:inline-block; width: 150px">
-			<b>Previous Day of Visit:</b>
+			<b>Receipt Date:</b>
 		</div>
 		
 		<div class="col2" align="left" style="display: inline-block; width: 150px;">
-			<span id="datetime"></span>
+			<span>${receiptDate}</span>
 		</div>				
 	</div>
 	
@@ -1276,6 +1275,13 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 	<div class="onerow" align="left" id="printablePaymentCategoryRow">             
 		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Payment Category:</b></div>
 		<div class="col2" align="left" style="display:inline-block; width: 150px""><div id="printPaymentCategory"></div></div>
+	</div>
+	
+	<div class="onerow" align="left">
+		<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Previous Visit Date:</b></div>
+		<div class="col2" align="left" style="display:inline-block;">
+			${currentDateTime}
+		</div>
 	</div>
 	
 	<div class="onerow" align="left">

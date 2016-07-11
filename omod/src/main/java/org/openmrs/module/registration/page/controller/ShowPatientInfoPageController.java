@@ -67,6 +67,9 @@ public class ShowPatientInfoPageController {
         model.addAttribute("firstTimeVisit", true);
         model.addAttribute("outcomes", "");
 
+        SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+        model.addAttribute("receiptDate", simpleDate.format(new Date()));
+
         Patient patient = Context.getPatientService().getPatient(patientId);
         HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
         PatientModel patientModel = new PatientModel(patient);

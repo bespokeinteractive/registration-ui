@@ -20,11 +20,11 @@
 	<%
         if(revisit) {
     %>
-    ${ui.includeFragment("registration", "patientInfoPage")}
+		${ui.includeFragment("registration", "patientInfoPage")}
     <%
         }else {
     %>
-    ${ui.includeFragment("registration", "patientInfoForm")}
+		${ui.includeFragment("registration", "patientInfoForm")}
     <%
         }
     %>

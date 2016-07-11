@@ -851,11 +851,11 @@
 			<div style="display: block;	margin-left: auto; margin-right: auto; width: 350px">
             <div class="onerow" align="left">
                 <div class="col2" align="left" style="display:inline-block; width: 150px">
-					<b>Previous Day of Visit:</b>
+					<b>Receipt Date:</b>
 				</div>
 				
                 <div class="col2" align="left" style="display: inline-block; width: 150px;">
-					<span id="datetime"></span>
+					<span>${receiptDate}</span>
 				</div>				
             </div>
 
@@ -953,6 +953,16 @@
 
                 <div class="col4 last">&nbsp;</div>
             </div>
+			
+			<% if (revisit || reprint){%>
+				<div class="onerow" align="left">
+					<div class="col2" align="left" style="display:inline-block; width: 150px"><b>Previous Visit Date:</b></div>
+					<div class="col2" align="left" style="display:inline-block;">
+						${currentDateTime}
+					</div>
+				</div>			
+			<% } %>
+			
 
             <div class="onerow" align="left" id="printableRegistrationFeeForRevisitRow">
 
