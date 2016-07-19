@@ -207,9 +207,17 @@
 			rows += '<td> ' +
 
 				'<a title="Patient Revisit" onclick="PATIENTSEARCHRESULT.revisit('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-user-md small" ></i></a>' +
-				<% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" onclick="PATIENTSEARCHRESULT.editPatient('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-edit small" ></i></a>'<% } %> +
-				<% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") ) { %>'<a title="Reprint Receipt" onclick="PATIENTSEARCHRESULT.reprint('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-print small" ></i></a>'<% } %>  +
-				'</td>';
+				<% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>
+                    '<a title="Edit Patient" onclick="PATIENTSEARCHRESULT.editPatient('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-edit small" ></i></a>'
+                <% } else {%>
+                ''
+                <%}%> +
+				<% if (context.authenticatedUser.hasPrivilege("Print Duplicate Slip") != false ) { %>
+                    '<a title="Reprint Receipt" onclick="PATIENTSEARCHRESULT.reprint('+item.patientId +','+ item.dead +','+item.voided +');"><i class="icon-print small" ></i></a>'
+                <% } else {%>
+                    ''
+                    <%}%> +
+                    '</td>';
 					
             rows += '</tr>';
             tbody.append(rows);

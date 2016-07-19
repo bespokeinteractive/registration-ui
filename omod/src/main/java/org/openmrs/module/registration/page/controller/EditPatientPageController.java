@@ -16,7 +16,6 @@ import org.openmrs.module.registration.web.controller.util.PatientModel;
 import org.openmrs.module.registration.web.controller.util.RegistrationWebUtils;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,16 +96,15 @@ public class EditPatientPageController {
     }
 
     /**
-     *
      * @param patientId The id of the patient whose details are edited
-     * @param request HttpServletRequest object that holds payload from the form when the form is submitted
-     * @param model PageModel object that holds the attributes
-     * @param uiUtils Helps with formatting
+     * @param request   HttpServletRequest object that holds payload from the form when the form is submitted
+     * @param model     PageModel object that holds the attributes
+     * @param uiUtils   Helps with formatting
      * @return
      * @throws ParseException
      */
     public String post(@RequestParam("patientId") Integer patientId,
-                              HttpServletRequest request, PageModel model, UiUtils uiUtils) throws ParseException {
+                       HttpServletRequest request, PageModel model, UiUtils uiUtils) throws ParseException {
 
         Patient patient = Context.getPatientService().getPatient(patientId);
 
@@ -132,13 +130,14 @@ public class EditPatientPageController {
             e.printStackTrace();
             model.addAttribute("status", "error");
             model.addAttribute("message", e.getMessage());
-            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId="+patientId);
+            String s = "redirect:" + uiUtils.pageLink("registration", "editPatient?patientId=" + patientId);
             return s;
         }
 
         String s = "redirect:" + uiUtils.pageLink("registration", "patientRegistration");
         return s;
     }
+
     /**
      * Generate Patient From Parameters
      *
@@ -150,20 +149,14 @@ public class EditPatientPageController {
                                     Map<String, String> parameters) throws ParseException {
 
         // get person name
-        if (!StringUtils.isBlank(parameters
-                .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))
-                && !StringUtils
-                .isBlank(parameters
-                        .get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))) {
-            RegistrationUtils
-                    .getPersonName(
-                            patient.getPersonName(),
-                            parameters
-                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME),
-                            parameters
-                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME),
-                            parameters
-                                    .get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME));
+        if (!StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME))
+                && !StringUtils.isBlank(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME))) {
+
+            PersonName personName = RegistrationUtils.getPersonName(patient.getPersonName(),
+                    parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_FIRSTNAME),
+                    parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_OTHERNAME),
+                    parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_SURNAME));
+            patient.addName(personName);
         }
 
         // get birthdate
@@ -172,8 +165,7 @@ public class EditPatientPageController {
                     RegistrationUtils.parseDate(parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE)));
             if (parameters.get(RegistrationConstants.FORM_FIELD_PATIENT_BIRTHDATE_ESTIMATED).contains("true")) {
                 patient.setBirthdateEstimated(true);
-            }
-            else {
+            } else {
                 patient.setBirthdateEstimated(false);
             }
         }

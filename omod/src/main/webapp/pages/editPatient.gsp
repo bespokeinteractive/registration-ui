@@ -1,5 +1,5 @@
-<% 
-	ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"]) 
+<%
+    ui.decorateWith("appui", "standardEmrPage", [title: "Edit Patient Details"])
     ui.includeCss("registration", "onepcssgrid.css")
     ui.includeCss("registration", "main.css")
     ui.includeCss("registration", "jquery.steps.css")
@@ -28,144 +28,160 @@
 
 <head>
     <script type="text/javascript">
-        var MODEL;
-        var emrMessages = {};
+        var MODEL,
+			arrey,
+			alley,
+			emrMessages = {};
+			
+		var oRegX = /^[a-zA-Z-` ]*\$/;
+        var NavigatorController;
+		
         emrMessages["requiredField"] = "Required";
-
-        var NavigatorController
+		
         jq(function () {
             NavigatorController = new KeyboardController();
-        });
-
-        jq(document).ready(function () {
+			
             if ('${status}' === 'error') {
-                jq().toastmessage('showNoticeToast', '${message}');
+                jq().toastmessage('showErrorToast', '${message}');
             }
-			
-			jq("input[name='paym_1']:radio").change(function () {
-				var index = jq(this, '#simple-form-ui').val();
-				var arrey = MODEL.payingCategory.split("|");
-				var alley = "";
-				
-				if (index == 1){
-					jq('#tasktitle').text('Paying Category');
-					
-					jq('#paying').attr('checked', 'checked').change();
-					jq('#nonPaying').attr('checked', false).change();
-					jq('#specialSchemes').attr('checked', false).change();
-					
-					arrey = MODEL.payingCategory.split("|");
-					
-				}
-				else if (index == 2){
-					jq('#tasktitle').text('Nonpaying Category');
-					
-					jq('#paying').attr('checked', false).change();
-					jq('#nonPaying').attr('checked', 'checked').change();
-					jq('#specialSchemes').attr('checked', false).change();
-					
-					arrey = MODEL.nonPayingCategory.split("|");
-				}
-				else {
-					jq('#tasktitle').text('Special Schemes');
-					
-					jq('#paying').attr('checked', false).change();
-					jq('#nonPaying').attr('checked', false).change();
-					jq('#specialSchemes').attr('checked', 'checked').change();
-					
-					arrey = MODEL.specialScheme.split("|");
-				}
-				
-				for (var i = 0; i < arrey.length-1; i++) {
-					alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20"+(i+1)+"' value='"+(i+1)+"' class='tasks-list-cb'> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i+1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
-				}
-				
-				jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
-			});
-			
-			jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
-				var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-				var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-				var select3 = '';
-				
-				if (select1 == 1) {
-					jq('#payingCategory option').eq(select2).prop('selected', true);					
-					jq('#nonPayingCategory option').eq(0).prop('selected', true);
-					jq('#specialScheme option').eq(0).prop('selected', true);
-					
-					select3 = jq('#payingCategory :selected').val().toUpperCase();
 
-					jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
-				}
-				else if (select1 == 2) {
-					jq('#nonPayingCategory option').eq(select2).prop('selected', true);
-					jq('#payingCategory option').eq(0).prop('selected', true);
-					jq('#specialScheme option').eq(0).prop('selected', true);
-					
-					select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+            jq("input[name='paym_1']:radio").change(function () {
+                var index = jq(this, '#simple-form-ui').val();
+                var alley = "";
 
-					jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
-				}
-				else {
-					jq('#specialScheme option').eq(select2).prop('selected', true);
-					jq('#payingCategory option').eq(0).prop('selected', true);
-					jq('#nonPayingCategory option').eq(0).prop('selected', true);
-					
-					select3 = jq('#specialScheme :selected').val().toUpperCase();
+                arrey = MODEL.payingCategory.split("|");
+				
+                if (index == 1) {
+                    jq('#tasktitle').text('Paying Category');
 
-					jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+                    jq('#paying').attr('checked', 'checked').change();
+                    jq('#nonPaying').attr('checked', false).change();
+                    jq('#specialSchemes').attr('checked', false).change();
+
+                    arrey = MODEL.payingCategory.split("|");
+
+                }
+                else if (index == 2) {
+                    jq('#tasktitle').text('Nonpaying Category');
+
+                    jq('#paying').attr('checked', false).change();
+                    jq('#nonPaying').attr('checked', 'checked').change();
+                    jq('#specialSchemes').attr('checked', false).change();
+
+                    arrey = MODEL.nonPayingCategory.split("|");
+                }
+                else {
+                    jq('#tasktitle').text('Special Schemes');
+
+                    jq('#paying').attr('checked', false).change();
+                    jq('#nonPaying').attr('checked', false).change();
+                    jq('#specialSchemes').attr('checked', 'checked').change();
+
+                    arrey = MODEL.specialScheme.split("|");
+                }
+				
+				if (MODEL.payingCategory.split('|').length == 1 && index == 1){
+					jq('.parent-items label').eq(0).hide();
+					jq('.parent-items label').eq(1).css("border-top", "1px none #f0f2f3");
+					arrey = MODEL.nonPayingCategory.split("|");				
+				}
+				
+				if (MODEL.nonPayingCategory.split('|').length == 1){
+					jq('.parent-items label').eq(1).hide();
+				}
+				
+				if (MODEL.specialScheme.split('|').length == 1){
+					jq('.parent-items label').eq(2).hide();
 				}
 
-				if (select3.toUpperCase().indexOf("NHIF") >= 0){
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").attr("name", 'person.attribute.34');
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('NHIF Details');
-					jq('#modesummary').attr("placeholder", "NHIF Number");
+                for (var i = 0; i < arrey.length - 1; i++) {
+					alley += "<label class='tasks-list-item'><input style='display:none!important' type='radio' name='paym_2' id='paym_20" + (i + 1) + "' value='" + (i + 1) + "' data-name='" + arrey[i].substr(0, arrey[i].indexOf(',')) + "' class='tasks-list-cb' /> <span class='tasks-list-mark'></span> <span class='tasks-list-desc' id='ipaym_1" + (i + 1) + "'>" + arrey[i].substr(0, arrey[i].indexOf(',')) + "</span> </label>";
 				}
-				else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0){
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").attr("name", 'person.attribute.42');
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').show();
-					jq('#university option').eq(1).prop('selected', true);
-					
-					jq('#summtitle1').text('Student Details');
-					jq('#modesummary').attr("placeholder", "Student Number");
-				}
-				else if (select3.toUpperCase().indexOf("WAIVER") >= 0){
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").attr("name", 'person.attribute.32');
-					jq("#modesummary").val("");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('Waiver Details');
-					jq('#modesummary').attr("placeholder", "Waiver Number");
-				}
-				else {
-					jq("#modesummary").attr("readonly", false);
-					jq("#modesummary").attr("name", 'modesummary');
-					jq("#modesummary").val("N/A");
-					
-					jq('#universitydiv').hide();
-					jq('#university option').eq(0).prop('selected', true);
-					
-					jq('#summtitle1').text('Details');
-					jq('#modesummary').attr("placeholder", "Enter Value");
-				}
-
-				payingCategorySelection();
 				
-			});
-			
-			
+                jq('#paycatgs').html(alley.replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS").replace("CHILD LESS THAN 5 YEARS", "CHILD UNDER 5YRS"));
+            });
+
+            jq("#paycatgs").on("change", "input[name='paym_2']:radio", function () {
+                var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
+                var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+                var select3 = '';
+
+                if (select1 == 1) {
+                    jq('#payingCategory option').eq(select2).prop('selected', true);
+                    jq('#nonPayingCategory option').eq(0).prop('selected', true);
+                    jq('#specialScheme option').eq(0).prop('selected', true);
+
+                    select3 = jq('#payingCategory :selected').val().toUpperCase();
+
+                    jq('#summ_pays').text('Paying / ' + jq('#payingCategory option:selected').text());
+                }
+                else if (select1 == 2) {
+                    jq('#nonPayingCategory option').eq(select2).prop('selected', true);
+                    jq('#payingCategory option').eq(0).prop('selected', true);
+                    jq('#specialScheme option').eq(0).prop('selected', true);
+
+                    select3 = jq('#nonPayingCategory :selected').val().toUpperCase();
+
+                    jq('#summ_pays').text('Non-Paying / ' + jq('#nonPayingCategory option:selected').text());
+                }
+                else {
+                    jq('#specialScheme option').eq(select2).prop('selected', true);
+                    jq('#payingCategory option').eq(0).prop('selected', true);
+                    jq('#nonPayingCategory option').eq(0).prop('selected', true);
+
+                    select3 = jq('#specialScheme :selected').val().toUpperCase();
+
+                    jq('#summ_pays').text('Special Scheme / ' + jq('#specialScheme option:selected').text());
+                }
+
+                if (select3.toUpperCase().indexOf("NHIF") >= 0) {
+                    jq("#modesummary").attr("readonly", false);
+                    jq("#modesummary").attr("name", 'person.attribute.34');
+                    jq("#modesummary").val("");
+
+                    jq('#universitydiv').hide();
+                    jq('#university option').eq(0).prop('selected', true);
+
+                    jq('#summtitle1').text('NHIF Details');
+                    jq('#modesummary').attr("placeholder", "NHIF Number");
+                }
+                else if (select3.toUpperCase().indexOf("STUDENT SCHEME") >= 0) {
+                    jq("#modesummary").attr("readonly", false);
+                    jq("#modesummary").attr("name", 'person.attribute.42');
+                    jq("#modesummary").val("");
+
+                    jq('#universitydiv').show();
+                    jq('#university option').eq(1).prop('selected', true);
+
+                    jq('#summtitle1').text('Student Details');
+                    jq('#modesummary').attr("placeholder", "Student Number");
+                }
+                else if (select3.toUpperCase().indexOf("WAIVER") >= 0) {
+                    jq("#modesummary").attr("readonly", false);
+                    jq("#modesummary").attr("name", 'person.attribute.32');
+                    jq("#modesummary").val("");
+
+                    jq('#universitydiv').hide();
+                    jq('#university option').eq(0).prop('selected', true);
+
+                    jq('#summtitle1').text('Waiver Details');
+                    jq('#modesummary').attr("placeholder", "Waiver Number");
+                }
+                else {
+                    jq("#modesummary").attr("readonly", false);
+                    jq("#modesummary").attr("name", 'modesummary');
+                    jq("#modesummary").val("N/A");
+
+                    jq('#universitydiv').hide();
+                    jq('#university option').eq(0).prop('selected', true);
+
+                    jq('#summtitle1').text('Details');
+                    jq('#modesummary').attr("placeholder", "Enter Value");
+                }
+
+                payingCategorySelection();
+            });
+
 
             // Districts
             var _districts = new Array();
@@ -289,14 +305,15 @@
                         }
                     }
                 }
-            };
-			
+            }
+            ;
+
             PAGE.fillOptions("#payingCategory", {
                 data: ', |' + MODEL.payingCategory,
                 delimiter: ",",
                 optionDelimiter: "|"
             });
-			
+
             PAGE.fillOptions("#nonPayingCategory", {
                 data: ', |' + MODEL.nonPayingCategory,
                 delimiter: ",",
@@ -365,7 +382,7 @@
 
             var g = "${patient.gender}";
             var genderValue = document.getElementById('patientGender');
-			
+
             if (g === "Male") {
                 genderValue.value = 'M';
             } else if (g === "Female") {
@@ -377,8 +394,8 @@
 
             //set the current religion
             document.getElementById('patientReligion').value = checkForNulls("${patient.attributes[40]}");
-			
-			jq('#birthdate').datepicker({
+
+            jq('#birthdate').datepicker({
                 yearRange: 'c-100:c',
                 maxDate: '0',
                 dateFormat: 'dd/mm/yy',
@@ -389,88 +406,84 @@
                 jq("#birthdate").val(this.value);
                 PAGE.checkBirthDate();
             });
-            
-			jq('#birthdate').val('${patient.birthdate}');
-			if ('${patient.birthdateEstimated}' === 'true'){
-				PAGE.checkBirthDate(true);
-			}
-			else{
-				PAGE.checkBirthDate();
-			}
-			
-			
-			
-			
-			
-			
-		
+
+            jq('#birthdate').val('${patient.birthdate}');
+            if ('${patient.birthdateEstimated}' === 'true') {
+                PAGE.checkBirthDate(true);
+            }
+            else {
+                PAGE.checkBirthDate();
+            }
+
+
             //set the nationality
             var currentNationality = document.getElementById('patientNation');
             currentNationality.value = "${patient.attributes[27]}";
-			
+
             document.getElementById('patientPostalAddress').value = "${patient.physicalAddress}";
-			
-            jq('#districts').val('${patient.subCounty}').change();			
-            jq('#upazilas' ).val('${patient.county}'   ).change();
-            jq('#locations').val('${patient.location}' );
-			
-            document.getElementById('patientRelativeName').value = checkForNulls("${patient.attributes[8]}");
-            document.getElementById('relationshipType').value = checkForNulls("${patient.attributes[15]}");
+
+            jq('#districts').val('${patient.subCounty}').change();
+            jq('#upazilas').val('${patient.county}').change();
+            jq('#locations').val('${patient.location}');
+
+
+//            change to accommodate multiple N.O.K
+            var kinNames = checkForNulls("${patient.attributes[8]}");
+            var arrayKinNames = kinNames.split(',');
+            var kinRelationshipType = checkForNulls("${patient.attributes[15]}");
+            var arrayKinRelationshipType = kinRelationshipType.split(',');
+            var kinTelephone = checkForNulls("${patient.attributes[29]}");
+            var arrayKinTelephone = kinTelephone.split(',');
+
+
+            console.log(arrayKinNames);
+            console.log(arrayKinRelationshipType);
+            console.log(arrayKinTelephone);
+
+            jq.each(arrayKinNames, function (index, value) {
+                var relationship = arrayKinRelationshipType[index];
+                var telephone = arrayKinTelephone[index];
+                addNextOfKinRows(index, value, relationship, telephone)
+            });
+
+
             document.getElementById('patientPhoneNumber').value = checkForNulls("${patient.attributes[16]}");
             document.getElementById('patientNationalId').value = checkForNulls("${patient.attributes[20]}");
             document.getElementById('relativePostalAddress').value = checkForNulls("${patient.attributes[28]}");
-            document.getElementById('patientTelephone').value = checkForNulls("${patient.attributes[29]}");
             document.getElementById('passportNumber').value = checkForNulls("${patient.attributes[38]}");
             document.getElementById('patientEmail').value = checkForNulls("${patient.attributes[37]}");
-			
-			if (jq('#patientPostalAddress').val() == jq('#relativePostalAddress').val()){
-				jq('#sameAddress').prop('checked', true);
-			}
+
+            if (jq('#patientPostalAddress').val() == jq('#relativePostalAddress').val()) {
+                jq('#sameAddress').prop('checked', true);
+            }
 
 
             //TODO  - binding the Patient Payment Category values post updates
             //
             //set the Patient Payment Category
             var paymentCategory = checkForNulls("${patient.attributes[14]}");
-//            console.log(paymentCategory)
-            //set the Payment Category - Paying Specific
             var payingCategorySpecific = checkForNulls("${patient.attributes[44]}");
-//            console.log(payingCategorySpecific)
-            //set the Payment Category - Non-Paying Specific
             var nonPayingSpecific = checkForNulls("${patient.attributes[45]}");
-//            console.log(nonPayingSpecific)
-            //set the Payment Category - Special scheme Specific
             var specialSchemeSpecific = checkForNulls("${patient.attributes[46]}");
-//            console.log(specialSchemeSpecific)
-            //set NHIF number if available
             var nhifNumber = checkForNulls("${patient.attributes[34]}");
-//            console.log(nhifNumber)
-
-            //set student college if present
             var studentUniversity = checkForNulls("${patient.attributes[47]}");
-//            console.log(studentUniversity)
-            //set student id if present
             var studentUniversityId = checkForNulls("${patient.attributes[42]}");
-//            console.log(studentUniversityId)
-            //set waiver number if waiver case
             var waiverNumber = checkForNulls("${patient.attributes[32]}");
-//            console.log(waiverNumber)
-			  
-			  
+
             if (paymentCategory == 'Paying') {
                 jq('input[name=paym_1][value="1"]').attr('checked', 'checked').change();
                 jq('#payingCategory').val(payingCategorySpecific).change();
-				jq('input[name=paym_2][value="' + jq('#payingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
+                jq('input[name=paym_2][value="' + jq('#payingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
             }
-			else if (paymentCategory == 'Non-Paying') {
+            else if (paymentCategory == 'Non-Paying') {
                 jq('input[name=paym_1][value="2"]').attr('checked', 'checked').change();
-				jq('#nonPayingCategory').val(nonPayingCategorySpecific).change();
-				jq('input[name=paym_2][value="' + jq('#nonPayingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
+                jq('#nonPayingCategory').val(nonPayingSpecific).change();
+                jq('input[name=paym_2][value="' + jq('#nonPayingCategory option:selected').index() + '"]').attr('checked', 'checked').change();
             }
-			else if (paymentCategory == 'Special Schemes') {
+            else if (paymentCategory == 'Special Schemes') {
                 jq('input[name=paym_1][value="3"]').attr('checked', 'checked').change();
-				jq('#specialScheme').val(specialSchemeSpecific).change();
-				jq('input[name=paym_2][value="' + jq('#specialScheme option:selected').index() + '"]').attr('checked', 'checked').change();
+                jq('#specialScheme').val(specialSchemeSpecific).change();
+                jq('input[name=paym_2][value="' + jq('#specialScheme option:selected').index() + '"]').attr('checked', 'checked').change();
             }
 
             jq('input:text[id]').focus(function (event) {
@@ -504,7 +517,7 @@
                 if (jq.inArray(idd, arr) != -1) {
                     if (idd == 'firstName') {
                         jq('#summ_idnt').text("${patient.identifier}");
-                        jq('#summ_name').text(jq('#surName').val() + ', ' + jq('#firstName').val());
+                        jq('#summ_name').text(jq('#firstName').val() + ' ' + jq('#surName').val());
                     }
                 }
             });
@@ -585,10 +598,61 @@
             jq("#sameAddress").click(function () {
                 VALIDATORS.copyaddress();
             });
+
+            jq("#addNextOfKin").on("click", function () {
+                //add input for new
+                var row = '<div class="onerow"><div class="col4"><field><input type="text" ' +
+                        ' name="person.attribute.8" class="required form-textbox1"/></field></div><div class="col4"> ' +
+                        '<span class="select-arrow" style="width: 100%"> <field> <select name="person.attribute.15" ' +
+                        'class="required form-combo1"> <option value=""></option> ' +
+                        '<option value="Father">Father</option> ' +
+                        '<option value="Mother">Mother</option> ' +
+                        '<option value="Spouse">Spouse</option> ' +
+                        '<option value="Guardian">Guardian</option> ' +
+                        '<option value="Friend">Friend</option> ' +
+                        '<option value="Other">Other</option> ' +
+                        '</select> </field> </span> </div> ' +
+                        '<div class="col4 last"> <field> ' +
+                        '<input type="text" id="patientTelephone" name="person.attribute.29" value="-" ' +
+                        'class="form-textbox1"/> </field> ' +
+                        '</div> </div>';
+                jq("#nextOfKinDiv").append(row);
+            });
 			
+			//Do Page Summary
+			jq('#summ_idnt').text("${patient.identifier}");
+            jq('#summ_name').text(jq('#firstName').val() + ' ' + jq('#surName').val());
+			jq('#summ_gend').text(jq('#patientGender option:selected').text());
 			
+			payingCategorySelection();
+
+
             //end of doc ready
         });
+
+        function addNextOfKinRows(index, names, relationship, telephone) {
+            var id = "kin_" + index;
+            var row = '<div class="onerow">' +
+                    '<div class="col4"><field><input type="text" ' +
+                    ' name="person.attribute.8" class="required form-textbox1" value="' + names + '"/></field></div><div class="col4"> ' +
+                    '<span class="select-arrow" style="width: 100%"> <field> ' +
+                    '<select name="person.attribute.15" ' +
+                    'class="required form-combo1" id="' + id + '"> <option value=""></option> ' +
+                    '<option value="Father">Father</option> ' +
+                    '<option value="Mother">Mother</option> ' +
+                    '<option value="Spouse">Spouse</option> ' +
+                    '<option value="Guardian">Guardian</option> ' +
+                    '<option value="Friend">Friend</option> ' +
+                    '<option value="Other">Other</option> ' +
+                    '</select> </field> </span> </div> ' +
+                    '<div class="col4 last"> <field> ' +
+                    '<input type="text" id="patientTelephone" name="person.attribute.29" ' +
+                    'class="form-textbox1" value="' + telephone + '"/> </field> ' +
+                    '</div> </div>';
+            jq("#nextOfKinDiv").append(row);
+            jq('#' + id).val(relationship);
+
+        }
 
         function checkForNulls(data) {
             if (data === "null") {
@@ -604,12 +668,11 @@
         PAGE = {
             /** SUBMIT */
             submit: function () {
-                relativeNameInCaptital = (jq("#patientRelativeName").val()).toUpperCase();
-                jq("#patientRelativeName").val(relativeNameInCaptital);
+//                relativeNameInCaptital = (jq("#patientRelativeName").val()).toUpperCase();
+//                jq("#patientRelativeName").val(relativeNameInCaptital);
 
                 // Validate and submit
                 if (this.validateRegisterForm()) {
-
                     jq("#patientRegistrationForm").submit();
                 }
             },
@@ -657,16 +720,16 @@
                         birthdate: submitted
                     }),
                     success: function (data) {
-                        if (data.datemodel.error == undefined) {							
+                        if (data.datemodel.error == undefined) {
                             if (String(data.datemodel.estimated) === "true" || isForceTest) {
                                 jq("#birthdateEstimated").val("true")
-								jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
+                                jq("#estimatedAge").html(data.datemodel.age + '<span> (Estimated)</span>');
                             } else {
                                 jq("#birthdateEstimated").val("false");
-								jq("#estimatedAge").html(data.datemodel.age);
+                                jq("#estimatedAge").html(data.datemodel.age);
                             }
 
-                            jq("#summ_ages").html(data.datemodel.age.substr(1, 1000));
+                            jq("#summ_ages").html(data.datemodel.age);
                             jq("#estimatedAgeInYear").val(data.datemodel.ageInYear);
                             jq("#birthdate").val(data.datemodel.birthdate);
                             jq("#calendar").val(data.datemodel.birthdate);
@@ -849,11 +912,11 @@
 
                 var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
                 var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
-				
-				if (!jq("input[name='paym_2']:checked").val()) {
-					jq().toastmessage('showErrorToast', 'Select and option for '+jq('#tasktitle').text());
-					return false;
-				}
+
+                if (!jq("input[name='paym_2']:checked").val()) {
+                    jq().toastmessage('showErrorToast', 'Select and option for ' + jq('#tasktitle').text());
+                    return false;
+                }
 
                 var str1 = '';
 
@@ -867,8 +930,8 @@
                     value = jq("#surName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#surName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+					
+                    if (oRegX.test(value) == false) {
                         jq('#surName').addClass("red-border");
                         tab1++;
                         i++;
@@ -889,8 +952,7 @@
                     value = jq("#firstName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#firstName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+                    if (oRegX.test(value) == false) {
                         jq('#firstName').addClass("red-border");
                         tab1++;
                         i++;
@@ -905,8 +967,8 @@
                     value = jq("#otherName").val();
                     value = value.substr(0, 1).toUpperCase() + value.substr(1);
                     jq("#otherName").val(value);
-                    //if(/^[a-zA-Z0-9- ]*\$/.test(value) == false) {
-                    if (/^[a-zA-Z- ]*\$/.test(value) == false) {
+					
+                    if (oRegX.test(value) == false) {
                         jq('#otherName').addClass("red-border");
                         tab1++;
                         i++;
@@ -986,37 +1048,35 @@
                 }
 
                 //NOK HERE
-                if (!(jq("#patientRelativeName").val().trim())) {
-                    jq('#patientRelativeName').addClass("red-border");
-                    i++;
-                    tab2++;
-                }
-                else {
-                    value = jq("#patientRelativeName").val();
-                    //value = value.substr(0, 1).toUpperCase() + value.substr(1);
-                    //jq("#patientRelativeName").val(value);
-                    if (<%= "/^[a-zA-Z- ]*\$/" %>.
-                    test(value) == false
-                )
-                    {
-                        jq('#patientRelativeName').addClass("red-border");
-                        i++;
-                        tab2++;
-                    }
-                else
-                    {
-                        jq('#patientRelativeName').removeClass("red-border");
-                    }
-                }
+                /*if (!(jq("#patientRelativeName").val().trim())) {
+                 jq('#patientRelativeName').addClass("red-border");
+                 i++;
+                 tab2++;
+                 }
+                 else {
+                 value = jq("#patientRelativeName").val();
+                 //value = value.substr(0, 1).toUpperCase() + value.substr(1);
+                 //jq("#patientRelativeName").val(value);
+                 if (oRegX.test(value) == false)
+                 {
+                 jq('#patientRelativeName').addClass("red-border");
+                 i++;
+                 tab2++;
+                 }
+                 else
+                 {
+                 jq('#patientRelativeName').removeClass("red-border");
+                 }
+                 }*/
 
-                if (jq("#relationshipType").val() == 0 || jq("#relationshipType").val().trim() == "") {
-                    jq('#relationshipType').addClass("red-border");
-                    i++;
-                    tab2++;
-                }
-                else {
-                    jq('#relationshipType').removeClass("red-border");
-                }
+                /*if (jq("#relationshipType").val() == 0 || jq("#relationshipType").val().trim() == "") {
+                 jq('#relationshipType').addClass("red-border");
+                 i++;
+                 tab2++;
+                 }
+                 else {
+                 jq('#relationshipType').removeClass("red-border");
+                 }*/
 
                 if (jq("#relativePostalAddress").val().length > 255) {
                     str1 = str1 + "Next of Kin Physical Address should not exceed more than 255 characters. ";
@@ -1029,11 +1089,11 @@
                 }
 
                 //TAB3
-				if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()){
-					str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
-					i++;
-					tab3++;
-				}
+                if (!jq("input[name='paym_1']:checked").val() || !jq("input[name='paym_2']:checked").val()) {
+                    str1 = str1 + "Kindly ensure the Payment Categories are properly filled. ";
+                    i++;
+                    tab3++;
+                }
                 /*
                  if (jq("#legal1").val() == 0) {
                  jq('#legal1').addClass("red-border");
@@ -1390,32 +1450,29 @@
 
         function payingCategorySelection() {
             var select1 = jq('input[name=paym_1]:checked', '#patientRegistrationForm').val();
-            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();
+            var select2 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').val();			
+			var select3 = jq('input[name=paym_2]:checked', '#patientRegistrationForm').data('name');
 
             var selectedPayingCategory = jq("#payingCategory option:checked").val();
-            //if(MODEL.payingCategoryMap[selectedPayingCategory]=="CHILD LESS THAN 5 YEARS"){
-            var estAge = jq("#estimatedAgeInYear").val();	//come back here
+            var estAge = jq("#estimatedAgeInYear").val();
 
-
-            if (select1 == 1 && select2 == 2) {
+            if (select3 == 'CHILD UNDER 5YRS') {
                 if (estAge < 6) {
                     jq("#selectedRegFeeValue").val(0);
                 } else {
                     jq().toastmessage('showErrorToast', 'Selected Scheme should be for child at 5 years and below');
                     jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-					return false;
+                    return false;
                 }
             }
             else {
-
-                if (select1 == 1 && select2 == 3) {
+                if (select3 == 'EXPECTANT MOTHER') {
                     if (jq("#patientGender").val() == "M") {
                         jq().toastmessage('showErrorToast', 'This category is only valid for Females');
                         jq('input[name=paym_2][value="1"]').attr('checked', 'checked').change();
-						return false;
+                        return false;
                     }
                 }
-
 
                 if (select1 == 3) {
                     var initialRegFee = 0;
@@ -1570,13 +1627,13 @@
                 jq("#selectedRegFeeValue").val(0);
             }
         }
-		
+
         function LoadPayCatg() {
-			
+
         }
 
         function LoadPayCatgMode() {
-            
+
         }
 
         function LoadPaymodes() {
@@ -1811,10 +1868,6 @@
                         NavigatorController.stepForward();
                     }
                 }
-                // jq(':focus')
-
-                //NavigatorController.getFieldById('passportNumber').select();
-
             }
             else if (current_tab == 2) {
                 var currents = '';
@@ -1866,13 +1919,21 @@
 
             }
             else if (current_tab == 5) {
+				var loops = 0;
                 while (jq(':focus') != jq('#maritalStatus')) {
                     if (jq(':focus').attr('id') == 'birthdate') {
                         jq("#ui-datepicker-div").hide();
                         break;
                     }
                     else {
-                        NavigatorController.stepBackward();
+						//Detect the Loop and Prevent it from Happening
+                        if (loops == 10){
+							jq('#birthdate').focus();
+							break;
+						}
+						
+						NavigatorController.stepBackward();
+						loops++;
                     }
                 }
             }
@@ -1883,11 +1944,9 @@
     body {
         margin-top: 20px;
     }
-
     .toast-item {
         background-color: #222;
     }
-
     .col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
         color: #555;
         text-align: left;
@@ -1902,12 +1961,13 @@
         height: 38px !important;
         line-height: 18px !important;
         padding: 8px 10px !important;
-		text-transform: capitalize;
+        text-transform: capitalize;
         width: 100% !important;
     }
-	#patientEmail{
-		text-transform: lowercase;
-	}
+
+    #patientEmail {
+        text-transform: lowercase;
+    }
 
     input[type="textarea"] {
         width: 100% !important;
@@ -1920,14 +1980,14 @@
         padding: 8px 10px !important;
     }
 
-    textarea{
-		border: 1px solid #aaa!important;
-		border-radius: 0px!important;
-		box-shadow: none!important;
-		box-sizing: border-box!important;
-		line-height: 18px!important;
-		padding: 8px 10px!important;
-	}
+    textarea {
+        border: 1px solid #aaa !important;
+        border-radius: 0px !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+        line-height: 18px !important;
+        padding: 8px 10px !important;
+    }
 
     form select {
         width: 100%;
@@ -1946,8 +2006,8 @@
         padding-left: 10px !important;
         right: 10px !important;
     }
-		
-	#estimatedAge span,
+
+    #estimatedAge span,
     label span {
         color: #ff0000;
         padding-left: 5px;
@@ -2100,18 +2160,18 @@
     }
 
     .tasks-lists {
-		background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
-		position: absolute;
-		top: 50%;
-		right: 10px;
-		margin-top: -11px;
-		padding: 10px 4px;
-		width: 19px;
-		height: 3px;
-		font: 0/0 serif;
-		text-shadow: none;
-		color: transparent;
-	}
+        background: rgba(0, 0, 0, 0) url("../ms/uiframework/resource/registration/images/view_list.png") no-repeat scroll 3px 0 / 85% auto;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        margin-top: -11px;
+        padding: 10px 4px;
+        width: 19px;
+        height: 3px;
+        font: 0/0 serif;
+        text-shadow: none;
+        color: transparent;
+    }
 
     .tasks-lists:before {
         display: block;
@@ -2252,25 +2312,62 @@
     }
 
     .addon {
-		color: #f26522;
+        color: #f26522;
         display: inline-block;
         float: right;
         margin: 10px 0 0 190px;
         position: absolute;
     }
-	
-	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus{
-		outline: 1px none #007fff;
-		box-shadow: 0 0 2px 0px #888!important;
+
+    .simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
+        outline: 1px none #007fff;
+        box-shadow: 0 0 2px 0px #888 !important;
+    }
+
+    .name {
+        color: #f26522;
+    }
+
+    .new-patient-header .identifiers {
+        margin-top: 5px;
+    }
+
+    .no-confirmation {
+        margin-top: -25px;
+    }
+	a.tooltip {outline:none; }
+	a.tooltip strong {line-height:20px;}
+	a.tooltip:hover {text-decoration:none;} 
+	a.tooltip span {
+		z-index:10;
+		display:none; 
+		padding:14px 20px;
+		margin-left:-205px;
+		width:205px; 
+		line-height:16px;
+		position:absolute; 
+		color:#111;
+		border:1px solid #DCA; background:#fffAF0;
 	}
-	.name {
-		color: #f26522;
+	a.tooltip span em{
+		width: 20px;
+		float: left;
+		font-family: Times New Roman;
+		font-style: italic;
 	}
-	.new-patient-header .identifiers {
-		margin-top: 5px;
+	a.tooltip:hover span{
+		display:inline; 
 	}
-	.no-confirmation{
-		margin-top: -25px;
+	.callout {
+		z-index:20;
+		position:absolute;
+		top:-12px;
+		border:0;
+		left:203px;
+	}
+	a.tooltip span {
+		border-radius:4px;
+		box-shadow: 5px 5px 8px #CCC;
 	}
     </style>
 
@@ -2328,23 +2425,23 @@
                         <span class="title">Patient Details</span>
                         <fieldset class="no-confirmation">
                             <legend>Demographics</legend>
-							<h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
 
-                            
+                            <h2 style="margin: 10px 0 0;">Patient Demographic Information</h2>
+
 
                             <div class="onerow">
-								<div class="col4">
-									<label>First Name<span>*</span></label>
-								</div>
+                                <div class="col4">
+                                    <label>First Name<span>*</span></label>
+                                </div>
 
-								<div class="col4">
-									<label>Middle name<span></span></label>
-								</div>
+                                <div class="col4">
+                                    <label>Middle name<span></span></label>
+                                </div>
 
-								<div class="col4 last">
-									<label>Third Name<span>*</span></label>
-								</div>
-							</div>
+                                <div class="col4 last">
+                                    <label>Third Name<span>*</span></label>
+                                </div>
+                            </div>
 
                             <div class="onerow">
 
@@ -2357,7 +2454,7 @@
                                     <field><input type="text" id="otherName" name="patient.otherName"
                                                   class="form-textbox1" value="${patient.otherName}"/></field>
                                 </div>
-								
+
                                 <div class="col4 last">
                                     <field><input type="text" id="surName" name="patient.surName"
                                                   class="required form-textbox1" value="${patient.surName}"/></field>
@@ -2409,7 +2506,7 @@
                                     <field>
                                         <div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
                                         <input type="text" id="birthdate" name="patient.birthdate"
-                                               class="required form-textbox1"/>
+                                               class="required form-textbox1" placeholder="DD/MM/YYYY"/>
                                     </field>
                                     <input id="birthdateEstimated" type="hidden" name="patient.birthdateEstimate"
                                            value="true"/>
@@ -2424,7 +2521,18 @@
                                 </div>
 
                                 <div class="col4 last">&nbsp;
-                                    <span id="estimatedAge"/>
+                                    <span id="estimatedAge"></span>
+									<a class="tooltip" style="float: right;">
+										<img src="../ms/uiframework/resource/registration/images/tooltip.png" style="margin: 3px 2px 0px 0px; width: 18px; cursor: pointer;"></img>
+										<span style="margin-top:11px; font-family: Times New Roman; color: #222;">
+											<img class="callout" src="../ms/uiframework/resource/registration/images/callout.png" style="width:auto;" />
+											<strong>D.O.B Estimates</strong><br />
+											<em>y</em> - for years (e.g 23y)<br/>
+											<em>m</em> - for months (e.g 28m)<br/>
+											<em>w</em> - for weeks (e.g 14w)<br/>
+											<em>d</em> - for days (e.g 76d)<br/>
+										</span>									
+									</a>
                                 </div>
                             </div>
 
@@ -2575,8 +2683,6 @@
                         <fieldset style="min-width: 500px; width: auto" class="no-confirmation">
                             <legend>Contact Info</legend>
 
-                           
-
 
                             <h2 style="margin: 10px 0 0;">Patient Contact Information</h2>
 
@@ -2601,7 +2707,8 @@
 
                                 <div class="col4 last">
                                     <field><input type="text" id="patientPostalAddress"
-                                                  name="patient.address.postalAddress" class="required form-textbox1" placeholder="Village /Estate /Landmark"/>
+                                                  name="patient.address.postalAddress" class="required form-textbox1"
+                                                  placeholder="Village /Estate /Landmark"/>
                                     </field>
                                 </div>
                             </div>
@@ -2647,58 +2754,41 @@
                             </div>
 
                             <h2>&nbsp;</h2>
-                            <h2>Next of Kin / Informant Details</h2>
+
+                            <h2>
+								Next of Kin / Informant Details
+								<div id="addNextOfKin" style="display: inline-block; cursor: pointer; border-left: 1px solid rgb(170, 170, 170); margin-left: 10px; padding: 0px 11px;">					
+									<img src="../ms/uiframework/resource/registration/images/add.png" style="width: auto; cursor: pointer;"></img>
+								</div>
+							</h2>
 
                             <div class="onerow">
-								<div class="col4"><label>Full Names <span>*</span></label></div>
+                                <div class="col4"><label>Full Names <span>*</span></label></div>
 
-								<div class="col4"><label>Relationship <span>*</span></label></div>
+                                <div class="col4"><label>Relationship <span>*</span></label></div>
 
-								<div class="col4 last"><label>Telephone Number</label></div>
-							</div>
+                                <div class="col4 last"><label>Telephone Number</label></div>
+                            </div>
 
-							<div class="onerow">
-								<div class="col4">
-									<field><input type="text" id="patientRelativeName" name="person.attribute.8"
-												  class="required form-textbox1"/></field>
-								</div>
 
-								<div class="col4">
-									<span class="select-arrow" style="width: 100%">
-										<field>
-											<select id="relationshipType" name="person.attribute.15"
-													class="required form-combo1">
-												<option value=""></option>
-												<option value="Parent">Parent</option>
-												<option value="Spouse">Spouse</option>
-												<option value="Guardian">Guardian</option>
-												<option value="Friend">Friend</option>
-												<option value="Other">Other</option>
-											</select>
-										</field>
-									</span>
-								</div>
+                            <div id="nextOfKinDiv">
 
-								<div class="col4 last">
-									<field>
-										<input type="text" id="patientTelephone" name="person.attribute.29"
-												  class="form-textbox1"/>
-									</field>
-								</div>
-							</div>
+                            </div>
 
-							<div class="onerow" style="margin-top: 50px">
-								<label style="margin-top: 0px">Physical Address</label>
-								
-								<field>
-									<textarea type="text" id="relativePostalAddress" name="person.attribute.28"
-											  class="form-textbox1" style="height: 80px; width: 700px;" placeholder="Village /Estate /Landmark"></textarea>
-								</field>
-							
-								<field>
-									<label><input id="sameAddress" type="checkbox" style="margin-top: 5px"/>Same as Patient</label>
-								</field>
-							</div>
+                            <div class="onerow" style="margin-top: 50px">
+                                <label style="margin-top: 0px">Physical Address</label>
+
+                                <field>
+                                    <textarea type="text" id="relativePostalAddress" name="person.attribute.28"
+                                              class="form-textbox1" style="height: 80px; width: 700px;"
+                                              placeholder="Village /Estate /Landmark"></textarea>
+                                </field>
+
+                                <field>
+                                    <label><input id="sameAddress" type="checkbox"
+                                                  style="margin-top: 5px"/>Same as Patient</label>
+                                </field>
+                            </div>
 
                             <div class="onerow" style="margin-top: 50px">
                                 <a class="button task" onclick="goto_previous_tab(2);">
@@ -2710,7 +2800,7 @@
                                     <span>NEXT PAGE</span>
                                 </a>
                             </div>
-                        
+
                         </fieldset>
 
 
@@ -2729,7 +2819,7 @@
                                                 <a class="tasks-lists"></a>
                                             </header>
 
-                                            <div class="tasks-list">
+                                            <div class="tasks-list parent-items">
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
                                                            value="1" class="tasks-list-cb"
@@ -2737,14 +2827,14 @@
                                                     <span class="tasks-list-mark"></span>
                                                     <span class="tasks-list-desc">PAYING</span>
                                                 </label>
-												
+
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
                                                            value="2" class="tasks-list-cb">
                                                     <span class="tasks-list-mark"></span>
                                                     <span class="tasks-list-desc">NON-PAYING</span>
                                                 </label>
-												
+
                                                 <label class="tasks-list-item">
                                                     <input style="display:none!important" type="radio" name="paym_1"
                                                            value="3" class="tasks-list-cb">
@@ -2763,7 +2853,7 @@
                                             </header>
 
                                             <div class="tasks-list" id="paycatgs">
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -2772,9 +2862,9 @@
                                         <div class="tasks">
                                             <header class="tasks-header">
                                                 <span id="summtitle1" class="tasks-title">Summary</span>
-                                                <input type="hidden" id="nhifNumber" name="person.attribute.34" />
-                                                <input type="hidden" id="studentId" name="person.attribute.42" />
-                                                <input type="hidden" id="waiverNumber" name="person.attribute.32" />
+                                                <input type="hidden" id="nhifNumber" name="person.attribute.34"/>
+                                                <input type="hidden" id="studentId" name="person.attribute.42"/>
+                                                <input type="hidden" id="waiverNumber" name="person.attribute.32"/>
                                                 <a class="tasks-lists"></a>
                                             </header>
                                         </div>
@@ -2830,8 +2920,7 @@
                                     <input id="opdRoom" type="checkbox" name="opdRoom"/>
                                     <input id="specialClinicRoom" type="checkbox" name="specialClinicRoom"/>
                                 </div>
-								
-								
+
 
                                 <div class="onerow" style="display:none!important;">
                                     <div class="col4">&nbsp;

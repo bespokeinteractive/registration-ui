@@ -16,14 +16,15 @@
 <div class="onepcssgrid-1000">
 
     ${ui.includeFragment("registration", "js_css")}
-    <%
+    
+	<%
         if(revisit) {
     %>
-    ${ui.includeFragment("registration", "patientInfoPage")}
+		${ui.includeFragment("registration", "patientInfoPage")}
     <%
         }else {
     %>
-    ${ui.includeFragment("registration", "patientInfoForm")}
+		${ui.includeFragment("registration", "patientInfoForm")}
     <%
         }
     %>
