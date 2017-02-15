@@ -940,7 +940,6 @@ input[type="text"], input[type="password"], select {
 #fileNumberRow {
     margin: 2px 0px 10px 0px;
 }
-
 .status-container {
     padding: 5px 10px 5px 5px;
 }
@@ -1137,10 +1136,10 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 								<br/>
 
 								<div id="fileNumberRow" class="onerow">
-									<label>&nbsp;</label>
-									<label class="checks">&nbsp;</label>
+								<label>&nbsp;</label>
+									<label class="checks">&nbsp;<span>*</span></label>
 									<input type="text" id="fileNumber" name="person.attribute.43" placeholder="File Number"
-										   style='display:inline-block;'/>
+									style='display:inline-block;'/>
 								</div>
 
 							</div>
