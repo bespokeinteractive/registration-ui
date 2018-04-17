@@ -73,7 +73,9 @@
                 jq("#modesummary").attr("name", 'modesummary');
                 jq("#modesummary").val("N/A");
 
+                jq('#insurancesdiv').hide();
                 jq('#universitydiv').hide();
+                jq('#insurances option').eq(0).prop('selected', true);
                 jq('#university option').eq(0).prop('selected', true);
 
                 jq('#summtitle1').text('Details');
@@ -140,7 +142,9 @@
                 jq("#modesummary").attr("name", 'person.attribute.34');
                 jq("#modesummary").val("");
 
+                jq('#insurancesdiv').hide();
                 jq('#universitydiv').hide();
+                jq('#insurances option').eq(0).prop('selected', true);
                 jq('#university option').eq(0).prop('selected', true);
 
                 jq('#summtitle1').text('NHIF Details');
@@ -152,7 +156,9 @@
                 jq("#modesummary").val("");
 
                 jq('#universitydiv').show();
+                jq('#insurancesdiv').hide();
                 jq('#university option').eq(1).prop('selected', true);
+                jq('#insurances option').eq(0).prop('selected', true);
 
                 jq('#summtitle1').text('Student Details');
                 jq('#modesummary').attr("placeholder", "Student Number");
@@ -162,18 +168,35 @@
                 jq("#modesummary").attr("name", 'person.attribute.32');
                 jq("#modesummary").val("");
 
+                jq('#insurancesdiv').hide();
                 jq('#universitydiv').hide();
+                jq('#insurances option').eq(0).prop('selected', true);
                 jq('#university option').eq(0).prop('selected', true);
 
                 jq('#summtitle1').text('Waiver Details');
                 jq('#modesummary').attr("placeholder", "Waiver Number");
+            }
+            else if (select3.toUpperCase().indexOf("INSURA") >= 0) {
+                jq("#modesummary").attr("readonly", false);
+                jq("#modesummary").attr("name", 'person.attribute.54');
+                jq("#modesummary").val("");
+
+                jq('#insurancesdiv').show();
+                jq('#universitydiv').hide();
+                jq('#insurances option').eq(1).prop('selected', true);
+                jq('#university option').eq(0).prop('selected', true);
+
+                jq('#summtitle1').text('Insurance Details');
+                jq('#modesummary').attr("placeholder", "Insurance Number");
             }
             else {
                 jq("#modesummary").attr("readonly", false);
                 jq("#modesummary").attr("name", 'modesummary');
                 jq("#modesummary").val("N/A");
 
+                jq('#insurancesdiv').hide();
                 jq('#universitydiv').hide();
+                jq('#insurances option').eq(0).prop('selected', true);
                 jq('#university option').eq(0).prop('selected', true);
 
                 jq('#summtitle1').text('Details');
@@ -231,20 +254,21 @@
             districts: _districts,
             upazilas: _upazilas,
             ////ghanshyam,16-dec-2013,3438 Remove the interdependency
-            TRIAGE: "${TRIAGE}",
-            OPDs: "${OPDs}",
-            SPECIALCLINIC: "${SPECIALCLINIC}",
-            payingCategory: "${payingCategory}",
-            nonPayingCategory: "${nonPayingCategory}",
-            specialScheme: "${specialScheme}",
-            payingCategoryMap: _payingCategoryMap,
+            TRIAGE:             "${TRIAGE}",
+            OPDs:               "${OPDs}",
+            SPECIALCLINIC:      "${SPECIALCLINIC}",
+            payingCategory:     "${payingCategory}",
+            nonPayingCategory:  "${nonPayingCategory}",
+            specialScheme:      "${specialScheme}",
+            payingCategoryMap:  _payingCategoryMap,
             nonPayingCategoryMap: _nonPayingCategoryMap,
-            specialSchemeMap: _specialSchemeMap,
-            universities: "${universities}",
-            referredFrom: "${referralHospitals}",
-            referralType: "${referralReasons}",
-            TEMPORARYCAT: "${TEMPORARYCAT}",
-            religions: "${religionList}"
+            specialSchemeMap:   _specialSchemeMap,
+            universities:       "${universities}",
+            insurances:         "${insurances}",
+            referredFrom:       "${referralHospitals}",
+            referralType:       "${referralReasons}",
+            TEMPORARYCAT:       "${TEMPORARYCAT}",
+            religions:          "${religionList}"
         }
 
         jq("#modesummary").blur(function () {
@@ -411,6 +435,14 @@
                 + MODEL.universities;
         PAGE.fillOptions("#university", {
             data: MODEL.universities,
+            delimiter: ",",
+            optionDelimiter: "|"
+        });
+
+        MODEL.insurances = ", |"
+            + MODEL.insurances;
+        PAGE.fillOptions("#insurances", {
+            data: MODEL.insurances,
             delimiter: ",",
             optionDelimiter: "|"
         });
@@ -1625,7 +1657,10 @@
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
+            jq('#insurancesdiv').hide();
             jq('#universitydiv').hide();
+
+            jq('#insurances option').eq(0).prop('selected', true);
             jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('NHIF Summary');
@@ -1635,17 +1670,36 @@
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
+            jq('#insurancesdiv').hide();
             jq('#universitydiv').show();
+
+            jq('#insurances option').eq(0).prop('selected', true);
             jq('#university option').eq(1).prop('selected', true);
 
             jq('#summtitle1').text('Student Summary');
             jq('#modesummary').attr("placeholder", "Student Number");
         }
+        else if (select3.includes("INSURANCE")) {
+            jq("#modesummary").attr("readonly", false);
+            jq("#modesummary").val("");
+
+            jq('#insurancesdiv').show();
+            jq('#universitydiv').hide();
+
+            jq('#insurances option').eq(1).prop('selected', true);
+            jq('#university option').eq(0).prop('selected', true);
+
+            jq('#summtitle1').text('Insurance Summary');
+            jq('#modesummary').attr("placeholder", "Insurance Number");
+        }
         else if (select3.includes("WAIVER CASE")) {
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("");
 
+            jq('#insurancesdiv').hide();
             jq('#universitydiv').hide();
+
+            jq('#insurances option').eq(0).prop('selected', true);
             jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('Waiver Summary');
@@ -1655,7 +1709,10 @@
             jq("#modesummary").attr("readonly", false);
             jq("#modesummary").val("N/A");
 
+            jq('#insurancesdiv').hide();
             jq('#universitydiv').hide();
+
+            jq('#insurances option').eq(0).prop('selected', true);
             jq('#university option').eq(0).prop('selected', true);
 
             jq('#summtitle1').text('Details');
@@ -2719,7 +2776,9 @@ a.tooltip span {
                                         <option value=""></option>
                                         <option value="Father">Father</option>
                                         <option value="Mother">Mother</option>
+                                        <option value="Sibling">Sibling</option>
                                         <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
                                         <option value="Guardian">Guardian</option>
                                         <option value="Friend">Friend</option>
                                         <option value="Other">Other</option>
@@ -2826,12 +2885,14 @@ a.tooltip span {
                             </div>
 
                             <span id="universitydiv" class="select-arrow" style="width: 100%">
-                                <field><select style="width: 101%;" name="person.attribute.47"
-                                               id="university">&nbsp;</select></field>
+                                <field><select style="width: 101%;" name="person.attribute.47" id="university">&nbsp;</select></field>
                             </span>
 
-                            <field><input type="text" id="modesummary" name="modesummary" value="N/A"
-                                          placeholder="WAIVER NUMBER" readonly="" style="width: 101%!important"/>
+                            <span id="insurancesdiv" class="select-arrow" style="width: 100%">
+                                <field><select style="width: 101%;" name="person.attribute.53" id="insurances">&nbsp;</select></field>
+                            </span>
+
+                            <field><input type="text" id="modesummary" name="modesummary" value="N/A" placeholder="WAIVER NUMBER" readonly="" style="width: 101%!important"/>
                             </field>
                         </div>
                     </div>

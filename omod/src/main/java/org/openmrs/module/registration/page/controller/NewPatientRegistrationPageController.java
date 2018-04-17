@@ -47,7 +47,6 @@ public class NewPatientRegistrationPageController {
 
 		PersonAttributeType personAttributeReligion = hospitalCoreService.getPersonAttributeTypeByName("Religion");
 
-
 		model.addAttribute("personAttributeReligion", personAttributeReligion);
 		PersonAttributeType personAttributeChiefdom = hospitalCoreService.getPersonAttributeTypeByName("Chiefdom");
 		model.addAttribute("personAttributeChiefdom", personAttributeChiefdom);
@@ -57,35 +56,33 @@ public class NewPatientRegistrationPageController {
 				RegistrationWebUtils.getSubConcepts(RegistrationConstants.CONCEPT_NAME_SPECIAL_CLINIC));
 		model.addAttribute("payingCategory",
 				RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_PAYING_CATEGORY));
-		model.addAttribute("nonPayingCategory",
-				RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_NONPAYING_CATEGORY));
-		model.addAttribute("specialScheme",
-				RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_SPECIAL_SCHEME));
-		model.addAttribute("universities",
-				RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_LIST_OF_UNIVERSITIES));
+		model.addAttribute("nonPayingCategory", RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_NONPAYING_CATEGORY));
+		model.addAttribute("specialScheme", RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_SPECIAL_SCHEME));
+		model.addAttribute("universities", RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_LIST_OF_UNIVERSITIES));
+		model.addAttribute("insurances", RegistrationWebUtils.getSubConceptsWithName(RegistrationConstants.CONCEPT_NAME_LIST_OF_INSURANCE));
+
 		Map<Integer, String> payingCategoryMap = new LinkedHashMap<Integer, String>();
-		Concept payingCategory = Context.getConceptService()
-				.getConcept(RegistrationConstants.CONCEPT_NAME_PAYING_CATEGORY);
+		Concept payingCategory = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_PAYING_CATEGORY);
 		for (ConceptAnswer ca : payingCategory.getAnswers()) {
 			payingCategoryMap.put(ca.getAnswerConcept().getConceptId(), ca.getAnswerConcept().getName().getName());
 		}
+
 		Map<Integer, String> nonPayingCategoryMap = new LinkedHashMap<Integer, String>();
-		Concept nonPayingCategory = Context.getConceptService()
-				.getConcept(RegistrationConstants.CONCEPT_NAME_NONPAYING_CATEGORY);
+		Concept nonPayingCategory = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_NONPAYING_CATEGORY);
 		for (ConceptAnswer ca : nonPayingCategory.getAnswers()) {
 			nonPayingCategoryMap.put(ca.getAnswerConcept().getConceptId(), ca.getAnswerConcept().getName().getName());
 		}
+
 		Map<Integer, String> specialSchemeMap = new LinkedHashMap<Integer, String>();
-		Concept specialScheme = Context.getConceptService()
-				.getConcept(RegistrationConstants.CONCEPT_NAME_SPECIAL_SCHEME);
+		Concept specialScheme = Context.getConceptService().getConcept(RegistrationConstants.CONCEPT_NAME_SPECIAL_SCHEME);
 		for (ConceptAnswer ca : specialScheme.getAnswers()) {
 			specialSchemeMap.put(ca.getAnswerConcept().getConceptId(), ca.getAnswerConcept().getName().getName());
 		}
+
 		model.addAttribute("payingCategoryMap", payingCategoryMap);
 		model.addAttribute("nonPayingCategoryMap", nonPayingCategoryMap);
 		model.addAttribute("specialSchemeMap", specialSchemeMap);
-		model.addAttribute("initialRegFee",
-				GlobalPropertyUtil.getString(RegistrationConstants.PROPERTY_INITIAL_REGISTRATION_FEE, ""));
+		model.addAttribute("initialRegFee", GlobalPropertyUtil.getString(RegistrationConstants.PROPERTY_INITIAL_REGISTRATION_FEE, ""));
 		// model.addAttribute("mchRegFee",
 		// GlobalPropertyUtil.getString(RegistrationConstants.PROPERTY_MCH_REGISTRATION_FEE,
 		// ""));

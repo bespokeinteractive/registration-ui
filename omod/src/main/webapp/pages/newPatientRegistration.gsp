@@ -160,7 +160,6 @@ form textarea:focus, .form textarea:focus{
 		<div class="onepcssgrid-1000">
 			<br/><br/>
 			${ ui.includeFragment("registration", "newPatientRegistrationPage") }
-
 		</div>
 	</div>
 </div>

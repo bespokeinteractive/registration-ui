@@ -131,8 +131,10 @@ public class RegistrationConstants {
 	
 	public static final String CONCEPT_NAME_SPECIAL_SCHEME = "SPECIAL SCHEME";
 	
+	public static final String CONCEPT_NAME_LIST_OF_INSURANCE = "LIST OF INSURANCE";
+
 	public static final String CONCEPT_NAME_LIST_OF_UNIVERSITIES = "LIST OF UNIVERSITIES";
-	
+
 	public static final String CONCEPT_NAME_PATIENT_REFERRED_TO_HOSPITAL = "PATIENT REFERRED TO HOSPITAL?";
 
 	public static final String CONCEPT_NAME_COUNTY_REFERRED_FROM = "COUNTY REFERRED FROM";
